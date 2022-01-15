@@ -19,7 +19,6 @@
 
 #include "desktopapp.h"
 #include "SDL.h"
-//#include "frame.h"
 #include "button.h"
 #include "progressbar.h"
 #include "window.h"
@@ -35,13 +34,10 @@ DesktopApp::DesktopApp()
 {
     SDL_Init(0);
 
-    //palg = new PaletteGroup(pal, PaletteGroup::PAL_NUM);
-    //palg = PaletteGroupFactory::create(PALETTE_WINOS2, 32);
-    palg = PaletteGroupFactory::create(PALETTE_DEBUG, 32);
-
     Rectangle master(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
     vr = ViewRenderFactory::create(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
     he = ViewEventFactory::create(EST_SDL);
+    palg = PaletteGroupFactory::create(PALETTE_WINOS2, 32);
 
     app = new ViewExec(master, vr, palg);
     app->initDesktop();
