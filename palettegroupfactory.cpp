@@ -39,6 +39,15 @@
 #define AQUA 0x00FFFF
 #define WHITE 0xFFFFFF
 
+#define ORANGE 0xFFA500
+#define MAGENTA 0xFF00FF
+#define CYAN 0x00FFFF
+#define DARKGREEN 0x006400
+#define BROWN 0xA52A2A
+#define TAN 0xD2B48C
+#define LIGHTGREY 0xD3D3D3
+#define DARKGREY 0xA9A9A9
+
 // Palette set for  PALETTE_WINOS2
 static const unsigned framePaletteWINOS2[] = {WHITE, BLACK, SILVER};                      // Bright, dark, main
 static const unsigned titlebarPaletteWINOS2[] = {BLUE, WHITE};                            // Background, text
@@ -56,6 +65,15 @@ static const unsigned progressbarPaletteDBG[] = {BLACK, BLUE, WHITE};           
 static const unsigned desktopPaletteDBG[] = {BLACK};                                   // Desktop background
 static const unsigned buttonPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK, YELLOW}; // Bright, Dark, main, selected, disabled, pressed
 static const unsigned winiconPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK};        // Bright, Dark, main, pressed, released
+
+// Palette set for  PALETTE_MACINTOSH
+static const unsigned framePaletteMAC[] = {LIGHTGREY, DARKGREY, GRAY};                 // Bright, dark, main
+static const unsigned titlebarPaletteMAC[] = {WHITE, BLACK};                           // Background, text
+static const unsigned backgroundPaletteMAC[] = {WHITE};                                // Background
+static const unsigned progressbarPaletteMAC[] = {LIGHTGREY, DARKGREY, WHITE};          // Background, Foreground, text
+static const unsigned desktopPaletteMAC[] = {GRAY};                                    // Desktop background
+static const unsigned buttonPaletteMAC[] = {WHITE, BLACK, SILVER, RED, BLACK, YELLOW}; // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteMAC[] = {WHITE, BLACK, SILVER, RED, BLACK};        // Bright, Dark, main, pressed, released
 
 //PALETTE_MACINTOSH, PALETTE_RISCOS
 class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int bitdepth)
@@ -88,6 +106,21 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteWINOS2);
         break;
     case PALETTE_MACINTOSH:
+        pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(1);
+        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
+        pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(3);
+        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
+        pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(2);
+        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteMAC);
+        pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(3);
+        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteMAC);
+        pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
+        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteMAC);
+        pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(6);
+        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteMAC);
+        pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(5);
+        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteMAC);
+        break;
     case PALETTE_RISCOS:
         return nullptr;
 
