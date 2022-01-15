@@ -303,9 +303,10 @@ protected:
 
 private:
 	/*
-	 * Limits is expressed in LOCAL coordinates
+	 * Limits is expressed in owners coordinates
 	 */
 	Rectangle limits;
+	Rectangle extent;
 	unsigned char rflags, sflags, oflags;
 };
 

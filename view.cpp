@@ -20,7 +20,7 @@
 
 #include "view.h"
 
-View::View(Rectangle &limits, ViewRender *rnd, Palette *pal, View *parent) : parentView(parent), renderer(rnd), palette(pal), limits(limits), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0)
+View::View(Rectangle &limits, ViewRender *rnd, Palette *pal, View *parent) : parentView(parent), renderer(rnd), palette(pal), limits(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0)
 {
 }
 
@@ -86,8 +86,7 @@ void View::getOrigin(Point &origin) const
 
 void View::getExtent(Rectangle &extent)
 {
-	extent.ul = Point(0, 0);
-	extent.lr = Point(limits.width() - 1, limits.height() - 1);
+	extent = this->extent;
 }
 
 void View::localize(Rectangle &rect)
@@ -290,8 +289,8 @@ void View::select()
 
 void View::setLimits(const Rectangle &newrect)
 {
-
 	limits = newrect;
+	extent.lr = Point(limits.width() - 1, limits.height() - 1);
 }
 
 void View::getLimits(Rectangle &rect)
