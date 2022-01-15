@@ -1,0 +1,8 @@
+#ignore generated binaries
+build/*
+*.exe
+*.dll
+#ignore commodities like fonts and SDKs
+*.ttf
+.vscode/*
+SDL/*
