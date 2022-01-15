@@ -9,7 +9,7 @@ ViewExec::ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View 
 void ViewExec::initDesktop()
 {
     Rectangle rect;
-    getLimits(rect);
+    getExtent(rect);
     View *bg = new Background(rect);
     bg->clearResizeMode(VIEW_RESIZEABLE);
     bg->setPalette(palettes->getPalette(PaletteGroup::PAL_DESKTOP));
