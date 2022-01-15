@@ -454,12 +454,14 @@ void ViewGroup::handleEvent(Event *evt)
 			case CMD_FOREGROUND:
 				std::cout << "Foreground" << std::endl;
 				toTheTop(static_cast<View *>(msg->targetObject));
-				break;
+				//break;
+				/* FALLTHRU */
 			case CMD_SELECT:
 				std::cout << "Select" << std::endl;
 				selectView(static_cast<View *>(msg->targetObject));
-				if (selected->getOptions(VIEW_OPT_TOPSELECT))
-					toTheTop(selected);
+				//if (selected->getOptions(VIEW_OPT_TOPSELECT))
+				//	toTheTop(selected);
+				//select();
 				break;
 			}
 			if (msg->destObject == this)
