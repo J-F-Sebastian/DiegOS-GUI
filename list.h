@@ -116,7 +116,6 @@ public:
 
     explicit iterator(List &list, T *begin = nullptr) : instance(&list)
     {
-      std::cout << "bbb " << list.count() << std::endl;
       if (list.count())
       {
         cursor = list.head->prev;

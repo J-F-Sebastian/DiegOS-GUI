@@ -99,8 +99,8 @@ void WindowIconClose::handleEvent(Event *evt)
     {
         Rectangle viewRect;
         getExtent(viewRect);
-        std::cout << "EVT ICON CLOSE (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-                  << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
+        //std::cout << "EVT ICON CLOSE (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
+        //<< viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     }
 }
 
@@ -174,7 +174,7 @@ void WindowIconZoom::handleEvent(Event *evt)
     {
         Rectangle viewRect;
         getExtent(viewRect);
-        std::cout << "EVT ICON ZOOM (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-                  << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
+        //std::cout << "EVT ICON ZOOM (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
+        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     }
 }

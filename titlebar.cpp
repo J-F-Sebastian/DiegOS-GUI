@@ -57,8 +57,8 @@ void TitleBar::handleEvent(Event *evt)
     {
         Rectangle viewRect;
         getExtent(viewRect);
-        std::cout << "EVT TBAR (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-                  << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
+        //std::cout << "EVT TBAR (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
+        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     }
 }
 

@@ -90,8 +90,8 @@ void Frame::handleEvent(Event *evt)
     {
         Rectangle viewRect;
         getExtent(viewRect);
-        std::cout << "EVT FRAME (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-                  << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
+        //std::cout << "EVT FRAME (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
+        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     }
 }
 
