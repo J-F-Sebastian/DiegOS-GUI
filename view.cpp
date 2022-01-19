@@ -219,6 +219,14 @@ void View::handleEvent(Event *evt)
 	}
 }
 
+void View::sendEvent(Event *evt)
+{
+	if (parentView)
+		parentView->sendEvent(evt);
+	else
+		delete evt;
+}
+
 bool View::isEventPositionValid(Event *evt)
 {
 	Rectangle lims;
@@ -259,31 +267,29 @@ bool View::focus()
 
 void View::select()
 {
-	Event evt;
+	Event *evt;
 	MessageEvent cmd;
 
 	if (!getOptions(VIEW_OPT_SELECTABLE))
 		return;
 
 	setState(VIEW_STATE_SELECTED);
+
+	if (!getOptions(VIEW_OPT_TOPSELECT))
+		return;
+
 	if (parentView)
 	{
 		if (parentView->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
+		evt = new Event();
 		cmd.senderObject = this;
 		cmd.destObject = parentView;
 		cmd.targetObject = this;
-		if (getOptions(VIEW_OPT_TOPSELECT))
-		{
-			cmd.command = CMD_FOREGROUND;
-		}
-		else
-		{
-			cmd.command = CMD_SELECT;
-		}
-		evt.setMessageEvent(cmd);
-		parentView->handleEvent(&evt);
+		cmd.command = CMD_FOREGROUND;
+		evt->setMessageEvent(cmd);
+		sendEvent(evt);
 	}
 }
 
@@ -454,14 +460,10 @@ void ViewGroup::handleEvent(Event *evt)
 			case CMD_FOREGROUND:
 				std::cout << "Foreground" << std::endl;
 				toTheTop(static_cast<View *>(msg->targetObject));
-				//break;
 				/* FALLTHRU */
 			case CMD_SELECT:
 				std::cout << "Select" << std::endl;
 				selectView(static_cast<View *>(msg->targetObject));
-				//if (selected->getOptions(VIEW_OPT_TOPSELECT))
-				//	toTheTop(selected);
-				//select();
 				break;
 			}
 			if (msg->destObject == this)

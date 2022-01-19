@@ -196,6 +196,19 @@ public:
 	virtual void handleEvent(Event *evt);
 
 	/*
+	 * Send an event to the view's owner.
+	 * The method will recursively look for the top owner.
+	 * Memory management must be performed by the receiver,
+	 * the event must be dynamically allocated.
+	 * Ownership of the event object is of the receiver, and so is
+	 * the memory management.
+	 * 
+	 * PARAMETERS IN
+	 * Event *evt - a pointer to a dynamically allocated event object
+	 */
+	virtual void sendEvent(Event *evt);
+
+	/*
 	 * Verify the validity of the event for this view and returns 
 	 * a boolean according to the evaluation.
 	 *
