@@ -21,6 +21,8 @@
 #define _VIEWEXEC_H_
 
 #include "view.h"
+#include "eventqueue.h"
+#include "vieweventmgr.h"
 
 class ViewExec : public ViewGroup
 {
@@ -29,10 +31,17 @@ public:
     void executeDialog(void){};
 
     //protected:
-    ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent = nullptr);
+    ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
 
     virtual void initDesktop(void);
     virtual void initMenu(void);
+    virtual void run(void);
+
+    virtual void sendEvent(Event *evt) override;
+
+private:
+    ViewEventManager *evtM;
+    EventQueue eventQ;
 };
 
 #endif
