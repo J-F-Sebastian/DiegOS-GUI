@@ -45,7 +45,25 @@ public:
 
     bool isPressed(void) { return (pressState == PRESSED) ? true : false; }
 
+    //FIXME This is common with buttons, sholud window icons be buttons ???
+
+    /*
+     * Updates the pressed state according to positionalPressureOn, if the icon
+     * is released and get pressed or is pressed and get released the pressState
+     * variable is updated and the method returns true.
+     * 
+     * PARAMETERS IN
+     * bool positionalPressureOn - the press on/off state of a positional event
+     * 
+     * RETURNS
+     * true if the state got updated
+     * false if no change was applied
+     */
+    bool updatePressed(bool positionalPressureOn);
+
 private:
+    void setPressed(WindowIconState val) { pressState = val; }
+
     WindowIconState pressState;
 };
 
