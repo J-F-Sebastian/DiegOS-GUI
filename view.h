@@ -168,12 +168,23 @@ public:
 
 	/*
 	 * Copy the upper left point of limits into origin.
+	 * Origin is relative to the owner's origin.
 	 * 
 	 * PARAMETERS OUT
 	 * Point &origin - view's origin
 	 */
 	void getOrigin(Point &origin) const;
 
+	/*
+	 * Copy the extents of the view, i.e. set extent to
+	 * a rectangle with upper left set to (0,0) and lower right
+	 * set to (width - 1, height - 1).
+	 * NOTE: width and height are computed in pixels and include
+	 * both vertical and horizontal lines.
+	 * 
+	 * PARAMETERS OUT
+	 * Rectangle &extent - reference to a Rectangle set to the extents of the view
+	 */
 	void getExtent(Rectangle &extent);
 	void localize(Rectangle &rect);
 	void globalize(Rectangle &rect);
@@ -182,29 +193,53 @@ public:
 	void setRenderer(ViewRender *rnd);
 	void setPalette(Palette *pal);
 
+	/*
+	 * Operate on the view resize options flags.
+	 */
 	void setResizeMode(unsigned char flags);
 	bool getResizeMode(unsigned char flags) const;
 	void clearResizeMode(unsigned char flags);
+
+	/*
+	 * Operate on the view options flags.
+	 */
 	void setOptions(unsigned char flags);
 	bool getOptions(unsigned char flags) const;
 	void clearOptions(unsigned char flags);
+
+	/*
+	 * Operate on the view state flags.
+	 */
 	void setState(unsigned char flags);
 	bool getState(unsigned char flags) const;
 	void clearState(unsigned char flags);
 
+	/*
+	 * Draw the graphics of the view.
+	 * The default method is null.
+	 */
 	virtual void draw(void) = 0;
+
+	/*
+	 * Make use of the Event object to perform tasks.
+	 * The default handleEvent will evaluate positional events,
+	 * in case the event coordinates are inside the view limits
+	 * and the PRESSED bit is set, the view will select herself
+	 * and notify with a message its owner.
+	 * NO memory management is to be performed on evt.
+	 * 
+	 * PARAMETERS IN
+	 * Event *evt - a pointer to an Event object
+	 */
 	virtual void handleEvent(Event *evt);
 
 	/*
 	 * Send an event to the view's owner.
 	 * The method will recursively look for the top owner.
-	 * Memory management must be performed by the receiver,
-	 * the event must be dynamically allocated.
-	 * Ownership of the event object is of the receiver, and so is
-	 * the memory management.
+	 * NO memory management is to be performed on evt.
 	 * 
 	 * PARAMETERS IN
-	 * Event *evt - a pointer to a dynamically allocated event object
+	 * Event *evt - a pointer to an event object
 	 */
 	virtual void sendEvent(Event *evt);
 
