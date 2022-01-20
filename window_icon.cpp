@@ -116,17 +116,18 @@ void WindowIconClose::handleEvent(Event *evt)
         // Update the pressure state, if the new state is RELEASED, it means
         // the icon was pressed and then released, in this case the object
         // will generate an event.
-        if (updatePressed(evt->getMouseEvent()->pressed) && !isPressed() && parentView)
+        bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+        if (updatePressed(pressed) && !isPressed() && parentView)
         {
-            Event *evt2 = new Event();
+            Event evt2;
             MessageEvent cmd;
 
             cmd.senderObject = this;
             cmd.destObject = parentView;
             cmd.targetObject = parentView;
             cmd.command = CMD_CLOSE;
-            evt2->setMessageEvent(cmd);
-            sendEvent(evt2);
+            evt2.setMessageEvent(cmd);
+            sendEvent(&evt2);
         }
     }
 }
@@ -201,19 +202,20 @@ void WindowIconZoom::handleEvent(Event *evt)
         // Update the pressure state, if the new state is RELEASED, it means
         // the icon was pressed and then released, in this case the object
         // will generate an event and toggle isZoom.
-        if (updatePressed(evt->getMouseEvent()->pressed) && !isPressed())
+        bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+        if (updatePressed(pressed) && !isPressed())
         {
             if (parentView)
             {
-                Event *evt2 = new Event();
+                Event evt2;
                 MessageEvent cmd;
 
                 cmd.senderObject = this;
                 cmd.destObject = parentView;
                 cmd.targetObject = parentView;
                 cmd.command = (isZoom) ? CMD_MAXIMIZE : CMD_RESTORE;
-                evt2->setMessageEvent(cmd);
-                sendEvent(evt2);
+                evt2.setMessageEvent(cmd);
+                sendEvent(&evt2);
             }
             isZoom = !isZoom;
         }

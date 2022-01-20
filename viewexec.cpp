@@ -23,19 +23,13 @@ void ViewExec::initMenu()
 void ViewExec::run()
 {
     setState(VIEW_STATE_EVLOOP);
-    Event event, *eventP;
+    Event event;
 
     while (getState(VIEW_STATE_EVLOOP))
     {
         draw();
         if (evtM->wait(&event, 1000))
             handleEvent(&event);
-        while (!eventQ.isQueueEmpty())
-        {
-            eventP = eventQ.dequeue();
-            handleEvent(eventP);
-            delete eventP;
-        }
     }
     clearState(VIEW_STATE_EVLOOP);
 }
@@ -44,7 +38,7 @@ void ViewExec::sendEvent(Event *evt)
 {
     if (getState(VIEW_STATE_EVLOOP))
     {
-        eventQ.enqueue(evt);
+        evtM->put(evt);
     }
     else
         View::sendEvent(evt);

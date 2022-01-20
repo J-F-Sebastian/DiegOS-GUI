@@ -81,39 +81,45 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         /* FALLTHRU */
         case SDL_MOUSEBUTTONUP:
         {
-            MouseEvent mouse;
+            PositionalEvent mouse;
             if (sdlevt.button.button == SDL_BUTTON_LEFT)
                 mouse.buttons = 1 << 2;
             if (sdlevt.button.button == SDL_BUTTON_MIDDLE)
                 mouse.buttons = 1 << 1;
             if (sdlevt.button.button == SDL_BUTTON_RIGHT)
                 mouse.buttons = 1 << 0;
-            mouse.pressed = (sdlevt.button.state == SDL_PRESSED) ? true : false;
-            mouse.doubleClick = (sdlevt.button.clicks == 2) ? true : false;
+
+            if (sdlevt.button.state == SDL_PRESSED)
+                mouse.status |= POS_EVT_PRESSED;
+            if (sdlevt.button.clicks == 2)
+                mouse.status |= POS_EVT_DOUBLE;
             mouse.x = sdlevt.button.x;
             mouse.y = sdlevt.button.y;
-            evt->setMouseEvent(mouse);
+            evt->setPositionalEvent(mouse);
         }
         break;
 
         //case SDL_MOUSEWHEEL:
         case SDL_MOUSEMOTION:
         {
-            MouseEvent mouse;
-            mouse.buttons = 0;
-            mouse.doubleClick = false;
+            PositionalEvent mouse;
+            mouse.buttons = mouse.status = 0;
             mouse.x = sdlevt.motion.x;
             mouse.y = sdlevt.motion.y;
-            evt->setMouseEvent(mouse);
+            evt->setPositionalEvent(mouse);
         }
         break;
 
         default:
             if (sdlevt.type == myEventType)
             {
-                MessageEvent cmd;
-                memcpy(&cmd, sdlevt.user.data1, sizeof(cmd));
-                evt->setMessageEvent(cmd);
+                Event *temp = static_cast<Event *>(sdlevt.user.data1);
+                MessageEvent *cmd = temp->getMessageEvent();
+                if (cmd)
+                    evt->setMessageEvent(*cmd);
+                delete temp;
+                if (!cmd)
+                    return false;
                 break;
             }
             else
@@ -137,6 +143,6 @@ bool ViewEventSDL::put(Event *evt)
     SDL_zero(event);
     event.type = myEventType;
     event.user.code = myEventType;
-    event.user.data1 = static_cast<void *>(evt);
+    event.user.data1 = static_cast<void *>(new Event(*evt));
     return (SDL_PushEvent(&event)) ? true : false;
 }

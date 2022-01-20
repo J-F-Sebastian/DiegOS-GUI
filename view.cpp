@@ -208,8 +208,7 @@ void View::handleEvent(Event *evt)
 {
 	if (isEventPositionValid(evt))
 	{
-		MouseEvent *mouse = evt->getMouseEvent();
-		if (mouse->pressed)
+		if (evt->testPositionalEventStatus(POS_EVT_PRESSED))
 		{
 			if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_DISABLED) && getOptions(VIEW_OPT_SELECTABLE))
 			{
@@ -223,8 +222,6 @@ void View::sendEvent(Event *evt)
 {
 	if (parentView)
 		parentView->sendEvent(evt);
-	else
-		delete evt;
 }
 
 bool View::isEventPositionValid(Event *evt)
@@ -238,12 +235,11 @@ bool View::isEventPositionValid(Event *evt)
 	if (!evt->isEventPositional())
 		return false;
 
-	MouseEvent *mouse = evt->getMouseEvent();
-	Point where(mouse->x, mouse->y);
+	Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
 	getExtent(lims);
 	globalize(lims);
-	/* if it falls outside our limits then return false */
 
+	/* if it falls outside our limits then return false */
 	return lims.includes(where);
 }
 
@@ -267,7 +263,7 @@ bool View::focus()
 
 void View::select()
 {
-	Event *evt;
+	Event evt;
 	MessageEvent cmd;
 
 	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
@@ -285,13 +281,12 @@ void View::select()
 		if (parentView->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
-		evt = new Event();
 		cmd.senderObject = this;
 		cmd.destObject = parentView;
 		cmd.targetObject = this;
 		cmd.command = CMD_FOREGROUND;
-		evt->setMessageEvent(cmd);
-		sendEvent(evt);
+		evt.setMessageEvent(cmd);
+		sendEvent(&evt);
 	}
 }
 

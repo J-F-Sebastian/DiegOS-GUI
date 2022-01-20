@@ -131,8 +131,7 @@ bool Frame::isEventPositionValid(Event *evt)
     if (!evt->isEventPositional())
         return false;
 
-    MouseEvent *mouse = evt->getMouseEvent();
-    Point where(mouse->x, mouse->y);
+    Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
     getExtent(lims);
     globalize(lims);
     /* if it falls outside our limits then return false */

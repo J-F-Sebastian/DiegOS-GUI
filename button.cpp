@@ -122,13 +122,13 @@ void Button::handleEvent(Event *evt)
     {
         if (isEventPositionValid(evt))
         {
-            MouseEvent *mouse = evt->getMouseEvent();
-            if ((pressState == RELEASED) && (mouse->pressed))
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+            if ((pressState == RELEASED) && pressed)
             {
                 pressState = PRESSED;
                 draw();
             }
-            else if ((pressState == PRESSED) && (!mouse->pressed))
+            else if ((pressState == PRESSED) && !pressed)
             {
                 pressState = RELEASED;
                 draw();

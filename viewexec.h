@@ -21,7 +21,6 @@
 #define _VIEWEXEC_H_
 
 #include "view.h"
-#include "eventqueue.h"
 #include "vieweventmgr.h"
 
 class ViewExec : public ViewGroup
@@ -41,7 +40,6 @@ public:
 
 private:
     ViewEventManager *evtM;
-    EventQueue eventQ;
 };
 
 #endif
