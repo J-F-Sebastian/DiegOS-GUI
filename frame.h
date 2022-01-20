@@ -33,13 +33,23 @@ enum
 class Frame : public View
 {
 public:
-    explicit Frame(Rectangle &rect);
+    enum FrameStyle
+    {
+        FRAME_BEVELLED,
+        FRAME_FLAT,
+    };
+
+    explicit Frame(Rectangle &rect, unsigned width = 4, enum FrameStyle style = FRAME_BEVELLED);
 
     virtual void draw(void) override;
 
     virtual void handleEvent(Event *evt) override;
 
     virtual bool isEventPositionValid(Event *evt) override;
+
+private:
+    enum FrameStyle style;
+    unsigned width;
 };
 
 #endif

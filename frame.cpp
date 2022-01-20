@@ -21,10 +21,15 @@
 
 #include "frame.h"
 
-Frame::Frame(Rectangle &rect) : View(rect)
+Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect), style(style), width(width)
 {
-    setResizeMode(VIEW_RESIZE_LX | VIEW_RESIZE_LY);
-    clearOptions(VIEW_OPT_TOPSELECT);
+    if (style == FRAME_BEVELLED)
+    {
+        if (width < 4)
+            width = 4;
+    }
+    setResizeMode(VIEW_BOUNDED);
+    setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
 void Frame::draw()
@@ -32,55 +37,77 @@ void Frame::draw()
     Rectangle viewRect;
     getExtent(viewRect);
     globalize(viewRect);
-    //std::cout << __PRETTY_FUNCTION__ << "(" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-    //          << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     unsigned color, color2;
 
-    Rectangle temp(viewRect);
+    if (style == FRAME_FLAT)
+    {
+        palette->getPalette(FRAME_MAIN, color);
+        for (unsigned i = 0; i < width; i++)
+        {
+            renderer->rectangle(viewRect, color);
+            viewRect.zoom(-1, -1);
+        }
+    }
+    else if (style == FRAME_BEVELLED)
+    {
+        Rectangle temp(viewRect);
 
-    palette->getPalette(FRAME_BRIGHT, color);
-    palette->getPalette(FRAME_DARK, color2);
+        palette->getPalette(FRAME_BRIGHT, color);
+        palette->getPalette(FRAME_DARK, color2);
 
-    //Outer shadow
+        //Outer shadow
 
-    /*
-     *    BBBBBBBBB
-     *    B       D
-     *    B       D
-     *    B       D
-     *    DDDDDDDDD
-     */
-    Point ul(temp.ul);
-    renderer->hline(ul, temp.width(), color);
-    renderer->vline(ul, temp.height() - 1, color);
-    ul.move(temp.width(), 1);
-    renderer->vline(ul, temp.height() - 1, color2);
-    ul.move(-temp.width(), temp.height() - 1);
-    renderer->hline(ul, temp.width() - 1, color2);
+        /*
+        *    BBBBBBBBB
+        *    B       D
+        *    B       D
+        *    B       D
+        *    DDDDDDDDD
+        */
+        Point ul(temp.ul);
+        renderer->hline(ul, temp.width(), color);
+        renderer->vline(ul, temp.height() - 1, color);
+        ul.move(temp.width(), 1);
+        renderer->vline(ul, temp.height() - 1, color2);
+        ul.move(-temp.width(), temp.height() - 1);
+        renderer->hline(ul, temp.width() - 1, color2);
 
-    //The frame
-    temp.zoom(-1, -1);
-    palette->getPalette(FRAME_MAIN, color);
-    renderer->rectangle(temp, color);
+        temp.zoom(-1, -1);
+        ul = temp.ul;
+        renderer->hline(ul, temp.width(), color);
+        renderer->vline(ul, temp.height() - 1, color);
+        ul.move(temp.width(), 1);
+        renderer->vline(ul, temp.height() - 1, color2);
+        ul.move(-temp.width(), temp.height() - 1);
+        renderer->hline(ul, temp.width() - 1, color2);
 
-    //Inner shadow
+        //The frame
+        palette->getPalette(FRAME_MAIN, color);
+        for (unsigned i = 0; i < width - 3; i++)
+        {
+            temp.zoom(-1, -1);
+            renderer->rectangle(temp, color);
+        }
 
-    /*
-     *    DDDDDDDDD
-     *    D       B
-     *    D       B
-     *    D       B
-     *    BBBBBBBBB
-     */
-    temp.zoom(-1, -1);
-    palette->getPalette(FRAME_BRIGHT, color);
-    ul = temp.ul;
-    renderer->hline(ul, temp.width(), color2);
-    renderer->vline(ul, temp.height() - 1, color2);
-    ul.move(temp.width(), 1);
-    renderer->vline(ul, temp.height() - 1, color);
-    ul.move(-temp.width(), temp.height() - 1);
-    renderer->hline(ul, temp.width() - 1, color);
+        //Inner shadow
+
+        /*
+        *    DDDDDDDDD
+        *    D       B
+        *    D       B
+        *    D       B
+        *    BBBBBBBBB
+        */
+        temp.zoom(-1, -1);
+        palette->getPalette(FRAME_BRIGHT, color);
+        ul = temp.ul;
+        renderer->hline(ul, temp.width(), color2);
+        renderer->vline(ul, temp.height() - 1, color2);
+        ul.move(temp.width(), 1);
+        renderer->vline(ul, temp.height() - 1, color);
+        ul.move(-temp.width(), temp.height() - 1);
+        renderer->hline(ul, temp.width() - 1, color);
+    }
 }
 
 void Frame::handleEvent(Event *evt)
@@ -90,8 +117,6 @@ void Frame::handleEvent(Event *evt)
     {
         Rectangle viewRect;
         getExtent(viewRect);
-        //std::cout << "EVT FRAME (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     }
 }
 
