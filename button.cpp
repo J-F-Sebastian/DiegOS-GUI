@@ -23,7 +23,7 @@
 
 Button::Button(Rectangle &rect) : View(rect), pressState(RELEASED)
 {
-    setOptions(VIEW_OPT_VALIDATE);
+    setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
 }
 
 void Button::draw()
@@ -32,36 +32,71 @@ void Button::draw()
     getExtent(viewRect);
     globalize(viewRect);
     Rectangle temp(viewRect);
-    //std::cout << __PRETTY_FUNCTION__ << "(" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-    //          << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
 
     unsigned color, color2;
     palette->getPalette(BUTTON_BRIGHT, color);
     palette->getPalette(BUTTON_DARK, color2);
 
     //Outer shadow
+
+    /*
+     *    BBBBBBBBB
+     *    B       D
+     *    B       D
+     *    B       D
+     *    DDDDDDDDD
+     */
     Point ul(temp.ul);
-    renderer->hline(ul, temp.width() - 1, color);
-    renderer->vline(ul, temp.height(), color);
-    ul.move(temp.width() - 1, 0);
+    renderer->hline(ul, temp.width(), color);
+    renderer->vline(ul, temp.height() - 1, color);
+    ul.move(temp.width(), 1);
     renderer->vline(ul, temp.height() - 1, color2);
-    ul.move(-temp.width() + 2, temp.height() - 1);
-    renderer->hline(ul, temp.width() - 2, color2);
+    ul.move(-temp.width(), temp.height() - 1);
+    renderer->hline(ul, temp.width() - 1, color2);
 
-    palette->getPalette(BUTTON_MAIN, color);
+    //Inner shadow
+
+    /*
+     *    DDDDDDDDD
+     *    D       B
+     *    D       B
+     *    D       B
+     *    BBBBBBBBB
+     */
     temp.zoom(-1, -1);
-    //The button frame
-    renderer->rectangle(temp, color);
+    ul = temp.ul;
+    renderer->hline(ul, temp.width(), color2);
+    renderer->vline(ul, temp.height() - 1, color2);
+    ul.move(temp.width(), 1);
+    renderer->vline(ul, temp.height() - 1, color);
+    ul.move(-temp.width(), temp.height() - 1);
+    renderer->hline(ul, temp.width() - 1, color);
+
+    //Outer shadow
+
+    /*
+     *    BBBBBBBBB
+     *    B       D
+     *    B       D
+     *    B       D
+     *    DDDDDDDDD
+     */
     temp.zoom(-1, -1);
-    renderer->rectangle(temp, color);
+    ul = temp.ul;
+    renderer->hline(ul, temp.width(), color);
+    renderer->vline(ul, temp.height() - 1, color);
+    ul.move(temp.width(), 1);
+    renderer->vline(ul, temp.height() - 1, color2);
+    ul.move(-temp.width(), temp.height() - 1);
+    renderer->hline(ul, temp.width() - 1, color2);
 
     temp.zoom(-1, -1);
-
-    if (getOptions(VIEW_STATE_DISABLED))
+    if (getState(VIEW_STATE_DISABLED))
     {
         palette->getPalette(BUTTON_DISABLED, color);
+        renderer->filledRectangle(temp, color);
     }
-    else if (getOptions(VIEW_STATE_SELECTED))
+    else if (getState(VIEW_STATE_SELECTED))
     {
         if (isPressed())
         {
@@ -71,12 +106,13 @@ void Button::draw()
         {
             palette->getPalette(BUTTON_SELECTED, color);
         }
+        renderer->filledRectangle(temp, color);
     }
-
     else
+    {
         palette->getPalette(BUTTON_MAIN, color);
-
-    renderer->filledRectangle(temp, color);
+        renderer->filledRectangle(temp, color);
+    }
 }
 
 void Button::handleEvent(Event *evt)
@@ -84,9 +120,19 @@ void Button::handleEvent(Event *evt)
     View::handleEvent(evt);
     if (evt)
     {
-        Rectangle viewRect;
-        getExtent(viewRect);
-        //std::cout << "EVT BUTTON (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
+        if (isEventPositionValid(evt))
+        {
+            MouseEvent *mouse = evt->getMouseEvent();
+            if ((pressState == RELEASED) && (mouse->pressed))
+            {
+                pressState = PRESSED;
+                draw();
+            }
+            else if ((pressState == PRESSED) && (!mouse->pressed))
+            {
+                pressState = RELEASED;
+                draw();
+            }
+        }
     }
 }
