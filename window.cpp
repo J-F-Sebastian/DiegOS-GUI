@@ -27,7 +27,7 @@
 
 Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, PaletteGroup *pals, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, rnd, pals, parent), wFlags(ctrlflags), isZoomed(false)
 {
-    setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE);
+    setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
 
     Rectangle temp;
     getExtent(temp);
@@ -35,14 +35,14 @@ Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, Palett
     tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_FRAME));
     insert(tmpView);
 
-    temp.zoom(-3, -3);
+    temp.zoom(-4, -4);
     temp.ul.y += 26;
     tmpView = new Background(temp);
     tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_BACKGROUND));
     insert(tmpView);
 
     getExtent(temp);
-    temp.zoom(-3, -3);
+    temp.zoom(-4, -4);
     temp.lr.y = temp.ul.y + 24;
     if (wFlags & WINDOW_CLOSE)
     {
