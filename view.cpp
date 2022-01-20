@@ -251,7 +251,7 @@ static const unsigned char FOCUSVAL = (VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
 
 bool View::focus()
 {
-	if ((oflags & VIEW_OPT_SELECTABLE) == 0)
+	if (!getOptions(VIEW_OPT_SELECTABLE))
 		return false;
 
 	bool checkflags = !getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
@@ -270,8 +270,10 @@ void View::select()
 	Event *evt;
 	MessageEvent cmd;
 
-	if (!getOptions(VIEW_OPT_SELECTABLE))
+	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
 		return;
+
+	std::cout << __func__ << reinterpret_cast<intptr_t>(this) << std::endl;
 
 	setState(VIEW_STATE_SELECTED);
 
@@ -350,6 +352,7 @@ void View::makeGlobal(Point &origin)
 
 ViewGroup::ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent) : View(limits, rnd, nullptr, parent), lastLimits(limits), focused(nullptr), selected(nullptr), palettes(pals), viewList()
 {
+	//FIXME : sure ?
 	setOptions(VIEW_OPT_SELECTABLE);
 }
 
@@ -458,11 +461,11 @@ void ViewGroup::handleEvent(Event *evt)
 			switch (msg->command)
 			{
 			case CMD_FOREGROUND:
-				std::cout << "Foreground" << std::endl;
+				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				toTheTop(static_cast<View *>(msg->targetObject));
 				/* FALLTHRU */
 			case CMD_SELECT:
-				std::cout << "Select" << std::endl;
+				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				selectView(static_cast<View *>(msg->targetObject));
 				break;
 			}
@@ -595,20 +598,25 @@ bool ViewGroup::focusView(View *target)
 
 void ViewGroup::selectView(View *target)
 {
-	if (!target)
+	if (!target || viewList.empty())
 		return;
 
-	if (selected)
+	List<View *>::iterator it(viewList, &target);
+
+	if (it != viewList.end())
 	{
-		selected->clearState(VIEW_STATE_SELECTED);
+		if (selected)
+		{
+			selected->clearState(VIEW_STATE_SELECTED);
+		}
+		target->setState(VIEW_STATE_SELECTED);
+		selected = target;
 	}
-	target->setState(VIEW_STATE_SELECTED);
-	selected = target;
 }
 
 void ViewGroup::toTheTop(View *target)
 {
-	if (viewList.count() < 1)
+	if (viewList.empty())
 		return;
 
 	List<View *>::iterator it(viewList, &target);

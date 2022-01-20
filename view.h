@@ -307,8 +307,8 @@ protected:
 	View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
 
-	virtual bool focus(void);
-	virtual void select(void);
+	bool focus(void);
+	void select(void);
 
 	View *parentView;
 	ViewRender *renderer;
