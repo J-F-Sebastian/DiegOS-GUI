@@ -19,10 +19,10 @@
 
 #include "event.h"
 
-Event::Event(const MouseEvent &mouse)
+Event::Event(const PositionalEvent &pos)
 {
-    myEventData.what = EVT_MOUSE;
-    myEventData.mouse = mouse;
+    myEventData.what = EVT_POS;
+    myEventData.position = pos;
 }
 
 Event::Event(const KeyDownEvent &kbd)
@@ -44,34 +44,28 @@ enum Event::EventType Event::getEventType()
 
 bool Event::isEventPositional()
 {
-    return (myEventData.what == EVT_MOUSE) ? true : false;
+    return (myEventData.what == EVT_POS) ? true : false;
 }
 
-struct MouseEvent *Event::getMouseEvent()
+struct PositionalEvent *Event::getPositionalEvent()
 {
-    if (myEventData.what == EVT_MOUSE)
-        return &myEventData.mouse;
-    return nullptr;
+    return (myEventData.what == EVT_POS) ? &myEventData.position : nullptr;
 }
 
 struct KeyDownEvent *Event::getKeyDownEvent()
 {
-    if (myEventData.what == EVT_KBD)
-        return &myEventData.keyDown;
-    return nullptr;
+    return (myEventData.what == EVT_KBD) ? &myEventData.keyDown : nullptr;
 }
 
 struct MessageEvent *Event::getMessageEvent()
 {
-    if (myEventData.what == EVT_CMD)
-        return &myEventData.message;
-    return nullptr;
+    return (myEventData.what == EVT_CMD) ? &myEventData.message : nullptr;
 }
 
-void Event::setMouseEvent(const MouseEvent &mouse)
+void Event::setPositionalEvent(const PositionalEvent &pos)
 {
-    myEventData.what = EVT_MOUSE;
-    myEventData.mouse = mouse;
+    myEventData.what = EVT_POS;
+    myEventData.position = pos;
 }
 
 void Event::setKeyDownEvent(const KeyDownEvent &kbd)
@@ -84,4 +78,23 @@ void Event::setMessageEvent(const MessageEvent &cmd)
 {
     myEventData.what = EVT_CMD;
     myEventData.message = cmd;
+}
+
+bool Event::testPositionalEventPos(char bitmap)
+{
+    if (myEventData.what == EVT_POS)
+    {
+        if (myEventData.position.buttons & bitmap)
+            return true;
+    }
+    return false;
+}
+bool Event::testPositionalEventStatus(char bitmap)
+{
+    if (myEventData.what == EVT_POS)
+    {
+        if (myEventData.position.status & bitmap)
+            return true;
+    }
+    return false;
 }

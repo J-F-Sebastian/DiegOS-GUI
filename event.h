@@ -37,19 +37,41 @@ struct KeyDownEvent
     };
 };
 
-struct MouseEvent
+enum
+{
+    POS_EVT_RIGHT = 1 << 0,
+    POS_EVT_MIDDLE = 1 << 1,
+    POS_EVT_LEFT = 1 << 2,
+    POS_EVT_TAP = 1 << 3,
+};
+
+enum
+{
+    POS_EVT_PRESSED = 1 << 0,
+    POS_EVT_DOUBLE = 1 << 1,
+    POS_EVT_LONG = 1 << 2
+};
+
+struct PositionalEvent
 {
     int x, y;
     /*
-     * Right  -----\
-     * Middle ----\ \
-     * Left -----\ \ \
-     *            \ \ \
-     *   7 6 5 4 3 2 1 0
+     * Right --------
+     * Middle ------ \
+     * Left ------- \ \
+     * Tap ------- \ \ \
+     *            \ \ \ \
+     *    7 6 5 4 3 2 1 0
      */
     uint8_t buttons;
-    bool pressed;
-    bool doubleClick;
+    /*
+     * Pressed ---------------
+     * Double Pressure ------ \
+     * Long Pressure ------- \ \
+     *                      \ \ \
+     *            7 6 5 4 3 2 1 0
+     */
+    uint8_t status;
 };
 
 /*
@@ -105,15 +127,23 @@ struct MessageEvent
     uint16_t command;
     /* Sub command ID */
     uint16_t subCommand;
-    /* The object sending this event, i.e. the originator */
+    /*
+     * The object sending this event, i.e. the originator.
+     * This value must be assigned anytime to a valid value.
+     * It cannot be set to BROADCAST_OBJECT.
+     */
     void *senderObject;
     /*
      * The object receiving this event, i.e. the destination.
      * It can be set to BROADCAST_OBJECT to send the event to all objects
-     * in the group tree.
+     * in a group.
+     * The destination is supposed to be the object that process the message.
      */
     void *destObject;
-    /* The target of the command, i.e. the object the action is to be applied upon. */
+    /*
+     * The target of the command, i.e. the object the action is to be applied upon.
+     * destObject is supposed to process the command and apply it to targetObject.
+     */
     void *targetObject;
 };
 
@@ -123,26 +153,30 @@ public:
     enum EventType
     {
         EVT_UNKNOWN,
-        EVT_MOUSE,
+        EVT_POS,
         EVT_KBD,
         EVT_CMD
     };
 
     Event() { myEventData.what = EVT_UNKNOWN; }
-    explicit Event(const MouseEvent &mouse);
+    explicit Event(const Event &other) { myEventData = other.myEventData; }
+    explicit Event(const PositionalEvent &pos);
     explicit Event(const KeyDownEvent &kbd);
     explicit Event(const MessageEvent &cmd);
 
     enum EventType getEventType(void);
     bool isEventPositional(void);
 
-    struct MouseEvent *getMouseEvent(void);
+    struct PositionalEvent *getPositionalEvent(void);
     struct KeyDownEvent *getKeyDownEvent(void);
     struct MessageEvent *getMessageEvent(void);
 
-    void setMouseEvent(const MouseEvent &mouse);
+    void setPositionalEvent(const PositionalEvent &pos);
     void setKeyDownEvent(const KeyDownEvent &kbd);
     void setMessageEvent(const MessageEvent &cmd);
+
+    bool testPositionalEventPos(char bitmap);
+    bool testPositionalEventStatus(char bitmap);
 
 private:
     struct EventData
@@ -150,7 +184,7 @@ private:
         EventType what;
         union
         {
-            MouseEvent mouse;
+            PositionalEvent position;
             KeyDownEvent keyDown;
             MessageEvent message;
         };
