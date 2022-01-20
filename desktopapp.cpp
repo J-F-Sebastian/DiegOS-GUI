@@ -39,7 +39,7 @@ DesktopApp::DesktopApp()
     he = ViewEventFactory::create(EST_SDL);
     palg = PaletteGroupFactory::create(PALETTE_WINOS2, 32);
 
-    app = new ViewExec(master, vr, palg);
+    app = new ViewExec(master, vr, palg, he);
     app->initDesktop();
 }
 
@@ -51,7 +51,6 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
     Window *newWindow = new Window(viewLimits, title, vr, palg, app);
     Button *newButton = new Button(buttonLimits);
     newButton->setPalette(palg->getPalette(PaletteGroup::PAL_BUTTON));
-    newButton->setState(Button::RELEASED);
     newWindow->insert(newButton);
     app->insert(newWindow);
     return newWindow;
@@ -59,16 +58,7 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
 
 void DesktopApp::run()
 {
-    //TODO this should not be here ... ?
-    app->draw();
-    Event event;
-
-    while (1)
-    {
-        he->wait(&event, 5000);
-        app->handleEvent(&event);
-        app->draw();
-    }
+    app->run();
 }
 
 DesktopApp::~DesktopApp()

@@ -27,19 +27,19 @@
 
 class DesktopApp
 {
-  public:
-    explicit DesktopApp();
-    virtual ~DesktopApp();
+public:
+  explicit DesktopApp();
+  virtual ~DesktopApp();
 
-    void run();
+  void run();
 
-    Window *createWindow(Rectangle &viewLimits, const char *title);
+  Window *createWindow(Rectangle &viewLimits, const char *title);
 
-  private:
-    PaletteGroup *palg;
-    ViewRender *vr;
-    ViewEventManager *he;
-    ViewExec *app;
+private:
+  PaletteGroup *palg;
+  ViewRender *vr;
+  ViewEventManager *he;
+  ViewExec *app;
 };
 
 #endif
