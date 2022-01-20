@@ -25,18 +25,18 @@
 
 class EventQueue
 {
-  public:
-    EventQueue() : eventsList() {};
-    ~EventQueue();
+public:
+  EventQueue() : eventsList(){};
+  ~EventQueue();
 
-    bool isQueueEmpty(void) { return (eventsList.count()) ? true : false; }
-    unsigned queueSize(void) { return eventsList.count(); }
+  bool isQueueEmpty(void) { return (eventsList.count()) ? false : true; }
+  unsigned queueSize(void) { return eventsList.count(); }
 
-    void enqueue(Event *newEvt);
-    Event *dequeue(void);
+  void enqueue(Event *newEvt);
+  Event *dequeue(void);
 
-  private:
-    List<Event *> eventsList;
+private:
+  List<Event *> eventsList;
 };
 
 #endif
