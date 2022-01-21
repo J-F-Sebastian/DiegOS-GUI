@@ -596,9 +596,7 @@ void ViewGroup::selectView(View *target)
 	if (!target || viewList.empty())
 		return;
 
-	List<View *>::iterator it(viewList, &target);
-
-	if (it != viewList.end())
+	if (thisViewIsMine(target))
 	{
 		if (selected)
 		{
@@ -619,9 +617,7 @@ void ViewGroup::toTheTop(View *target)
 	if (it != viewList.end())
 	{
 		it = viewList.erase(it);
-		std::cout << "count " << viewList.count() << std::endl;
 		viewList.addHead(target);
-		std::cout << "count " << viewList.count() << std::endl;
 	}
 }
 
@@ -635,4 +631,11 @@ void ViewGroup::maximize()
 void ViewGroup::minimize()
 {
 	setLocation(lastLimits);
+}
+
+bool ViewGroup::thisViewIsMine(View *who)
+{
+	List<View *>::iterator it(viewList, &who);
+
+	return (it != viewList.end()) ? true : false;
 }

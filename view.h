@@ -409,6 +409,8 @@ protected:
 	void selectView(View *target);
 	void toTheTop(View *target);
 
+	bool thisViewIsMine(View *who);
+
 	Rectangle lastLimits;
 	View *focused;
 	View *selected;
