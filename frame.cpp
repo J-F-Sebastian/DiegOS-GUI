@@ -113,10 +113,10 @@ void Frame::draw()
 void Frame::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-    if (evt)
+
+    if (isEventPositionValid(evt))
     {
-        Rectangle viewRect;
-        getExtent(viewRect);
+        evt->clear();
     }
 }
 
