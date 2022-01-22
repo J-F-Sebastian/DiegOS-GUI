@@ -64,7 +64,9 @@ enum
 	/* View is moving around or resizing */
 	VIEW_STATE_DRAGGING = (1 << 4),
 	/* View is running the event loop */
-	VIEW_STATE_EVLOOP = (1 << 5)
+	VIEW_STATE_EVLOOP = (1 << 5),
+	/* View is to be drawn on video */
+	VIEW_STATE_EXPOSED = (1 << 6)
 };
 
 /*
@@ -246,14 +248,18 @@ public:
 	/*
 	 * Verify the validity of the event for this view and returns 
 	 * a boolean according to the evaluation.
+	 * A positional event is valid if:
+	 * 	1) the pointer is not null
+	 * 	2) the event is positional
+	 * 	3) the event coordinates are in the view's range
 	 *
 	 * PARAMETERS IN
 	 * Event *evt - the event to be validated
 	 * 
 	 * RETURN
 	 * true if the event is valid for this view, i.e. the event has coordinates
-	 *      falling inside the view limits, and the event type is positional (mouse)
-	 * false if the event is not valid for this view and would not be processed by
+	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
+	 * false if the event is not valid for this view and should not be processed by
 	 *       handleEvent
 	 */
 	virtual bool isEventPositionValid(Event *evt);
@@ -338,6 +344,21 @@ protected:
 	* Point &origin - global coordinates (screen coordinates)
 	 */
 	void makeGlobal(Point &origin);
+
+	/*
+	 * Verify that coordinates of the positional event are in the view's range.
+	 * The method will not check for pointer validity OR positional validity.
+	 * Use as a speedup but with caution.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event
+	 * 
+	 * RETURN
+	 * true if the event is in range for this view, i.e. the event has coordinates
+	 *      falling inside the view limits
+	 * false if the event is outside this view's range
+	 */
+	bool isEventPositionInRange(Event *evt);
 
 	View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }

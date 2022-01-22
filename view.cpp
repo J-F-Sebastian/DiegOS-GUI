@@ -226,8 +226,6 @@ void View::sendEvent(Event *evt)
 
 bool View::isEventPositionValid(Event *evt)
 {
-	Rectangle lims;
-
 	if (!evt)
 		return false;
 
@@ -235,11 +233,18 @@ bool View::isEventPositionValid(Event *evt)
 	if (!evt->isEventPositional())
 		return false;
 
-	Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-	getExtent(lims);
-	globalize(lims);
+	return isEventPositionInRange(evt);
+}
 
-	/* if it falls outside our limits then return false */
+bool View::isEventPositionInRange(Event *evt)
+{
+	Rectangle lims;
+	Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
+
+	makeLocal(where);
+	getExtent(lims);
+
+	/* if the event coordinates fall outside our limits then return false */
 	return lims.includes(where);
 }
 
@@ -347,7 +352,6 @@ void View::makeGlobal(Point &origin)
 
 ViewGroup::ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent) : View(limits, rnd, nullptr, parent), lastLimits(limits), focused(nullptr), selected(nullptr), palettes(pals), viewList()
 {
-	//FIXME : sure ?
 	setOptions(VIEW_OPT_SELECTABLE);
 }
 
@@ -432,17 +436,14 @@ void ViewGroup::handleEvent(Event *evt)
 	 * boundaries; first view accepting the coordinates of the event will process the
 	 * event with handleEvent() method.
 	 */
-	if (evt->isEventPositional())
+	if (isEventPositionValid(evt))
 	{
 		List<View *>::iterator it;
 		for (it = viewList.begin(); it != viewList.end(); it++)
 		{
-			if ((*it)->isEventPositionValid(evt))
-				break;
-		}
-
-		if (it != viewList.end())
 			(*it)->handleEvent(evt);
+		}
+		evt->clear();
 	}
 	/*
 	 * If the event is a message (a command) then the event is processed by either the
@@ -465,7 +466,10 @@ void ViewGroup::handleEvent(Event *evt)
 				break;
 			}
 			if (msg->destObject == this)
+			{
+				evt->clear();
 				return;
+			}
 		}
 
 		for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
