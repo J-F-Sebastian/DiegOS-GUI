@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cstring>
 
 #include "event.h"
 
@@ -97,4 +98,10 @@ bool Event::testPositionalEventStatus(char bitmap)
             return true;
     }
     return false;
+}
+
+void Event::clear()
+{
+    memset(&myEventData, 0, sizeof(myEventData));
+    myEventData.what = EVT_UNKNOWN;
 }

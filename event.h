@@ -178,6 +178,8 @@ public:
     bool testPositionalEventPos(char bitmap);
     bool testPositionalEventStatus(char bitmap);
 
+    void clear(void);
+
 private:
     struct EventData
     {
