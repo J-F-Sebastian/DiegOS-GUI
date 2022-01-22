@@ -61,11 +61,4 @@ void ProgressBar::draw()
 void ProgressBar::handleEvent(Event *evt)
 {
   View::handleEvent(evt);
-  if (evt)
-  {
-    Rectangle viewRect;
-    getExtent(viewRect);
-    //std::cout << "EVT PBAR (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-    //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
-  }
 }
