@@ -30,7 +30,7 @@ ViewEventSDL::ViewEventSDL() : ViewEventManager()
     else
     {
         SDL_EventState(SDL_WINDOWEVENT, SDL_IGNORE);
-        SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+        //SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
         myEventType = SDL_RegisterEvents(1);
         if (myEventType == -1U)
@@ -102,8 +102,18 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         //case SDL_MOUSEWHEEL:
         case SDL_MOUSEMOTION:
         {
+            std::cout << "@ " << sdlevt.motion.state << std::endl;
             PositionalEvent mouse;
-            mouse.buttons = mouse.status = 0;
+            if (sdlevt.motion.state & SDL_BUTTON_LMASK)
+                mouse.buttons = 1 << 2;
+            if (sdlevt.motion.state & SDL_BUTTON_MMASK)
+                mouse.buttons = 1 << 1;
+            if (sdlevt.motion.state & SDL_BUTTON_RMASK)
+                mouse.buttons = 1 << 0;
+
+            if (sdlevt.motion.state & (SDL_BUTTON_LMASK | SDL_BUTTON_MMASK | SDL_BUTTON_RMASK))
+                mouse.status |= POS_EVT_PRESSED;
+
             mouse.x = sdlevt.motion.x;
             mouse.y = sdlevt.motion.y;
             evt->setPositionalEvent(mouse);
