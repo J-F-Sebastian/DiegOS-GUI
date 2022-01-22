@@ -20,7 +20,7 @@
 #ifndef _WINDOW_ICON_H_
 #define _WINDOW_ICON_H_
 
-#include "view.h"
+#include "button.h"
 
 enum
 {
@@ -32,55 +32,20 @@ enum
     WINICON_PAL_NUM
 };
 
-class WindowIcon : public View
+class WindowIconClose : public Button
 {
 public:
-    enum WindowIconState
-    {
-        RELEASED,
-        PRESSED
-    };
-
-    explicit WindowIcon(Rectangle &rect);
-
-    bool isPressed(void) { return (pressState == PRESSED) ? true : false; }
-
-    //FIXME This is common with buttons, sholud window icons be buttons ???
-
-    /*
-     * Updates the pressed state according to positionalPressureOn, if the icon
-     * is released and get pressed or is pressed and get released the pressState
-     * variable is updated and the method returns true.
-     * 
-     * PARAMETERS IN
-     * bool positionalPressureOn - the press on/off state of a positional event
-     * 
-     * RETURNS
-     * true if the state got updated
-     * false if no change was applied
-     */
-    bool updatePressed(bool positionalPressureOn);
-
-private:
-    void setPressed(WindowIconState val) { pressState = val; }
-
-    WindowIconState pressState;
-};
-
-class WindowIconClose : public WindowIcon
-{
-public:
-    explicit WindowIconClose(Rectangle &rect) : WindowIcon(rect) {}
+    explicit WindowIconClose(Rectangle &rect) : Button(rect) { clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE); }
 
     virtual void draw(void) override;
 
     virtual void handleEvent(Event *evt) override;
 };
 
-class WindowIconZoom : public WindowIcon
+class WindowIconZoom : public Button
 {
 public:
-    explicit WindowIconZoom(Rectangle &rect) : WindowIcon(rect), isZoom(true) {}
+    explicit WindowIconZoom(Rectangle &rect) : Button(rect), isZoom(true) { clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE); }
 
     virtual void draw(void) override;
 

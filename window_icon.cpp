@@ -21,31 +21,8 @@
 
 #include "window_icon.h"
 
-WindowIcon::WindowIcon(Rectangle &rect) : View(rect), pressState(RELEASED)
-{
-    clearOptions(VIEW_OPT_ALL);
-}
-
-bool WindowIcon::updatePressed(bool positionalPressureOn)
-{
-    if (isPressed() && !positionalPressureOn)
-    {
-        setPressed(RELEASED);
-        return true;
-    }
-    else if (!isPressed() && positionalPressureOn)
-    {
-        setPressed(PRESSED);
-        return true;
-    }
-    return false;
-}
-
 void WindowIconClose::draw()
 {
-    if (!getState(VIEW_STATE_VISIBLE))
-        return;
-
     Rectangle viewRect;
     getExtent(viewRect);
     globalize(viewRect);
@@ -76,7 +53,7 @@ void WindowIconClose::draw()
     viewRect.zoom(-1, -1);
     renderer->filledRectangle(viewRect, color);
 
-    if (isPressed())
+    if (isDown())
     {
         palette->getPalette(WINICON_PRESSED, color);
     }
@@ -117,7 +94,7 @@ void WindowIconClose::handleEvent(Event *evt)
         // the icon was pressed and then released, in this case the object
         // will generate an event.
         bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-        if (updatePressed(pressed) && !isPressed() && parentView)
+        if (updateButtonState(pressed) && !isDown() && parentView)
         {
             Event evt2;
             MessageEvent cmd;
@@ -129,6 +106,11 @@ void WindowIconClose::handleEvent(Event *evt)
             evt2.setMessageEvent(cmd);
             sendEvent(&evt2);
         }
+        evt->clear();
+    }
+    else if (isDown())
+    {
+        updateButtonState(false);
     }
 }
 
@@ -164,7 +146,7 @@ void WindowIconZoom::draw()
     viewRect.zoom(-1, -1);
     renderer->filledRectangle(viewRect, color);
 
-    if (isPressed())
+    if (isDown())
     {
         palette->getPalette(WINICON_PRESSED, color);
     }
@@ -195,7 +177,6 @@ void WindowIconZoom::draw()
 void WindowIconZoom::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-    View::handleEvent(evt);
 
     if (isEventPositionValid(evt))
     {
@@ -203,7 +184,7 @@ void WindowIconZoom::handleEvent(Event *evt)
         // the icon was pressed and then released, in this case the object
         // will generate an event and toggle isZoom.
         bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-        if (updatePressed(pressed) && !isPressed())
+        if (updateButtonState(pressed) && !isDown())
         {
             if (parentView)
             {
@@ -218,6 +199,13 @@ void WindowIconZoom::handleEvent(Event *evt)
                 sendEvent(&evt2);
             }
             isZoom = !isZoom;
+            draw();
         }
+        evt->clear();
+    }
+    else if (isDown())
+    {
+        updateButtonState(false);
+        draw();
     }
 }
