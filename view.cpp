@@ -248,6 +248,13 @@ bool View::isEventPositionInRange(Event *evt)
 	return lims.includes(where);
 }
 
+bool View::isEventCmdForMe(Event *evt)
+{
+	if (evt && evt->getEventType() == Event::EVT_CMD)
+		return (evt->getMessageEvent()->destObject == this) ? true : false;
+	return false;
+}
+
 static const unsigned char FOCUSVAL = (VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
 
 bool View::focus()
@@ -463,6 +470,44 @@ void ViewGroup::handleEvent(Event *evt)
 			case CMD_SELECT:
 				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				selectView(static_cast<View *>(msg->targetObject));
+				break;
+
+			case CMD_CLOSE:
+				std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				/* We are instructed to close, so send and event to our owner */
+				if (msg->targetObject == this)
+				{
+					Event evt2;
+					MessageEvent cmd;
+
+					cmd.senderObject = this;
+					cmd.destObject = parentView;
+					cmd.targetObject = this;
+					cmd.command = CMD_CLOSE;
+					evt2.setMessageEvent(cmd);
+					sendEvent(&evt2);
+				}
+				/* We are instructed to close one of our views */
+				else if (msg->senderObject == msg->targetObject)
+				{
+					View *target = reinterpret_cast<View *>(msg->targetObject);
+					if (target)
+					{
+						List<View *>::iterator it(viewList, &target);
+						if (it != viewList.end())
+						{
+							// FIXME THIS IS NOT GONNA WORK AS EXPECTED...
+							if (target->getState(VIEW_STATE_FOCUSED))
+								focusNext(true);
+							if (target->getState(VIEW_STATE_SELECTED))
+								selectNext(true);
+							viewList.erase(it);
+							delete target;
+							// FIXME THER MUST BE A WISE WAY TO REFRESH OTHER THAN THIS
+							draw();
+						}
+					}
+				}
 				break;
 			}
 			if (msg->destObject == this)

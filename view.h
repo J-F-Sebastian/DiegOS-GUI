@@ -360,6 +360,19 @@ protected:
 	 */
 	bool isEventPositionInRange(Event *evt);
 
+	/*
+	 * Verify that the event is a command and the destination object matches this
+	 * instance.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event
+	 * 
+	 * RETURN
+	 * true if the event is a command with destObject == this
+	 * false in any other case
+	 */
+	bool isEventCmdForMe(Event *evt);
+
 	View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
 
