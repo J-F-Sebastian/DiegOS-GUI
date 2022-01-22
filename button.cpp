@@ -21,7 +21,7 @@
 
 #include "button.h"
 
-Button::Button(Rectangle &rect) : View(rect), pressState(RELEASED)
+Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 {
     setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
 }
@@ -98,7 +98,7 @@ void Button::draw()
     }
     else if (getState(VIEW_STATE_SELECTED))
     {
-        if (isPressed())
+        if (isDown())
         {
             palette->getPalette(BUTTON_PRESSED, color);
         }
@@ -118,21 +118,31 @@ void Button::draw()
 void Button::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-    if (evt)
+
+    if (isEventPositionValid(evt))
     {
-        if (isEventPositionValid(evt))
+        bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+        if (updateButtonState(pressed))
         {
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-            if ((pressState == RELEASED) && pressed)
-            {
-                pressState = PRESSED;
-                draw();
-            }
-            else if ((pressState == PRESSED) && !pressed)
-            {
-                pressState = RELEASED;
-                draw();
-            }
+            draw();
         }
+        evt->clear();
     }
+    else if (isDown())
+    {
+        updateButtonState(false);
+        draw();
+    }
+}
+
+bool Button::updateButtonState(bool eventPressed)
+{
+    bool toBeUpdated = buttonIsDown ^ eventPressed;
+
+    if (toBeUpdated)
+    {
+        buttonIsDown = !buttonIsDown;
+    }
+
+    return toBeUpdated;
 }

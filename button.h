@@ -36,22 +36,19 @@ enum
 class Button : public View
 {
 public:
-    enum ButtonState
-    {
-        RELEASED,
-        PRESSED
-    };
-
     explicit Button(Rectangle &rect);
 
     virtual void draw(void) override;
 
     virtual void handleEvent(Event *evt) override;
 
-    bool isPressed(void) { return (pressState == PRESSED) ? true : false; }
+    bool isDown(void) { return buttonIsDown; }
+
+protected:
+    bool updateButtonState(bool eventPressed);
 
 private:
-    ButtonState pressState;
+    bool buttonIsDown;
 };
 
 #endif
