@@ -43,11 +43,4 @@ void Background::draw()
 void Background::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-    if (evt)
-    {
-        Rectangle viewRect;
-        getExtent(viewRect);
-        //std::cout << "EVT BG (" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-        //        << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
-    }
 }
