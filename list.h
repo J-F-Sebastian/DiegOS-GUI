@@ -325,6 +325,29 @@ public:
     items += 1;
   }
 
+  // Link the new item next to the target, so the new item is closer to the head
+  // than the target.
+  // If target is not part of the list return false, else return true.
+  bool insert(T newObject, T targetObject)
+  {
+    // Look for targetObject, if not found return
+    ListNode<T> *cursor = head->prev;
+    while (cursor != tail)
+    {
+      if (cursor->obj == targetObject)
+        break;
+      cursor = cursor->prev;
+    }
+    if (cursor == tail)
+      return false;
+
+    // Link in the new object
+    ListNode<T> *temp = new ListNode<T>(newObject);
+    temp->linkNext(cursor);
+    items += 1;
+    return true;
+  }
+
   void popHead(void)
   {
     if (items)
