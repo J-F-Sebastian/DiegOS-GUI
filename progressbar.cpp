@@ -17,48 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
+#include <cstdio>
 
 #include "progressbar.h"
 
-ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPercent(showpercent)
+ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPercent(showpercent), percent(36)
 {
-  setPercent(36);
-}
-
-void ProgressBar::setPercent(unsigned value)
-{
-  if (value > 100)
-    value = 100;
-  percent = value;
+  setOptions(VIEW_OPT_TOPSELECT);
 }
 
 void ProgressBar::draw()
 {
   unsigned color;
-  int pxcent, pxcent2;
+  int pxcent;
 
   Rectangle viewRect;
   getExtent(viewRect);
   globalize(viewRect);
-  Rectangle temp(viewRect);
-  std::cout << __PRETTY_FUNCTION__ << "(" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-            << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
 
   palette->getPalette(PROGRESSBAR_BG, color);
-  renderer->rectangle(temp, color);
-  temp.zoom(-1, -1);
-  pxcent = temp.width() * percent / 100;
-  pxcent2 = temp.width() - pxcent;
-  temp.width(pxcent);
-  renderer->filledRectangle(temp, color);
+  renderer->filledRectangle(viewRect, color);
+  viewRect.zoom(-2, -2);
+  pxcent = viewRect.width() * percent / 100;
+  viewRect.width(pxcent);
   palette->getPalette(PROGRESSBAR_FG, color);
-  temp.move(pxcent, 0);
-  temp.width(pxcent2);
-  renderer->filledRectangle(temp, color);
-  //if (showPercent)
+  renderer->filledRectangle(viewRect, color);
+  if (showPercent)
+  {
+    char buffer[5];
+    snprintf(buffer, sizeof(buffer), "%3d%%", percent);
+    palette->getPalette(PROGRESSBAR_TEXT, color);
+    renderer->text(viewRect, color, buffer);
+  }
 }
 
 void ProgressBar::handleEvent(Event *evt)
 {
   View::handleEvent(evt);
+
+  if (isEventCmdForMe(evt))
+  {
+    MessageEvent *msg = evt->getMessageEvent();
+    if (msg->command == CMD_UPDATE)
+    {
+      percent = (msg->subCommand > 100) ? 100 : msg->subCommand;
+      draw();
+      evt->clear();
+    }
+  }
 }
