@@ -100,7 +100,9 @@ enum
     /* Select a view */
     CMD_SELECT,
     /* Focus a view */
-    CMD_FOCUS
+    CMD_FOCUS,
+    /* Update the view with data found in the message */
+    CMD_UPDATE
 };
 
 /*
@@ -145,6 +147,10 @@ struct MessageEvent
      * destObject is supposed to process the command and apply it to targetObject.
      */
     void *targetObject;
+    /*
+     * Optional payload, up to the message implementation.
+    */
+    void *payload;
 };
 
 class Event
