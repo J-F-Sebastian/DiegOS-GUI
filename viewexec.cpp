@@ -10,10 +10,11 @@ void ViewExec::initDesktop()
 {
     Rectangle rect;
     getExtent(rect);
-    View *bg = new Background(rect);
-    bg->clearResizeMode(VIEW_RESIZEABLE);
-    bg->setPalette(palettes->getPalette(PaletteGroup::PAL_DESKTOP));
-    insert(bg);
+    background = new Background(rect);
+    background->clearOptions(VIEW_OPT_ALL);
+    background->clearResizeMode(VIEW_RESIZEABLE);
+    background->setPalette(palettes->getPalette(PaletteGroup::PAL_DESKTOP));
+    insert(background);
 }
 
 void ViewExec::initMenu()

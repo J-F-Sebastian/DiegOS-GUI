@@ -40,6 +40,7 @@ public:
 
 private:
     ViewEventManager *evtM;
+    View *background;
 };
 
 #endif
