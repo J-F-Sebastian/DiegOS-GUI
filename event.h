@@ -102,7 +102,9 @@ enum
     /* Focus a view */
     CMD_FOCUS,
     /* Update the view with data found in the message */
-    CMD_UPDATE
+    CMD_UPDATE,
+    /* Redraw the view */
+    CMD_REDRAW
 };
 
 /*
