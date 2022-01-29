@@ -102,6 +102,17 @@ public:
 	bool intersect(Rectangle &other);
 	bool includes(Rectangle &other);
 	bool includes(Point &point);
+	/*
+	 * computes the difference between other and this rectangle.
+	 * Output is stored in other.
+	 * 
+	 * PARAMETERS IN
+	 * Rectangle &other - the rectangle to subtract 
+	 * 
+	 * PRAMETERS OUT
+	 * Rectangle &other - the result of the difference this -= other
+	 */
+	void delta(Rectangle &other);
 	int width(void) const;
 	int height(void) const;
 	void width(int w);

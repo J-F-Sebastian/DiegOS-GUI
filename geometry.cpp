@@ -60,7 +60,7 @@ Rectangle::Rectangle() : ul(0, 0), lr(0, 0) {}
 Rectangle::Rectangle(Point &upleft, Point &lowright) : ul(upleft), lr(lowright) {}
 
 Rectangle::Rectangle(int upleftx, int uplefty, int lowrightx, int lowrighty) : ul(upleftx, uplefty),
-																			   lr(lowrightx, lowrighty) {}
+									       lr(lowrightx, lowrighty) {}
 
 Rectangle::Rectangle(Rectangle &other) : ul(other.ul), lr(other.lr)
 {
@@ -130,19 +130,19 @@ void Rectangle::center(Rectangle &other)
 bool Rectangle::intersect(Rectangle &other)
 {
 	if ((ul.x < other.ul.x) &&
-		(lr.x < other.lr.x))
+	    (lr.x < other.lr.x))
 		return false;
 
 	if ((ul.x > other.lr.x) &&
-		(lr.x > other.lr.x))
+	    (lr.x > other.lr.x))
 		return false;
 
 	if ((ul.y < other.ul.y) &&
-		(lr.y < other.lr.y))
+	    (lr.y < other.lr.y))
 		return false;
 
 	if ((ul.y > other.lr.y) &&
-		(lr.y > other.lr.y))
+	    (lr.y > other.lr.y))
 		return false;
 
 	return true;
@@ -151,9 +151,9 @@ bool Rectangle::intersect(Rectangle &other)
 bool Rectangle::includes(Rectangle &other)
 {
 	if ((ul.x <= other.ul.x) &&
-		(ul.y <= other.ul.y) &&
-		(lr.x >= other.lr.x) &&
-		(lr.y >= other.lr.y))
+	    (ul.y <= other.ul.y) &&
+	    (lr.x >= other.lr.x) &&
+	    (lr.y >= other.lr.y))
 		return true;
 
 	return false;
@@ -162,12 +162,20 @@ bool Rectangle::includes(Rectangle &other)
 bool Rectangle::includes(Point &point)
 {
 	if ((ul.x <= point.x) &&
-		(ul.y <= point.y) &&
-		(lr.x >= point.x) &&
-		(lr.y >= point.y))
+	    (ul.y <= point.y) &&
+	    (lr.x >= point.x) &&
+	    (lr.y >= point.y))
 		return true;
 
 	return false;
+}
+
+void Rectangle::delta(const Rectangle &other)
+{
+	Rectangle temp = *this;
+	temp.ul.sub(other.ul);
+	temp.lr.sub(other.lr);
+	other = temp;
 }
 
 int Rectangle::width() const
