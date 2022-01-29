@@ -375,15 +375,25 @@ protected:
 
 	View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
+	Palette *getPalette(void) { return palette; }
 
 	bool focus(void);
 	void select(void);
 
+private:
+	/*
+	 * The parent or Owner of this view, can be nullptr
+	 */
 	View *parentView;
+	/*
+	 * renderer instance, cannot be nullptr
+	 */
 	ViewRender *renderer;
+	/*
+	 * Color palette, cannot be nullptr
+	 */
 	Palette *palette;
 
-private:
 	/*
 	 * borders is expressed in owners coordinates
 	 */

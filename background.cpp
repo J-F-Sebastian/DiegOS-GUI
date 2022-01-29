@@ -29,10 +29,10 @@ Background::Background(Rectangle &rect) : View(rect)
 void Background::draw()
 {
     Rectangle viewRect;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
-    //std::cout << __PRETTY_FUNCTION__ << "(" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-    //<< viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
     unsigned color;
 
     palette->getPalette(BACKGROUND_COLOR, color);

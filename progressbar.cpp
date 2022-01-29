@@ -30,7 +30,8 @@ void ProgressBar::draw()
 {
   unsigned color;
   int pxcent;
-
+  ViewRender *renderer = getRenderer();
+  Palette *palette = getPalette();
   Rectangle viewRect;
   getExtent(viewRect);
   globalize(viewRect);

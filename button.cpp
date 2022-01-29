@@ -29,6 +29,8 @@ Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 void Button::draw()
 {
     Rectangle viewRect;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
     Rectangle temp(viewRect);

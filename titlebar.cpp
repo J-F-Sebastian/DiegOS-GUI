@@ -31,6 +31,8 @@ void TitleBar::draw()
 {
     unsigned color;
     Rectangle viewRect;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
 
@@ -54,14 +56,14 @@ void TitleBar::handleEvent(Event *evt)
     {
         if ((evt->getPositionalEvent()->status & (POS_EVT_DOUBLE | POS_EVT_PRESSED)) == POS_EVT_DOUBLE)
         {
-            if (parentView)
+            if (getParent())
             {
                 Event evt2;
                 MessageEvent cmd;
 
                 cmd.senderObject = this;
-                cmd.destObject = parentView;
-                cmd.targetObject = parentView;
+                cmd.destObject = getParent();
+                cmd.targetObject = getParent();
                 cmd.command = (isZoom) ? CMD_MAXIMIZE : CMD_RESTORE;
                 evt2.setMessageEvent(cmd);
                 sendEvent(&evt2);

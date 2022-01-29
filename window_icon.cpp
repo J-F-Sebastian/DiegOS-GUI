@@ -24,6 +24,8 @@
 void WindowIconClose::draw()
 {
     Rectangle viewRect;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
 
@@ -94,14 +96,14 @@ void WindowIconClose::handleEvent(Event *evt)
         // the icon was pressed and then released, in this case the object
         // will generate an event.
         bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-        if (updateButtonState(pressed) && !isDown() && parentView)
+        if (updateButtonState(pressed) && !isDown() && getParent())
         {
             Event evt2;
             MessageEvent cmd;
 
             cmd.senderObject = this;
-            cmd.destObject = parentView;
-            cmd.targetObject = parentView;
+            cmd.destObject = getParent();
+            cmd.targetObject = getParent();
             cmd.command = CMD_CLOSE;
             evt2.setMessageEvent(cmd);
             sendEvent(&evt2);
@@ -117,6 +119,8 @@ void WindowIconClose::handleEvent(Event *evt)
 void WindowIconZoom::draw()
 {
     Rectangle viewRect;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
 
@@ -186,14 +190,14 @@ void WindowIconZoom::handleEvent(Event *evt)
         bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
         if (updateButtonState(pressed) && !isDown())
         {
-            if (parentView)
+            if (getParent())
             {
                 Event evt2;
                 MessageEvent cmd;
 
                 cmd.senderObject = this;
-                cmd.destObject = parentView;
-                cmd.targetObject = parentView;
+                cmd.destObject = getParent();
+                cmd.targetObject = getParent();
                 cmd.command = (isZoom) ? CMD_MAXIMIZE : CMD_RESTORE;
                 evt2.setMessageEvent(cmd);
                 sendEvent(&evt2);

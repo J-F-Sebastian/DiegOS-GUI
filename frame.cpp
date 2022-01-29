@@ -38,6 +38,8 @@ void Frame::draw()
     getExtent(viewRect);
     globalize(viewRect);
     unsigned color, color2;
+    ViewRender *renderer = getRenderer();
+    Palette *palette = getPalette();
 
     if (style == FRAME_FLAT)
     {

@@ -481,7 +481,7 @@ void ViewGroup::handleEvent(Event *evt)
 					MessageEvent cmd;
 
 					cmd.senderObject = this;
-					cmd.destObject = parentView;
+					cmd.destObject = getParent();
 					cmd.targetObject = this;
 					cmd.command = CMD_CLOSE;
 					evt2.setMessageEvent(cmd);
@@ -543,7 +543,7 @@ void ViewGroup::insert(View *newView)
 	if (newView)
 	{
 		newView->setParent(this);
-		newView->setRenderer(renderer);
+		newView->setRenderer(getRenderer());
 		if (newView->getOptions(VIEW_OPT_TOPSELECT))
 		{
 			viewList.addHead(newView);
@@ -568,7 +568,7 @@ void ViewGroup::insertBefore(View *newView, View *target)
 		if (viewList.insert(newView, target))
 		{
 			newView->setParent(this);
-			newView->setRenderer(renderer);
+			newView->setRenderer(getRenderer());
 		}
 	}
 }
