@@ -509,6 +509,9 @@ void ViewGroup::handleEvent(Event *evt)
 					}
 				}
 				break;
+			case CMD_MAXIMIZE:
+				maximize();
+				break;
 			}
 			if (msg->destObject == this)
 			{
