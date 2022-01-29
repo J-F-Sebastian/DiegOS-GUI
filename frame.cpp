@@ -28,7 +28,7 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
         if (width < 4)
             width = 4;
     }
-    setResizeMode(VIEW_BOUNDED);
+    setResizeMode(VIEW_RESIZEABLE);
     setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
