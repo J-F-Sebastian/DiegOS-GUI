@@ -432,6 +432,7 @@ public:
 	void minimize(void);
 
 	void insert(View *newView);
+	void insertBefore(View *newView, View *target);
 
 	void setPalettes(PaletteGroup *pals);
 

@@ -558,6 +558,18 @@ void ViewGroup::insert(View *newView)
 	}
 }
 
+void ViewGroup::insertBefore(View *newView, View *target)
+{
+	if (newView && target)
+	{
+		if (viewList.insert(newView, target))
+		{
+			newView->setParent(this);
+			newView->setRenderer(renderer);
+		}
+	}
+}
+
 void ViewGroup::setPalettes(PaletteGroup *pals)
 {
 	if (pals && !palettes)
