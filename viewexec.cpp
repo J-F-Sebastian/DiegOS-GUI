@@ -4,6 +4,7 @@
 ViewExec::ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent) : ViewGroup(limits, rnd, pals, parent), evtM(evt)
 {
     clearOptions(VIEW_OPT_ALL);
+    setState(VIEW_STATE_VISIBLE | VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED | VIEW_STATE_EXPOSED);
 }
 
 void ViewExec::initDesktop()
