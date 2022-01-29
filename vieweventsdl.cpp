@@ -81,7 +81,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         /* FALLTHRU */
         case SDL_MOUSEBUTTONUP:
         {
-            PositionalEvent mouse;
+            PositionalEvent mouse = {0, 0, 0, 0};
             if (sdlevt.button.button == SDL_BUTTON_LEFT)
                 mouse.buttons = 1 << 2;
             if (sdlevt.button.button == SDL_BUTTON_MIDDLE)
@@ -103,7 +103,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         case SDL_MOUSEMOTION:
         {
             std::cout << "@ " << sdlevt.motion.state << std::endl;
-            PositionalEvent mouse;
+            PositionalEvent mouse = {0, 0, 0, 0};
             if (sdlevt.motion.state & SDL_BUTTON_LMASK)
                 mouse.buttons = 1 << 2;
             if (sdlevt.motion.state & SDL_BUTTON_MMASK)
