@@ -44,6 +44,7 @@ public:
 
 private:
     std::string title;
+    bool isZoom;
 };
 
 #endif

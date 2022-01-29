@@ -22,7 +22,7 @@
 
 #include "titlebar.h"
 
-TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title)
+TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), isZoom(false)
 {
     setResizeMode(VIEW_RESIZE_LX);
 }
@@ -33,9 +33,6 @@ void TitleBar::draw()
     Rectangle viewRect;
     getExtent(viewRect);
     globalize(viewRect);
-
-    //std::cout << __PRETTY_FUNCTION__ << "(" << viewRect.ul.x << "," << viewRect.ul.y << ")x("
-    //          << viewRect.lr.x << "," << viewRect.lr.y << ")" << std::endl;
 
     palette->getPalette(TITLEBAR_BG, color);
 
@@ -53,6 +50,25 @@ void TitleBar::draw()
 void TitleBar::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
+    if (isEventPositionValid(evt))
+    {
+        if ((evt->getPositionalEvent()->status & (POS_EVT_DOUBLE | POS_EVT_PRESSED)) == POS_EVT_DOUBLE)
+        {
+            if (parentView)
+            {
+                Event evt2;
+                MessageEvent cmd;
+
+                cmd.senderObject = this;
+                cmd.destObject = parentView;
+                cmd.targetObject = parentView;
+                cmd.command = (isZoom) ? CMD_MAXIMIZE : CMD_RESTORE;
+                evt2.setMessageEvent(cmd);
+                sendEvent(&evt2);
+            }
+            isZoom = !isZoom;
+        }
+    }
 }
 
 void TitleBar::setTitle(const char *title)
