@@ -590,19 +590,15 @@ bool ViewGroup::focusNext(bool forward)
 	{
 		List<View *>::iterator it(viewList, &focused);
 
-		if (++it == viewList.end())
-			it = viewList.begin();
-
-		temp = (*it);
+		if (++it != viewList.end())
+			temp = (*it);
 	}
 	else
 	{
 		List<View *>::riterator it(viewList, &focused);
 
-		if (++it == viewList.rend())
-			it = viewList.rbegin();
-
-		temp = (*it);
+		if (++it != viewList.rend())
+			temp = (*it);
 	}
 
 	return focusView(temp);
@@ -619,19 +615,15 @@ void ViewGroup::selectNext(bool forward)
 	{
 		List<View *>::iterator it(viewList, &selected);
 
-		if (++it == viewList.end())
-			it = viewList.begin();
-
-		temp = (*it);
+		if (++it != viewList.end())
+			temp = (*it);
 	}
 	else
 	{
 		List<View *>::riterator it(viewList, &selected);
 
-		if (++it == viewList.rend())
-			it = viewList.rbegin();
-
-		temp = (*it);
+		if (++it != viewList.rend())
+			temp = (*it);
 	}
 
 	selectView(temp);
