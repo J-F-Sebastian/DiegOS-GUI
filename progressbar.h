@@ -39,8 +39,6 @@ public:
 
     virtual void handleEvent(Event *evt) override;
 
-    void setPercent(unsigned value);
-
 private:
     bool showPercent;
     unsigned percent;
