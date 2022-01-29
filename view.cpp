@@ -20,7 +20,7 @@
 
 #include "view.h"
 
-View::View(Rectangle &limits, ViewRender *rnd, Palette *pal, View *parent) : parentView(parent), renderer(rnd), palette(pal), limits(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0)
+View::View(Rectangle &limits, ViewRender *rnd, Palette *pal, View *parent) : parentView(parent), renderer(rnd), palette(pal), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0)
 {
 }
 
@@ -37,13 +37,13 @@ void View::sizeLimits(Point &min, Point &max)
 
 	if (parentView)
 	{
-		max.x = parentView->limits.width();
-		max.y = parentView->limits.height();
+		max.x = parentView->borders.width();
+		max.y = parentView->borders.height();
 	}
 	else
 	{
-		max.x = limits.width();
-		max.y = limits.height();
+		max.x = borders.width();
+		max.y = borders.height();
 	}
 }
 
@@ -63,12 +63,12 @@ bool View::setLocation(const Rectangle &loc)
 
 bool View::moveLocation(const Point &delta)
 {
-	Rectangle temp(limits);
+	Rectangle temp(borders);
 	temp.move(delta.x, delta.y);
 
 	if (parentView)
 	{
-		if (!parentView->limits.includes(temp))
+		if (!parentView->borders.includes(temp))
 		{
 			std::cout << "ERR" << std::endl;
 			return false;
@@ -81,7 +81,7 @@ bool View::moveLocation(const Point &delta)
 
 void View::getOrigin(Point &origin) const
 {
-	origin = limits.ul;
+	origin = borders.ul;
 }
 
 void View::getExtent(Rectangle &extent)
@@ -304,18 +304,18 @@ void View::select()
 
 void View::setLimits(const Rectangle &newrect)
 {
-	limits = newrect;
-	extent.lr = Point(limits.width() - 1, limits.height() - 1);
+	borders = newrect;
+	extent.lr = Point(borders.width() - 1, borders.height() - 1);
 }
 
 void View::getLimits(Rectangle &rect)
 {
-	rect = limits;
+	rect = borders;
 }
 
 void View::calcLimits(const Point &delta, Rectangle &newrect)
 {
-	newrect = limits;
+	newrect = borders;
 	if (rflags & VIEW_RESIZE_UX)
 		newrect.ul.x += delta.x;
 	if (rflags & VIEW_RESIZE_UY)
@@ -338,7 +338,7 @@ void View::makeLocal(Point &origin)
 	{
 		parentView->makeLocal(origin);
 	}
-	origin -= limits.ul;
+	origin -= borders.ul;
 }
 
 void View::makeGlobal(Point &origin)
@@ -347,7 +347,7 @@ void View::makeGlobal(Point &origin)
 	{
 		parentView->makeGlobal(origin);
 	}
-	origin += limits.ul;
+	origin += borders.ul;
 }
 
 //////////////////////////////////////////////////////////////////////////////

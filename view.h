@@ -385,9 +385,12 @@ protected:
 
 private:
 	/*
-	 * Limits is expressed in owners coordinates
+	 * borders is expressed in owners coordinates
 	 */
-	Rectangle limits;
+	Rectangle borders;
+	/*
+	 * extent is the width and height of the view
+	 */
 	Rectangle extent;
 	unsigned char rflags, sflags, oflags;
 };
