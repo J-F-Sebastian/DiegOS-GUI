@@ -170,7 +170,7 @@ bool Rectangle::includes(Point &point)
 	return false;
 }
 
-void Rectangle::delta(const Rectangle &other)
+void Rectangle::delta(Rectangle &other)
 {
 	Rectangle temp = *this;
 	temp.ul.sub(other.ul);
