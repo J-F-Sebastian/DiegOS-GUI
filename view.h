@@ -123,7 +123,7 @@ public:
 
 	/*
 	 * Compute new limits using resize flags.
-	 * Increments stored in delta are added to the view's limits
+	 * Increments stored in delta are added to the view's borders
 	 * according to flags stored in rflags, the resulting rectangle
 	 * is stored in newrect.
 	 * 
@@ -151,7 +151,7 @@ public:
 	/*
 	 * Validate the new location coordinates stored in loc
 	 * and then invokes changeLimits to apply them.
-	 * The new location must be included in the owner limits
+	 * The new location must be included in the owner borders
 	 * if owner is valid.
 	 * 
 	 * PARAMETERS IN
@@ -165,9 +165,9 @@ public:
 
 	/*
 	 * Compute the new location coordinates adding
-	 * delta to the limits rectangle, validates the new location
+	 * delta to the borders rectangle, validates the new location
 	 * and then invokes changeLimits to apply it.
-	 * The new location must be included in the owner limits
+	 * The new location must be included in the owner borders
 	 * if owner is valid.
 	 * 
 	 * PARAMETERS IN
@@ -180,7 +180,7 @@ public:
 	virtual bool moveLocation(const Point &delta);
 
 	/*
-	 * Copy the upper left point of limits into origin.
+	 * Copy the upper left point of borders into origin.
 	 * Origin is relative to the owner's origin.
 	 * 
 	 * PARAMETERS OUT
@@ -199,11 +199,50 @@ public:
 	 * Rectangle &extent - reference to a Rectangle set to the extents of the view
 	 */
 	void getExtent(Rectangle &extent);
+
+	/*
+	 * Convert rectangle coordinates from global (root owner view)
+	 * to local (this view).
+	 *
+	 * PARAMETERS IN/OUT
+	 * Rectangle &rect - reference to a Rectangle in global coordinates,
+	 *                   will be converted to local coordinates
+	 */
 	void localize(Rectangle &rect);
+
+	/*
+	 * Convert rectangle coordinates from local (this view)
+	 * to global (root owner view).
+	 * This method is complementary to localize().
+	 *
+	 * PARAMETERS IN/OUT
+	 * Rectangle &rect - reference to a Rectangle in local coordinates,
+	 *                   will be converted to global coordinates
+	 */
 	void globalize(Rectangle &rect);
 
+	/*
+	 * Set the parent view (owner).
+	 *
+	 * PARAMETERS IN
+	 * View *par - pointer to a View instance
+	 */
 	void setParent(View *par);
+
+	/*
+	 * Set the renderer instance.
+	 *
+	 * PARAMETERS IN
+	 * ViewRenderer *rnd - pointer to a ViewRender instance
+	 */
 	void setRenderer(ViewRender *rnd);
+
+	/*
+	 * Set the palette instance.
+	 *
+	 * PARAMETERS IN
+	 * Palette *pal - pointer to a Palette instance
+	 */
 	void setPalette(Palette *pal);
 
 	/*
