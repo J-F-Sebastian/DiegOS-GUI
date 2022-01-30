@@ -460,6 +460,26 @@ void ViewGroup::draw()
 		renderer->show();
 }
 
+void ViewGroup::reDraw()
+{
+	if (getState(VIEW_CHANGED_REDRAW))
+	{
+		// No parenting means this is the root object, the main container of all graphics
+		if ((getState(VIEW_STATE_EVLOOP)))
+			getRenderer()->clear(0);
+
+		// Draw children back-to-top, following the painter algorithm
+		for (List<View *>::riterator it = viewList.rbegin(); it != viewList.rend(); it++)
+		{
+			(*it)->reDraw();
+		}
+		clearChanged(VIEW_CHANGED_REDRAW);
+		// No parenting means this is the root object, the main container of all graphics
+		if ((getState(VIEW_STATE_EVLOOP)))
+			getRenderer()->show();
+	}
+}
+
 void ViewGroup::handleEvent(Event *evt)
 {
 	View::handleEvent(evt);

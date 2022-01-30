@@ -280,6 +280,12 @@ public:
 	virtual void draw(void) = 0;
 
 	/*
+	 * Draw the graphics of the view if VIEW_CHANGED_REDRAW is set.
+	 * After drawing the view the flag is reset.
+	 */
+	virtual void reDraw(void);
+
+	/*
 	 * Make use of the Event object to perform tasks.
 	 * The default handleEvent will evaluate positional events,
 	 * in case the event coordinates are inside the view limits
@@ -495,6 +501,8 @@ public:
 	virtual bool moveLocation(const Point &delta) override;
 
 	virtual void draw(void) override;
+
+	virtual void reDraw(void) override;
 
 	virtual void handleEvent(Event *evt) override;
 
