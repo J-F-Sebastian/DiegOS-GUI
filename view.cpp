@@ -204,6 +204,38 @@ void View::clearState(unsigned char flags)
 		sflags &= ~flags;
 }
 
+static const unsigned char CVALIDATE = (VIEW_CHANGED_REDRAW |
+					VIEW_CHANGED_DATA);
+
+void View::setChanged(unsigned char flags)
+{
+	if (flags & CVALIDATE)
+		cflags |= flags;
+}
+
+bool View::getChanged(unsigned char flags) const
+{
+	if (cflags & flags)
+		return true;
+	else
+		return false;
+}
+
+void View::clearChanged(unsigned char flags)
+{
+	if (flags & CVALIDATE)
+		cflags &= ~flags;
+}
+
+void View::reDraw()
+{
+	if (getChanged(VIEW_CHANGED_REDRAW))
+	{
+		draw();
+		clearChanged(VIEW_CHANGED_REDRAW);
+	}
+}
+
 void View::handleEvent(Event *evt)
 {
 	if (isEventPositionValid(evt))

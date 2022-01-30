@@ -102,6 +102,17 @@ enum
 };
 
 /*
+ * Changed flags, used to mark the need to update the view in some way.
+ */
+enum
+{
+	/* View need to be redrawn */
+	VIEW_CHANGED_REDRAW = (1 << 0),
+	/* View carries updated data */
+	VIEW_CHANGED_DATA = (1 << 1)
+};
+
+/*
  * Class View is the basic interface to a graphical - or text view.
  * Coordinates are referred to the owner's origin.
  */
@@ -217,7 +228,14 @@ public:
 	void clearState(unsigned char flags);
 
 	/*
-	 * Draw the graphics of the view.
+	 * Operate on the view changed flags.
+	 */
+	void setChanged(unsigned char flags);
+	bool getChanged(unsigned char flags) const;
+	void clearChanged(unsigned char flags);
+
+	/*
+	 * Draw the graphics of the view unconditionally.
 	 * The default method is null.
 	 */
 	virtual void draw(void) = 0;
@@ -402,7 +420,7 @@ private:
 	 * extent is the width and height of the view
 	 */
 	Rectangle extent;
-	unsigned char rflags, sflags, oflags;
+	unsigned char rflags, sflags, oflags, cflags;
 };
 
 class ViewGroup : public View
