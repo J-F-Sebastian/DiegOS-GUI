@@ -24,6 +24,7 @@
 Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 {
     setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+    setResizeMode(VIEW_BOUNDED);
 }
 
 void Button::draw()
