@@ -325,31 +325,31 @@ protected:
 	explicit View(Rectangle &limits, ViewRender *rnd = nullptr, Palette *pal = nullptr, View *parent = nullptr);
 
 	/*
-	 * Apply new limits.
-	 * Limits are stored in a rectangle in owners coordinates.
+	 * Apply new coordinates.
+	 * Borders are stored in a rectangle in owners coordinates.
 	 * 
 	 * PARAMETERS IN
-	 * const Rectangle &newrect - new view limits
+	 * const Rectangle &newrect - new view borders
 	 */
-	void setLimits(const Rectangle &newrect);
+	void setBorders(const Rectangle &newrect);
 
 	/*
-	 * Copy limits into rect.
-	 * Limits are stored in a rectangle in owners coordinates.
+	 * Copy borders into rect.
+	 * Borders are stored in a rectangle in owners coordinates.
 	 * 
 	 * PARAMETERS OUT
-	 * Rectangle &rect - view limits
+	 * Rectangle &rect - view borders
 	 */
-	void getLimits(Rectangle &rect);
+	void getBorders(Rectangle &rect);
 
 	/*
-	 * Apply new limits and draw the view.
-	 * Limits are stored in a rectangle in owners coordinates.
+	 * Apply new coordinates and set the view for re-drawing.
+	 * Borders are stored in a rectangle in owners coordinates.
 	 * 
 	 * PARAMETERS IN
 	 * const Rectangle &newrect - the new boundaries
 	 */
-	void changeLimits(const Rectangle &newrect);
+	void changeBorders(const Rectangle &newrect);
 
 	/*
 	 * General explanation: each view has its origin at (0,0) and expresses

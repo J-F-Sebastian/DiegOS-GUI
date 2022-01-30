@@ -57,7 +57,7 @@ bool View::setLocation(const Rectangle &loc)
 	    (loc.height() < min.y))
 		return false;
 
-	changeLimits(loc);
+	changeBorders(loc);
 	return true;
 }
 
@@ -66,16 +66,10 @@ bool View::moveLocation(const Point &delta)
 	Rectangle temp(borders);
 	temp.move(delta.x, delta.y);
 
-	if (parentView)
-	{
-		if (!parentView->borders.includes(temp))
-		{
-			std::cout << "ERR" << std::endl;
-			return false;
-		}
-	}
+	if (parentView && !parentView->borders.includes(temp))
+		return false;
 
-	changeLimits(temp);
+	changeBorders(temp);
 	return true;
 }
 
@@ -334,13 +328,13 @@ void View::select()
 	}
 }
 
-void View::setLimits(const Rectangle &newrect)
+void View::setBorders(const Rectangle &newrect)
 {
 	borders = newrect;
 	extent.lr = Point(borders.width() - 1, borders.height() - 1);
 }
 
-void View::getLimits(Rectangle &rect)
+void View::getBorders(Rectangle &rect)
 {
 	rect = borders;
 }
@@ -358,10 +352,10 @@ void View::calcLimits(const Point &delta, Rectangle &newrect)
 		newrect.lr.y += delta.y;
 }
 
-void View::changeLimits(const Rectangle &newrect)
+void View::changeBorders(const Rectangle &newrect)
 {
-	setLimits(newrect);
-	draw();
+	setBorders(newrect);
+	setChanged(VIEW_CHANGED_REDRAW);
 }
 
 void View::makeLocal(Point &origin)
@@ -418,14 +412,13 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	    (loc.height() < min.y))
 		return false;
 
-	getLimits(update);
+	getBorders(update);
 	delta.x = loc.width() - update.width();
 	delta.y = loc.height() - update.height();
-	setLimits(loc);
-
 	// No parenting means this is the root object, the main container of all graphics
 	if (!parentView)
 		renderer->clear(0);
+	setBorders(loc);
 
 	List<View *>::iterator it = viewList.begin();
 	while (it != viewList.end())
