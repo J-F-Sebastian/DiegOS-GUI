@@ -38,6 +38,11 @@ public:
 	void move(int deltax, int deltay);
 	void add(Point &other);
 	void sub(Point &other);
+	void neg(void)
+	{
+		x = -x;
+		y = -y;
+	}
 
 	inline bool operator==(const Point &other)
 	{
