@@ -23,7 +23,7 @@
 Background::Background(Rectangle &rect) : View(rect)
 {
     clearOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
-    clearResizeMode(VIEW_RESIZEABLE);
+    setResizeMode(VIEW_RESIZEABLE);
 }
 
 void Background::draw()
