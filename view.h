@@ -299,14 +299,43 @@ public:
 	virtual void handleEvent(Event *evt);
 
 	/*
-	 * Send an event to the view's owner.
-	 * The method will recursively look for the top owner.
-	 * NO memory management is to be performed on evt.
+	 * Create an event and send it up to the root parent.
+	 * This is a wrap around for sendEvent().
+	 * The message will be passed down the children hierarchy
+	 * to the destination object (if specified), or to all objects (if
+	 * BROADCAST_OBJECT is set as destination).
+	 *
+	 * PARAMETERS IN
+	 * uint16_t command - the command code
+	 * void *destination - the receipient of the message
+	 * void *target - the view the command applies to
+	 */
+	virtual void sendCommand(const uint16_t command, void *destination, void *target);
+
+	/*
+	 * This is a wrap around for sendCommand(cons uint16_t, void *, void*).
+	 * Messages are sent to BROADCAST_OBJECT with target set to the sender object;
+	 * so it is just like calling sendCommand(command, BROADCAST_OBJECT, this)
 	 * 
 	 * PARAMETERS IN
-	 * Event *evt - a pointer to an event object
+	 * uint16_t command - the command code
+	 * void *destination - the receipient of the message
+	 * void *target - the view the command applies to
 	 */
-	virtual void sendEvent(Event *evt);
+	void sendCommand(const uint16_t command);
+
+	/*
+	 * Verify the validity of the event (not nullptr) and check
+	 * if it is a positional event.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event to be validated
+	 *
+	 * RETURN
+	 * true if the event is a valid pointer and a positional event
+	 * false in any other case
+	 */
+	bool isEventPositional(Event *evt);
 
 	/*
 	 * Verify the validity of the event for this view and returns 

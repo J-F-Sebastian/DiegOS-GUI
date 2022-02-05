@@ -244,22 +244,37 @@ void View::handleEvent(Event *evt)
 	}
 }
 
+void View::sendCommand(const uint16_t command, void *destination, void *target)
+{
+	Event evt;
+	MessageEvent cmd = {command, 0, this, destination, target, nullptr};
+	evt.setMessageEvent(cmd);
+	sendEvent(&evt);
+}
+
+void View::sendCommand(const uint16_t command)
+{
+	Event evt;
+	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, this, nullptr};
+	evt.setMessageEvent(cmd);
+	sendEvent(&evt);
+}
+
 void View::sendEvent(Event *evt)
 {
 	if (parentView)
 		parentView->sendEvent(evt);
 }
 
+bool View::isEventPositional(Event *evt)
+{
+	/* If the event is positional return true */
+	return (evt && evt->isEventPositional()) ? true : false;
+}
+
 bool View::isEventPositionValid(Event *evt)
 {
-	if (!evt)
-		return false;
-
-	/* If the event is not positional return false */
-	if (!evt->isEventPositional())
-		return false;
-
-	return isEventPositionInRange(evt);
+	return isEventPositional(evt) && isEventPositionInRange(evt);
 }
 
 bool View::isEventPositionInRange(Event *evt)
