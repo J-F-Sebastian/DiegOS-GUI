@@ -498,13 +498,35 @@ void ViewGroup::handleEvent(Event *evt)
 		evt->clear();
 	}
 	/*
-	 * If the event is a message (a command) then the event is processed by either the
-	 * target view (if specified) or all views (if the target is the broadcast address).
+	 * If the event is a message (a command) then the event is processed if the destination
+	 * is either this view or the broadcast object.
+	 * The event will be propagated to children if the destination is the broadcast object
+	 * or is NOT this view.
+	 *
+	 * +---------------+----------+
+	 * |  destination  |  action  |
+	 * +---------------+----------+
+	 * |               |  execute |
+	 * |  this view    |    and   |
+	 * |               |   clear  |
+	 * +---------------+----------+
+	 * |               |  execute |
+	 * |  broadcast    |    and   |
+	 * |               |  forward |
+	 * +---------------+----------+
+	 *
+	 * The targetObject is part of the header message but is used to address the action
+	 * of the command, not the destination.
+	 * A broadcast destination will make a message be processed by all handleEvent methods
+	 * of all Views in the system.
+	 * A unicast destination will make a message be processed by handleEvent methods
+	 * until the destination view is reached; the message will be forwarded from root to leaves
+	 * until the destination leave (a View) is reached.
 	 */
 	else if (evt->getEventType() == Event::EVT_CMD)
 	{
 		MessageEvent *msg = evt->getMessageEvent();
-		if ((msg->destObject == this) || (msg->destObject == BROADCAST_OBJECT))
+		if (msg->destObject == this)
 		{
 			switch (msg->command)
 			{
@@ -522,15 +544,7 @@ void ViewGroup::handleEvent(Event *evt)
 				/* We are instructed to close, so send and event to our owner */
 				if (msg->targetObject == this)
 				{
-					Event evt2;
-					MessageEvent cmd;
-
-					cmd.senderObject = this;
-					cmd.destObject = getParent();
-					cmd.targetObject = this;
-					cmd.command = CMD_CLOSE;
-					evt2.setMessageEvent(cmd);
-					sendEvent(&evt2);
+					sendCommand(CMD_CLOSE, getParent(), this);
 				}
 				/* We are instructed to close one of our views */
 				else if (msg->senderObject == msg->targetObject)
@@ -548,33 +562,63 @@ void ViewGroup::handleEvent(Event *evt)
 								selectNext(true);
 							viewList.erase(it);
 							delete target;
-							// FIXME THER MUST BE A WISE WAY TO REFRESH OTHER THAN THIS
-							draw();
+							/* Now ask for redrawing */
+							sendCommand(CMD_DRAW);
 						}
 					}
 				}
 				break;
+
 			case CMD_MAXIMIZE:
 				maximize();
 				break;
-			}
-			if (msg->destObject == this)
-			{
-				evt->clear();
-				return;
-			}
-		}
 
-		for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+			case CMD_RESTORE:
+				minimize();
+				break;
+
+			case CMD_DRAW:
+			{
+				View *target = static_cast<View *>(msg->targetObject);
+				List<View *>::iterator it(viewList, &target);
+				if (it != viewList.end())
+					(*it)->draw();
+				else
+					draw();
+			}
+			break;
+
+			case CMD_REDRAW:
+				reDraw();
+				break;
+			}
+			evt->clear();
+		}
+		else
 		{
-			if ((msg->destObject == (*it)) || (msg->destObject == BROADCAST_OBJECT))
+			/*
+			 * Process BROADCAST_OBJECT and leave the message as is.
+			 */
+			if (msg->destObject == BROADCAST_OBJECT)
+			{
+				switch (msg->command)
+				{
+				case CMD_DRAW:
+					draw();
+					break;
+				}
+			}
+			/*
+			 * Forward messages.
+			 */
+			for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
 			{
 				(*it)->handleEvent(evt);
 			}
 		}
 	}
 	/*
-	 * Other events are processed by all views.
+	 * FIXME: Other events are processed by all views and applied by the focused view.
 	 */
 	else
 	{
