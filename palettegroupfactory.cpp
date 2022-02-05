@@ -66,6 +66,7 @@
  * 6 - teal     14 - aqua
  * 7 - silver   15 - white
  */
+static const unsigned PALETTEWINOS2[] = {BLACK, MAROON, GREEN, OLIVE, NAVY, PURPLE, TEAL, SILVER, GRAY, RED, LIME, YELLOW, BLUE, FUCHSIA, AQUA, WHITE};
 
 //PALETTE_MACINTOSH
 /*
@@ -78,15 +79,31 @@
  * 6 - blue     14 - dark grey
  * 7 - cyan     15 - black
  */
+static const unsigned PALETTEMAC[] = {WHITE, 0xFBF305, 0xFF6403, 0xDD0907, 0xF20884, 0x4700A5, 0x0000D3, 0x02ABEA, 0x1FB714, 0x006412, 0x562C05, 0x90713A, SILVER, GRAY, 0x404040, BLACK};
+
+//PALETTE RISCOS
+/*
+ * 0 - white    8 - dark blue
+ * 1 - grey #1  9 - yellow
+ * 2 - grey #2  10 - green
+ * 3 - grey #3  11 - red
+ * 4 - grey #4  12 - beige
+ * 5 - grey #5  13 - dark green
+ * 6 - grey #6  14 - gold/orange
+ * 7 - black    15 - light blue
+ */
+static const unsigned PALETTERISCOS[] = {WHITE, 0xDDDDDD, 0xBBBBBB, 0x999999, 0x777777, 0x555555, 0x333333, BLACK, 0x004499, 0xEEEE00, 0x00CC00, 0xDD0000, 0xEEEEBB, 0x558800, 0xFFBB00, 0x00BBFF};
 
 // Palette set for  PALETTE_WINOS2
-static const unsigned framePaletteWINOS2[] = {WHITE, BLACK, SILVER, RED, GRAY, LIME};         // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteWINOS2[] = {BLUE, WHITE, GRAY, BLACK};                   // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteWINOS2[] = {SILVER, GRAY};                             // Background, disabled
-static const unsigned progressbarPaletteWINOS2[] = {BLACK, BLUE, WHITE, BLACK, GRAY, SILVER}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteWINOS2[] = {GRAY};                                        // Desktop background
-static const unsigned buttonPaletteWINOS2[] = {WHITE, BLACK, SILVER, RED, BLACK, YELLOW};     // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteWINOS2[] = {WHITE, BLACK, SILVER, RED, BLACK};            // Bright, Dark, main, pressed, released
+#define C(x) PALETTEWINOS2[x]
+
+static const unsigned framePaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(8), C(10)};       // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteWINOS2[] = {C(12), C(15), C(8), C(0)};                // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteWINOS2[] = {C(7), C(8)};                            // Background, disabled
+static const unsigned progressbarPaletteWINOS2[] = {C(0), C(12), C(15), C(0), C(8), C(7)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
+static const unsigned desktopPaletteWINOS2[] = {C(8)};                                     // Desktop background
+static const unsigned buttonPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0), C(11)};      // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0)};            // Bright, Dark, main, pressed, released
 
 // Palette set for  PALETTE_DEBUG
 static const unsigned framePaletteDBG[] = {RED, GREEN, BLUE};                          // Bright, dark, main
@@ -98,7 +115,10 @@ static const unsigned buttonPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK, YE
 static const unsigned winiconPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK};        // Bright, Dark, main, pressed, released
 
 // Palette set for  PALETTE_MACINTOSH
-static const unsigned framePaletteMAC[] = {LIGHTGREY, DARKGREY, GRAY};                 // Bright, dark, main
+#undef C
+#define C(x) PALETTEMAC[x]
+
+static const unsigned framePaletteMAC[] = {C(12), C(14), C(13)};                       // Bright, dark, main
 static const unsigned titlebarPaletteMAC[] = {WHITE, BLACK};                           // Background, text
 static const unsigned backgroundPaletteMAC[] = {WHITE};                                // Background
 static const unsigned progressbarPaletteMAC[] = {LIGHTGREY, DARKGREY, WHITE};          // Background, Foreground, text
