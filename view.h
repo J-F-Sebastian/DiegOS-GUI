@@ -484,21 +484,6 @@ public:
 	 * const Rectangle &loc - the new location
 	 */
 	virtual bool setLocation(const Rectangle &loc) override;
-	/*
-	 * Compute the new location coordinates adding
-	 * delta to the limits rectangle, validates the new location
-	 * and then invokes changeLimits to apply it.
-	 * The new location must be included in the owner limits
-	 * if owner is valid.
-	 * 
-	 * PARAMETERS IN
-	 * const Point &delta - delta coordinates to be added to the origin
-	 * 
-	 * RETURN
-	 * true if the new location was validated
-	 * false if the new location was rejected
-	 */
-	virtual bool moveLocation(const Point &delta) override;
 
 	virtual void draw(void) override;
 

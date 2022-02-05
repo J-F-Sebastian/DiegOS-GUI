@@ -435,15 +435,6 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	return true;
 }
 
-bool ViewGroup::moveLocation(const Point &delta)
-{
-	if (View::moveLocation(delta))
-	{
-		return true;
-	}
-	return false;
-}
-
 void ViewGroup::draw()
 {
 	// No parenting means this is the root object, the main container of all graphics
