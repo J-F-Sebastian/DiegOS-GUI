@@ -104,7 +104,9 @@ enum
     /* Update the view with data found in the message */
     CMD_UPDATE,
     /* Redraw the view */
-    CMD_REDRAW
+    CMD_REDRAW,
+    /* Draw all views */
+    CMD_DRAW
 };
 
 /*
