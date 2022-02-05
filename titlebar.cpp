@@ -22,7 +22,7 @@
 
 #include "titlebar.h"
 
-TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), isZoom(false)
+TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), isZoom(false), isDragging(false), lastPressure(0, 0)
 {
     setResizeMode(VIEW_RESIZE_LX);
 }
@@ -52,23 +52,53 @@ void TitleBar::draw()
 void TitleBar::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-    if (isEventPositionValid(evt))
-    {
-        if ((evt->getPositionalEvent()->status & (POS_EVT_DOUBLE | POS_EVT_PRESSED)) == POS_EVT_DOUBLE)
-        {
-            if (getParent())
-            {
-                Event evt2;
-                MessageEvent cmd;
 
-                cmd.senderObject = this;
-                cmd.destObject = getParent();
-                cmd.targetObject = getParent();
-                cmd.command = (isZoom) ? CMD_MAXIMIZE : CMD_RESTORE;
-                evt2.setMessageEvent(cmd);
-                sendEvent(&evt2);
+    if (isEventPositional(evt))
+    {
+        if (isEventPositionInRange(evt))
+        {
+            uint8_t status = evt->getPositionalEvent()->status;
+            if ((status & (POS_EVT_DOUBLE | POS_EVT_PRESSED)) == POS_EVT_DOUBLE)
+            {
+                if (getParent())
+                {
+                    sendCommand((isZoom) ? CMD_MAXIMIZE : CMD_RESTORE, getParent(), getParent());
+                }
+                isZoom = !isZoom;
+                /* Reset dragging */
+                isDragging = false;
             }
-            isZoom = !isZoom;
+            else if (status & POS_EVT_PRESSED)
+            {
+                Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
+                Point deltaPressure(newPressure);
+                deltaPressure -= lastPressure;
+                if (!isDragging)
+                {
+                    lastPressure = newPressure;
+                    isDragging = true;
+                }
+                else if (lastPressure != newPressure)
+                {
+                    lastPressure = newPressure;
+                    std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
+                    if (getParent())
+                        getParent()->moveLocation(deltaPressure);
+                    /* Now ask for redrawing */
+                    sendCommand(CMD_DRAW);
+                }
+            }
+            else
+            {
+                /* Reset dragging */
+                isDragging = false;
+            }
+            evt->clear();
+        }
+        else
+        {
+            /* Reset dragging */
+            isDragging = false;
         }
     }
 }
