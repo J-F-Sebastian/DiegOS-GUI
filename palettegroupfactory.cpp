@@ -87,57 +87,45 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
     Palette *pal[PaletteGroup::PAL_NUM];
     memset(pal, 0, sizeof(pal));
 
+    pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(BACKGROUND_PAL_NUM);
+    pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(FRAME_PAL_NUM);
+    pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(TITLEBAR_PAL_NUM);
+    pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(PROGRESSBAR_PAL_NUM);
+    // FIXME: where is this one ?
+    pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
+    pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(BUTTON_PAL_NUM);
+    pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(WINICON_PAL_NUM);
+
     switch (sel)
     {
     case PALETTE_WINOS2:
-        pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteWINOS2);
-        pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteWINOS2);
-        pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(2);
         pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteWINOS2);
-        pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteWINOS2);
-        pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteWINOS2);
-        pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(6);
         pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteWINOS2);
-        pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(5);
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteWINOS2);
         break;
     case PALETTE_MACINTOSH:
-        pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
-        pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
-        pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(2);
         pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteMAC);
-        pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteMAC);
-        pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteMAC);
-        pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(6);
         pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteMAC);
-        pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(5);
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteMAC);
         break;
     case PALETTE_RISCOS:
         return nullptr;
 
     case PALETTE_DEBUG:
-        pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDBG);
-        pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDBG);
-        pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(2);
         pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDBG);
-        pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(3);
         pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteDBG);
-        pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
         pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteDBG);
-        pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(6);
         pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteDBG);
-        pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(5);
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDBG);
         break;
     }
