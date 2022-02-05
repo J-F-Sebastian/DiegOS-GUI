@@ -24,7 +24,6 @@
 Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 {
     setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
-    setResizeMode(VIEW_BOUNDED);
 }
 
 void Button::draw()
@@ -122,19 +121,24 @@ void Button::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
 
-    if (isEventPositionValid(evt))
+    if (isEventPositional(evt))
     {
-        bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-        if (updateButtonState(pressed))
+        if (isEventPositionInRange(evt))
         {
-            draw();
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+            if (updateButtonState(pressed))
+            {
+                /* Now ask for redrawing */
+                sendCommand(CMD_DRAW);
+            }
+            evt->clear();
         }
-        evt->clear();
-    }
-    else if (isDown())
-    {
-        updateButtonState(false);
-        draw();
+        else if (isDown())
+        {
+            updateButtonState(false);
+            /* Now ask for redrawing */
+            sendCommand(CMD_DRAW);
+        }
     }
 }
 
