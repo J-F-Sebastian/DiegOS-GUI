@@ -36,6 +36,8 @@ public:
     virtual void initMenu(void);
     virtual void run(void);
 
+    virtual void draw(void) override;
+    virtual void reDraw(void) override;
     virtual void sendEvent(Event *evt) override;
 
 private:

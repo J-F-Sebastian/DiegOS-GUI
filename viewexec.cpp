@@ -27,13 +27,33 @@ void ViewExec::run()
     setState(VIEW_STATE_EVLOOP);
     Event event;
 
+    draw();
     while (getState(VIEW_STATE_EVLOOP))
     {
-        draw();
         if (evtM->wait(&event, 1000))
             handleEvent(&event);
     }
     clearState(VIEW_STATE_EVLOOP);
+}
+
+void ViewExec::draw()
+{
+    if (getState(VIEW_STATE_EVLOOP))
+    {
+        getRenderer()->clear(0);
+        ViewGroup::draw();
+        getRenderer()->show();
+    }
+}
+
+void ViewExec::reDraw()
+{
+    if (getState(VIEW_STATE_EVLOOP))
+    {
+        getRenderer()->clear(0);
+        ViewGroup::reDraw();
+        getRenderer()->show();
+    }
 }
 
 void ViewExec::sendEvent(Event *evt)
