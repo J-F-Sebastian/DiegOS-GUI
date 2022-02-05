@@ -153,6 +153,8 @@ public:
 	 * and then invokes changeLimits to apply them.
 	 * The new location must be included in the owner borders
 	 * if owner is valid.
+	 * Calling this method implies resizing; to set the view
+	 * in a different position use moveLocation.
 	 * 
 	 * PARAMETERS IN
 	 * const Rectangle &loc - the new location
@@ -282,6 +284,7 @@ public:
 	/*
 	 * Draw the graphics of the view if VIEW_CHANGED_REDRAW is set.
 	 * After drawing the view the flag is reset.
+	 * This method invokes draw().
 	 */
 	virtual void reDraw(void);
 
@@ -347,7 +350,7 @@ public:
 	 *
 	 * PARAMETERS IN
 	 * Event *evt - the event to be validated
-	 * 
+	 *
 	 * RETURN
 	 * true if the event is valid for this view, i.e. the event has coordinates
 	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
@@ -464,6 +467,16 @@ protected:
 	 * false in any other case
 	 */
 	bool isEventCmdForMe(Event *evt);
+
+	/*
+	 * Send an event to the view's owner.
+	 * The method will recursively look for the top owner.
+	 * NO memory management is to be performed on evt.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - a pointer to an event object
+	 */
+	virtual void sendEvent(Event *evt);
 
 	View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }

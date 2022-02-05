@@ -92,6 +92,7 @@ void View::localize(Rectangle &rect)
 	rect.lr -= rect.ul;
 	rect.ul = p;
 	rect.lr += p;
+	/* FIXME: Should perform clipping ? */
 }
 
 void View::globalize(Rectangle &rect)
@@ -129,7 +130,7 @@ void View::setPalette(Palette *pal)
 	}
 }
 
-static const unsigned char RVALIDATE = VIEW_RESIZEABLE;
+static const unsigned char RVALIDATE = VIEW_BOUNDED;
 
 void View::setResizeMode(unsigned char flags)
 {
@@ -316,9 +317,6 @@ bool View::focus()
 
 void View::select()
 {
-	Event evt;
-	MessageEvent cmd;
-
 	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
 		return;
 
@@ -365,7 +363,6 @@ void View::calcLimits(const Point &delta, Rectangle &newrect)
 void View::changeBorders(const Rectangle &newrect)
 {
 	setBorders(newrect);
-	setChanged(VIEW_CHANGED_REDRAW);
 }
 
 void View::makeLocal(Point &origin)
@@ -425,9 +422,6 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	getBorders(update);
 	delta.x = loc.width() - update.width();
 	delta.y = loc.height() - update.height();
-	// No parenting means this is the root object, the main container of all graphics
-	if (!parentView)
-		renderer->clear(0);
 	setBorders(loc);
 
 	List<View *>::iterator it = viewList.begin();
@@ -438,46 +432,28 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 		it++;
 	}
 
-	// No parenting means this is the root object, the main container of all graphics
-	if (!parentView)
-		renderer->show();
-
 	return true;
 }
 
 void ViewGroup::draw()
 {
-	// No parenting means this is the root object, the main container of all graphics
-	if (!parentView)
-		renderer->clear(0);
-
 	// Draw children back-to-top, following the painter algorithm
 	for (List<View *>::riterator it = viewList.rbegin(); it != viewList.rend(); it++)
 	{
 		(*it)->draw();
 	}
-	// No parenting means this is the root object, the main container of all graphics
-	if (!parentView)
-		renderer->show();
 }
 
 void ViewGroup::reDraw()
 {
 	if (getState(VIEW_CHANGED_REDRAW))
 	{
-		// No parenting means this is the root object, the main container of all graphics
-		if ((getState(VIEW_STATE_EVLOOP)))
-			getRenderer()->clear(0);
-
 		// Draw children back-to-top, following the painter algorithm
 		for (List<View *>::riterator it = viewList.rbegin(); it != viewList.rend(); it++)
 		{
 			(*it)->reDraw();
 		}
 		clearChanged(VIEW_CHANGED_REDRAW);
-		// No parenting means this is the root object, the main container of all graphics
-		if ((getState(VIEW_STATE_EVLOOP)))
-			getRenderer()->show();
 	}
 }
 
