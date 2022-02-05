@@ -69,25 +69,38 @@ void WindowIconClose::draw()
         palette->getPalette(WINICON_RELEASED, color);
     }
 
-    viewRect.zoom(-4, -4);
+    viewRect.zoom(-2, -2);
     Point s(viewRect.ul), e(viewRect.lr);
     renderer->line(s, e, color);
-    s.x += 1;
-    e.y -= 1;
+    s.move(1, 0);
+    e.move(0, -1);
     renderer->line(s, e, color);
-    s.x += 1;
-    e.y -= 1;
+    s.move(1, 0);
+    e.move(0, -1);
     renderer->line(s, e, color);
+    s.move(-2, 1);
+    e.move(-1, 2);
+    renderer->line(s, e, color);
+    s.move(0, 1);
+    e.move(-1, 0);
+    renderer->line(s, e, color);
+
     s.x = viewRect.lr.x;
     s.y = viewRect.ul.y;
     e.x = viewRect.ul.x;
     e.y = viewRect.lr.y;
     renderer->line(s, e, color);
-    s.x -= 1;
-    e.y -= 1;
+    s.move(-1, 0);
+    e.move(0, -1);
     renderer->line(s, e, color);
-    s.x -= 1;
-    e.y -= 1;
+    s.move(-1, 0);
+    e.move(0, -1);
+    renderer->line(s, e, color);
+    s.move(2, 1);
+    e.move(1, 2);
+    renderer->line(s, e, color);
+    s.move(0, 1);
+    e.move(1, 0);
     renderer->line(s, e, color);
 }
 
