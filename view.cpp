@@ -334,12 +334,7 @@ void View::select()
 		if (parentView->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
-		cmd.senderObject = this;
-		cmd.destObject = parentView;
-		cmd.targetObject = this;
-		cmd.command = CMD_FOREGROUND;
-		evt.setMessageEvent(cmd);
-		sendEvent(&evt);
+		sendCommand(CMD_FOREGROUND, getParent(), this);
 	}
 }
 
@@ -755,6 +750,8 @@ void ViewGroup::selectView(View *target)
 		}
 		target->setState(VIEW_STATE_SELECTED);
 		selected = target;
+		/* Now ask for redrawing */
+		sendCommand(CMD_DRAW);
 	}
 }
 
@@ -774,14 +771,21 @@ void ViewGroup::toTheTop(View *target)
 
 void ViewGroup::maximize()
 {
-	Rectangle max;
-	getLimits(max);
-	setLocation(max);
+	if (getParent())
+	{
+		Rectangle max;
+		getParent()->getExtent(max);
+		setLocation(max);
+		/* Now ask for redrawing */
+		sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
+	}
 }
 
 void ViewGroup::minimize()
 {
 	setLocation(lastLimits);
+	/* Now ask for redrawing */
+	sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
 }
 
 bool ViewGroup::thisViewIsMine(View *who)
