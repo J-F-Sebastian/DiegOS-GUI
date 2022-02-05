@@ -35,7 +35,7 @@ enum
 class WindowIconClose : public Button
 {
 public:
-    explicit WindowIconClose(Rectangle &rect) : Button(rect) { clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE); }
+    explicit WindowIconClose(Rectangle &rect);
 
     virtual void draw(void) override;
 
@@ -45,7 +45,7 @@ public:
 class WindowIconZoom : public Button
 {
 public:
-    explicit WindowIconZoom(Rectangle &rect) : Button(rect), isZoom(true) { clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE); }
+    explicit WindowIconZoom(Rectangle &rect);
 
     virtual void draw(void) override;
 

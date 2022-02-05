@@ -21,6 +21,11 @@
 
 #include "window_icon.h"
 
+WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
+{
+    clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+}
+
 void WindowIconClose::draw()
 {
     Rectangle viewRect;
@@ -114,6 +119,12 @@ void WindowIconClose::handleEvent(Event *evt)
     {
         updateButtonState(false);
     }
+}
+
+WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect), isZoom(true)
+{
+    clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+    setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
 }
 
 void WindowIconZoom::draw()
