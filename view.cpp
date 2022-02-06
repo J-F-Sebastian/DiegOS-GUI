@@ -588,7 +588,7 @@ void ViewGroup::handleEvent(Event *evt)
 				break;
 
 			case CMD_RESTORE:
-				minimize();
+				restore();
 				break;
 
 			case CMD_DRAW:
