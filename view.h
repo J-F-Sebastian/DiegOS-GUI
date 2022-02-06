@@ -269,6 +269,7 @@ public:
 	 */
 	void setResizeMode(unsigned char flags);
 	bool getResizeMode(unsigned char flags) const;
+	unsigned char getResizeMode(void) const;
 	void clearResizeMode(unsigned char flags);
 
 	/*
@@ -276,6 +277,7 @@ public:
 	 */
 	void setOptions(unsigned char flags);
 	bool getOptions(unsigned char flags) const;
+	unsigned char getOptions(void) const;
 	void clearOptions(unsigned char flags);
 
 	/*
@@ -283,6 +285,7 @@ public:
 	 */
 	void setState(unsigned char flags);
 	bool getState(unsigned char flags) const;
+	unsigned char getState(void) const;
 	void clearState(unsigned char flags);
 
 	/*
@@ -290,6 +293,7 @@ public:
 	 */
 	void setChanged(unsigned char flags);
 	bool getChanged(unsigned char flags) const;
+	unsigned char getChanged(void) const;
 	void clearChanged(unsigned char flags);
 
 	/*
@@ -515,7 +519,6 @@ private:
 	 * Color palette, cannot be nullptr
 	 */
 	Palette *palette;
-
 	/*
 	 * borders is expressed in owners coordinates
 	 */
@@ -524,6 +527,9 @@ private:
 	 * extent is the width and height of the view
 	 */
 	Rectangle extent;
+	/*
+	 * resize flags, state flags, option flags, changed flags
+	 */
 	unsigned char rflags, sflags, oflags, cflags;
 };
 
@@ -580,6 +586,7 @@ protected:
 
 private:
 	List<View *> viewList;
+	unsigned char lastrflags;
 };
 
 #endif
