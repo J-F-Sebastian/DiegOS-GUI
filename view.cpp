@@ -130,7 +130,7 @@ void View::setPalette(Palette *pal)
 	}
 }
 
-static const unsigned char RVALIDATE = VIEW_BOUNDED;
+static const unsigned char RVALIDATE = (VIEW_BOUNDED | VIEW_ZOOMED);
 
 void View::setResizeMode(unsigned char flags)
 {
@@ -752,6 +752,9 @@ void ViewGroup::maximize()
 		Rectangle max;
 		getParent()->getExtent(max);
 		setLocation(max);
+		lastrflags = getResizeMode();
+		clearResizeMode(VIEW_BOUNDED);
+		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
 		sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
 	}
@@ -759,6 +762,15 @@ void ViewGroup::maximize()
 
 void ViewGroup::minimize()
 {
+	//FIX ME
+	clearResizeMode(VIEW_ZOOMED);
+	setResizeMode(lastrflags);
+}
+
+void ViewGroup::restore()
+{
+	clearResizeMode(VIEW_ZOOMED);
+	setResizeMode(lastrflags);
 	setLocation(lastLimits);
 	/* Now ask for redrawing */
 	sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());

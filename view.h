@@ -45,7 +45,8 @@ enum
 	VIEW_RESIZE_LX = (1 << 2),
 	VIEW_RESIZE_LY = (1 << 3),
 	VIEW_RESIZEABLE = (VIEW_RESIZE_LX | VIEW_RESIZE_LY),
-	VIEW_BOUNDED = (VIEW_RESIZE_UX | VIEW_RESIZE_UY | VIEW_RESIZE_LX | VIEW_RESIZE_LY)
+	VIEW_BOUNDED = (VIEW_RESIZE_UX | VIEW_RESIZE_UY | VIEW_RESIZE_LX | VIEW_RESIZE_LY),
+	VIEW_ZOOMED = (1 << 4)
 };
 
 /*
@@ -535,6 +536,7 @@ public:
 
 	void maximize(void);
 	void minimize(void);
+	void restore(void);
 
 	void insert(View *newView);
 	void insertBefore(View *newView, View *target);
