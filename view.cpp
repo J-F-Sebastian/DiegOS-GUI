@@ -50,6 +50,10 @@ void View::sizeLimits(Point &min, Point &max)
 bool View::setLocation(const Rectangle &loc)
 {
 	Point min, max;
+
+	if (getResizeMode(VIEW_ZOOMED))
+		return false;
+
 	sizeLimits(min, max);
 	if ((loc.width() > max.x) ||
 	    (loc.width() < min.x) ||
@@ -441,6 +445,9 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	Rectangle update;
 	Point delta(0, 0);
 	Point min, max;
+
+	if (getResizeMode(VIEW_ZOOMED))
+		return false;
 
 	sizeLimits(min, max);
 	if ((loc.width() > max.x) ||
