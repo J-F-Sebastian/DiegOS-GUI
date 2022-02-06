@@ -46,7 +46,6 @@ public:
 
 private:
     std::string title;
-    bool isZoom, isDragging;
     Point lastPressure;
 };
 

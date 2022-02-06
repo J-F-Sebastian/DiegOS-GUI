@@ -22,7 +22,7 @@
 
 #include "titlebar.h"
 
-TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), isZoom(false), isDragging(false), lastPressure(0, 0)
+TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), lastPressure(0, 0)
 {
     setResizeMode(VIEW_RESIZE_LX);
 }
@@ -62,21 +62,18 @@ void TitleBar::handleEvent(Event *evt)
             {
                 if (getParent())
                 {
-                    sendCommand((isZoom) ? CMD_MAXIMIZE : CMD_RESTORE, getParent(), getParent());
+                    sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
                 }
-                isZoom = !isZoom;
-                /* Reset dragging */
-                isDragging = false;
             }
             else if (status & POS_EVT_PRESSED)
             {
                 Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
                 Point deltaPressure(newPressure);
                 deltaPressure -= lastPressure;
-                if (!isDragging)
+                if (!getState(VIEW_STATE_DRAGGING))
                 {
                     lastPressure = newPressure;
-                    isDragging = true;
+                    setState(VIEW_STATE_DRAGGING);
                 }
                 else if (lastPressure != newPressure)
                 {
@@ -91,14 +88,14 @@ void TitleBar::handleEvent(Event *evt)
             else
             {
                 /* Reset dragging */
-                isDragging = false;
+                clearState(VIEW_STATE_DRAGGING);
             }
             evt->clear();
         }
         else
         {
             /* Reset dragging */
-            isDragging = false;
+            clearState(VIEW_STATE_DRAGGING);
         }
     }
 }
