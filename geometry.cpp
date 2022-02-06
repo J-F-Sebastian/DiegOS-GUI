@@ -97,6 +97,10 @@ void Rectangle::intersection(Rectangle &other)
 		if (lr.y > other.lr.y)
 			lr.y = other.lr.y;
 	}
+	else
+	{
+		ul = lr = {0, 0};
+	}
 }
 
 void Rectangle::join(Rectangle &other)
@@ -111,6 +115,10 @@ void Rectangle::join(Rectangle &other)
 			lr.x = other.lr.x;
 		if (lr.y < other.lr.y)
 			lr.y = other.lr.y;
+	}
+	else
+	{
+		ul = lr = {0, 0};
 	}
 }
 
