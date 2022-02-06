@@ -67,7 +67,9 @@ enum
 	/* View is running the event loop */
 	VIEW_STATE_EVLOOP = (1 << 5),
 	/* View is to be drawn on video */
-	VIEW_STATE_EXPOSED = (1 << 6)
+	VIEW_STATE_EXPOSED = (1 << 6),
+	/* View is in foreground, so it has to be visible and exposed, and is first on screen */
+	VIEW_STATE_FOREGROUND = (1 << 7)
 };
 
 /*
@@ -247,6 +249,20 @@ public:
 	 * Palette *pal - pointer to a Palette instance
 	 */
 	void setPalette(Palette *pal);
+
+	/*
+	 * Set state to foreground, this view is visible and on top
+	 * of others.
+	 * This state does not imply complete visibility on screen.
+	 */
+	virtual void setForeground(void);
+
+	/*
+	 * Clear background state, this view might be visible and is behind
+	 * one or more views.
+	 * This state does not imply complete visibility on screen.
+	 */
+	virtual void setBackground(void);
 
 	/*
 	 * Operate on the view resize options flags.
@@ -534,6 +550,9 @@ public:
 
 	virtual void handleEvent(Event *evt) override;
 
+	virtual void setForeground(void) override;
+	virtual void setBackground(void) override;
+
 	void maximize(void);
 	void minimize(void);
 	void restore(void);
@@ -549,6 +568,7 @@ protected:
 
 	bool focusView(View *target);
 	void selectView(View *target);
+	void setForeground(View *target);
 	void toTheTop(View *target);
 
 	bool thisViewIsMine(View *who);

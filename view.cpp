@@ -383,6 +383,16 @@ void View::makeGlobal(Point &origin)
 	origin += borders.ul;
 }
 
+void View::setForeground()
+{
+	setState(VIEW_STATE_FOREGROUND);
+}
+
+void View::setBackground()
+{
+	clearState(VIEW_STATE_FOREGROUND);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -604,6 +614,20 @@ void ViewGroup::handleEvent(Event *evt)
 	}
 }
 
+void ViewGroup::setForeground()
+{
+	setState(VIEW_STATE_FOREGROUND);
+	for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+		(*it)->setForeground();
+}
+
+void ViewGroup::setBackground()
+{
+	clearState(VIEW_STATE_FOREGROUND);
+	for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+		(*it)->setBackground();
+}
+
 void ViewGroup::insert(View *newView)
 {
 	if (newView)
@@ -740,8 +764,10 @@ void ViewGroup::toTheTop(View *target)
 
 	if (it != viewList.end())
 	{
+		viewList.getHead()->setBackground();
 		it = viewList.erase(it);
 		viewList.addHead(target);
+		viewList.getHead()->setForeground();
 	}
 }
 
