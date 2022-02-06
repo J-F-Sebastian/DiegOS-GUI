@@ -136,7 +136,7 @@ void WindowIconClose::handleEvent(Event *evt)
     }
 }
 
-WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect), isZoom(true)
+WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect)
 {
     clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
     setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
@@ -185,7 +185,7 @@ void WindowIconZoom::draw()
         palette->getPalette(WINICON_RELEASED, color);
     }
 
-    if (isZoom)
+    if (getParent() && !getParent()->getResizeMode(VIEW_ZOOMED))
     {
         viewRect.zoom(-3, -3);
         renderer->rectangle(viewRect, color);
@@ -222,9 +222,8 @@ void WindowIconZoom::handleEvent(Event *evt)
                 {
                     if (getParent())
                     {
-                        sendCommand((isZoom) ? CMD_MAXIMIZE : CMD_RESTORE, getParent(), getParent());
+                        sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
                     }
-                    isZoom = !isZoom;
                 }
                 /* Now ask for redrawing */
                 sendCommand(CMD_DRAW);

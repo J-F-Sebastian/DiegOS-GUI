@@ -50,9 +50,6 @@ public:
     virtual void draw(void) override;
 
     virtual void handleEvent(Event *evt) override;
-
-private:
-    bool isZoom;
 };
 
 #endif
