@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "window_icon.h"
+#include "window_icon_palette.h"
 
 WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
 {

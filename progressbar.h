@@ -22,17 +22,6 @@
 
 #include "view.h"
 
-enum
-{
-    PROGRESSBAR_BG,
-    PROGRESSBAR_FG,
-    PROGRESSBAR_TEXT,
-    PROGRESSBAR_BG_DISABLED,
-    PROGRESSBAR_FG_DISABLED,
-    PROGRESSBAR_TEXT_DISABLED,
-    PROGRESSBAR_PAL_NUM
-};
-
 class ProgressBar : public View
 {
 public:

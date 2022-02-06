@@ -16,32 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <iostream>
 
-#include "background.h"
-#include "background_palette.h"
+#ifndef _WINDOW_ICON_PALETTE_H_
+#define _WINDOW_ICON_PALETTE_H_
 
-Background::Background(Rectangle &rect) : View(rect)
+enum WINICON_PAL
 {
-    clearOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
-    setResizeMode(VIEW_RESIZEABLE);
-}
+	WINICON_BRIGHT,
+	WINICON_DARK,
+	WINICON_MAIN,
+	WINICON_PRESSED,
+	WINICON_RELEASED,
+	WINICON_PAL_NUM
+};
 
-void Background::draw()
-{
-    Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
-    getExtent(viewRect);
-    globalize(viewRect);
-    unsigned color;
-
-    palette->getPalette(BACKGROUND_COLOR, color);
-
-    renderer->filledRectangle(viewRect, color);
-}
-
-void Background::handleEvent(Event *evt)
-{
-    View::handleEvent(evt);
-}
+#endif

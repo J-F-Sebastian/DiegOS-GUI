@@ -22,13 +22,6 @@
 
 #include "view.h"
 
-enum
-{
-    BACKGROUND_BG,
-    BACKGROUND_BG_DISABLED,
-    BACKGROUND_PAL_NUM
-};
-
 class Background : public View
 {
 public:

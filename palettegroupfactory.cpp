@@ -19,13 +19,13 @@
 
 #include "palettegroupfactory.h"
 #include "viewrenderhw.h"
-#include "background.h"
-#include "button.h"
-#include "frame.h"
-#include "progressbar.h"
-#include "titlebar.h"
-#include "window.h"
-#include "window_icon.h"
+#include "background_palette.h"
+#include "button_palette.h"
+#include "frame_palette.h"
+#include "progressbar_palette.h"
+#include "titlebar_palette.h"
+#include "window_palette.h"
+#include "window_icon_palette.h"
 #include <cstring>
 
 #define BLACK 0x000000

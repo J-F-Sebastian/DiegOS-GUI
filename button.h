@@ -22,17 +22,6 @@
 
 #include "view.h"
 
-enum
-{
-    BUTTON_BRIGHT,
-    BUTTON_DARK,
-    BUTTON_MAIN,
-    BUTTON_SELECTED,
-    BUTTON_DISABLED,
-    BUTTON_PRESSED,
-    BUTTON_PAL_NUM
-};
-
 class Button : public View
 {
 public:

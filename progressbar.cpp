@@ -20,6 +20,7 @@
 #include <cstdio>
 
 #include "progressbar.h"
+#include "progressbar_palette.h"
 
 ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPercent(showpercent), percent(36)
 {

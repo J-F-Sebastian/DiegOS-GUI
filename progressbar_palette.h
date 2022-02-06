@@ -16,32 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <iostream>
 
-#include "background.h"
-#include "background_palette.h"
+#ifndef _PROGRESSBAR_PALETTE_H_
+#define _PROGRESSBAR_PALETTE_H_
 
-Background::Background(Rectangle &rect) : View(rect)
+enum PROGRESSBAR_PAL
 {
-    clearOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
-    setResizeMode(VIEW_RESIZEABLE);
-}
+	PROGRESSBAR_BG,
+	PROGRESSBAR_FG,
+	PROGRESSBAR_TEXT,
+	PROGRESSBAR_BG_DISABLED,
+	PROGRESSBAR_FG_DISABLED,
+	PROGRESSBAR_TEXT_DISABLED,
+	PROGRESSBAR_PAL_NUM
+};
 
-void Background::draw()
-{
-    Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
-    getExtent(viewRect);
-    globalize(viewRect);
-    unsigned color;
-
-    palette->getPalette(BACKGROUND_COLOR, color);
-
-    renderer->filledRectangle(viewRect, color);
-}
-
-void Background::handleEvent(Event *evt)
-{
-    View::handleEvent(evt);
-}
+#endif

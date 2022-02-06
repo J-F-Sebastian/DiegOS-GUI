@@ -22,16 +22,6 @@
 
 #include "button.h"
 
-enum
-{
-    WINICON_BRIGHT,
-    WINICON_DARK,
-    WINICON_MAIN,
-    WINICON_PRESSED,
-    WINICON_RELEASED,
-    WINICON_PAL_NUM
-};
-
 class WindowIconClose : public Button
 {
 public:

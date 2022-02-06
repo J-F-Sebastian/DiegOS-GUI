@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "window.h"
+#include "window_palette.h"
 #include "window_icon.h"
 #include "frame.h"
 #include "titlebar.h"

@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "button.h"
+#include "button_palette.h"
 
 Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 {

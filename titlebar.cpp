@@ -21,6 +21,7 @@
 #include <cstring>
 
 #include "titlebar.h"
+#include "titlebar_palette.h"
 
 TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), lastPressure(0, 0)
 {

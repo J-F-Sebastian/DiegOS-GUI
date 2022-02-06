@@ -23,24 +23,6 @@
 #include "view.h"
 
 /*
- * Palette for windows, bright dark and main are used to draw the enveloping frame,
- * Title colors are used for the window title bar, icons is the background of button icons
- * controlling zoom close etc.
- * Window text is the default text color for fonts printed inside the window space.
- */
-enum
-{
-    WINDOW_BRIGHT,
-    WINDOW_DARK,
-    WINDOW_MAIN,
-    WINDOW_TITLE_BG,
-    WINDOW_TITLE_TXT,
-    WINDOW_ICONS_BG,
-    WINDOW_TEXT,
-    WINDOW_PAL_NUM
-};
-
-/*
  * Window control flags.
  * They dictates which abilites the window have:
  *     the window can be moved around by dragging the title bar

@@ -22,17 +22,6 @@
 
 #include "view.h"
 
-enum
-{
-    FRAME_BRIGHT,
-    FRAME_DARK,
-    FRAME_MAIN,
-    FRAME_DRAGGING,
-    FRAME_DISABLED,
-    FRAME_ACTIVE,
-    FRAME_PAL_NUM
-};
-
 class Frame : public View
 {
 public:

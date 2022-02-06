@@ -24,15 +24,6 @@
 
 #include "view.h"
 
-enum
-{
-    TITLEBAR_BG,
-    TITLEBAR_TEXT,
-    TITLEBAR_BG_DISABLED,
-    TITLEBAR_TEXT_DISABLED,
-    TITLEBAR_PAL_NUM
-};
-
 class TitleBar : public View
 {
 public:

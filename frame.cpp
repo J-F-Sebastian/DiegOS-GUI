@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "frame.h"
+#include "frame_palette.h"
 
 Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect), style(style), width(width)
 {
