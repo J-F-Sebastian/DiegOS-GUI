@@ -118,15 +118,26 @@ static const unsigned winiconPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK}; 
 #undef C
 #define C(x) PALETTEMAC[x]
 
-static const unsigned framePaletteMAC[] = {C(12), C(14), C(13)};                       // Bright, dark, main
-static const unsigned titlebarPaletteMAC[] = {WHITE, BLACK};                           // Background, text
-static const unsigned backgroundPaletteMAC[] = {WHITE};                                // Background
-static const unsigned progressbarPaletteMAC[] = {LIGHTGREY, DARKGREY, WHITE};          // Background, Foreground, text
-static const unsigned desktopPaletteMAC[] = {GRAY};                                    // Desktop background
-static const unsigned buttonPaletteMAC[] = {WHITE, BLACK, SILVER, RED, BLACK, YELLOW}; // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteMAC[] = {WHITE, BLACK, SILVER, RED, BLACK};        // Bright, Dark, main, pressed, released
+static const unsigned framePaletteMAC[] = {C(12), C(14), C(13), C(9), C(14), C(8)};        // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteMAC[] = {C(0), C(15), C(13), C(15)};                  // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteMAC[] = {C(0), C(13)};                              // Background, disabled
+static const unsigned progressbarPaletteMAC[] = {C(12), C(14), C(0), C(15), C(14), C(13)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
+static const unsigned desktopPaletteMAC[] = {C(12)};                                       // Desktop background
+static const unsigned buttonPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15), C(1)};        // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15)};             // Bright, Dark, main, pressed, released
 
-//PALETTE_MACINTOSH, PALETTE_RISCOS
+// Palette set for  PALETTE_RISCOS
+#undef C
+#define C(x) PALETTERISCOS[x]
+
+static const unsigned framePaletteRISCOS[] = {C(12), C(14), C(13), C(9), C(14), C(8)};        // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteRISCOS[] = {C(0), C(15), C(13), C(15)};                  // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteRISCOS[] = {C(0), C(13)};                              // Background, disabled
+static const unsigned progressbarPaletteRISCOS[] = {C(12), C(14), C(0), C(15), C(14), C(13)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
+static const unsigned desktopPaletteRISCOS[] = {C(12)};                                       // Desktop background
+static const unsigned buttonPaletteRISCOS[] = {C(0), C(15), C(12), C(3), C(15), C(1)};        // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteRISCOS[] = {C(0), C(15), C(12), C(3), C(15)};             // Bright, Dark, main, pressed, released
+
 class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int bitdepth)
 {
     /*
@@ -158,6 +169,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
         pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteWINOS2);
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteWINOS2);
         break;
+
     case PALETTE_MACINTOSH:
         pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
         pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
@@ -167,8 +179,16 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
         pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteMAC);
         pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteMAC);
         break;
+
     case PALETTE_RISCOS:
-        return nullptr;
+        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteRISCOS);
+        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteRISCOS);
+        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteRISCOS);
+        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteRISCOS);
+        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteRISCOS);
+        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteRISCOS);
+        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteRISCOS);
+        break;
 
     case PALETTE_DEBUG:
         pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDBG);
