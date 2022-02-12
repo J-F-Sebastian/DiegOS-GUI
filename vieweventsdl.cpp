@@ -102,7 +102,6 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         //case SDL_MOUSEWHEEL:
         case SDL_MOUSEMOTION:
         {
-            std::cout << "@ " << sdlevt.motion.state << std::endl;
             PositionalEvent mouse = {0, 0, 0, 0};
             if (sdlevt.motion.state & SDL_BUTTON_LMASK)
                 mouse.buttons = 1 << 2;
@@ -116,6 +115,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 
             mouse.x = sdlevt.motion.x;
             mouse.y = sdlevt.motion.y;
+            std::cout << mouse.x << " @ " << mouse.y << std::endl;
             evt->setPositionalEvent(mouse);
         }
         break;
