@@ -439,6 +439,18 @@ void View::makeGlobal(Point &origin)
 	origin += borders.ul;
 }
 
+void View::setExposed()
+{
+	if (getState(VIEW_STATE_VISIBLE))
+	{
+		setState(VIEW_STATE_EXPOSED);
+	}
+	else
+	{
+		clearState(VIEW_STATE_EXPOSED);
+	}
+}
+
 void View::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);

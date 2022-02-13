@@ -265,6 +265,11 @@ public:
 	virtual void setBackground(void);
 
 	/*
+	 * If the view is visible set VIEW_STATE_EXPOSED, otherwise clear it.
+	 */
+	void setExposed(void);
+
+	/*
 	 * Operate on the view resize options flags.
 	 */
 	void setResizeMode(unsigned char flags);
