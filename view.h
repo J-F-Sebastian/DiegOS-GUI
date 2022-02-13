@@ -269,6 +269,7 @@ public:
 	 */
 	void setResizeMode(unsigned char flags);
 	bool getResizeMode(unsigned char flags) const;
+	bool getResizeModeAll(unsigned char flags) const;
 	unsigned char getResizeMode(void) const;
 	void clearResizeMode(unsigned char flags);
 
@@ -277,6 +278,7 @@ public:
 	 */
 	void setOptions(unsigned char flags);
 	bool getOptions(unsigned char flags) const;
+	bool getOptionsAll(unsigned char flags) const;
 	unsigned char getOptions(void) const;
 	void clearOptions(unsigned char flags);
 
@@ -285,6 +287,7 @@ public:
 	 */
 	void setState(unsigned char flags);
 	bool getState(unsigned char flags) const;
+	bool getStateAll(unsigned char flags) const;
 	unsigned char getState(void) const;
 	void clearState(unsigned char flags);
 
@@ -293,6 +296,7 @@ public:
 	 */
 	void setChanged(unsigned char flags);
 	bool getChanged(unsigned char flags) const;
+	bool getChangedAll(unsigned char flags) const;
 	unsigned char getChanged(void) const;
 	void clearChanged(unsigned char flags);
 

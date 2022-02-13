@@ -150,6 +150,14 @@ bool View::getResizeMode(unsigned char flags) const
 		return false;
 }
 
+bool View::getResizeModeAll(unsigned char flags) const
+{
+	if ((rflags & flags) == flags)
+		return true;
+	else
+		return false;
+}
+
 unsigned char View::getResizeMode() const
 {
 	return rflags;
@@ -170,6 +178,14 @@ void View::setOptions(unsigned char flags)
 bool View::getOptions(unsigned char flags) const
 {
 	if (oflags & flags)
+		return true;
+	else
+		return false;
+}
+
+bool View::getOptionsAll(unsigned char flags) const
+{
+	if ((oflags & flags) == flags)
 		return true;
 	else
 		return false;
@@ -207,6 +223,14 @@ bool View::getState(unsigned char flags) const
 		return false;
 }
 
+bool View::getStateAll(unsigned char flags) const
+{
+	if ((sflags & flags) == flags)
+		return true;
+	else
+		return false;
+}
+
 unsigned char View::getState() const
 {
 	return sflags;
@@ -230,6 +254,14 @@ void View::setChanged(unsigned char flags)
 bool View::getChanged(unsigned char flags) const
 {
 	if (cflags & flags)
+		return true;
+	else
+		return false;
+}
+
+bool View::getChangedAll(unsigned char flags) const
+{
+	if ((cflags & flags) == flags)
 		return true;
 	else
 		return false;
