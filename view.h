@@ -129,10 +129,10 @@ public:
 	 * Increments stored in delta are added to the view's borders
 	 * according to flags stored in rflags, the resulting rectangle
 	 * is stored in newrect.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Point &delta - delta values
-	 * 
+	 *
 	 * PARAMETERS OUT
 	 * Rectangle &newrect - the resulting rectangle after computation
 	 */
@@ -144,7 +144,7 @@ public:
 	 * The default computation returns (0,0) in min and
 	 * (width, height) in max if owner is nil; if owner is valid
 	 * the width and height are those of the owner.
-	 * 
+	 *
 	 * PARAMETERS OUT
 	 * Point &min - minimum width and height
 	 * Point &max - maximum width and height
@@ -158,10 +158,10 @@ public:
 	 * if owner is valid.
 	 * Calling this method implies resizing; to set the view
 	 * in a different position use moveLocation.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Rectangle &loc - the new location
-	 * 
+	 *
 	 * RETURN
 	 * true if the new location was validated
 	 * false if the new location was rejected
@@ -174,10 +174,10 @@ public:
 	 * and then invokes changeLimits to apply it.
 	 * The new location must be included in the owner borders
 	 * if owner is valid.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Point &delta - delta coordinates to be added to the origin
-	 * 
+	 *
 	 * RETURN
 	 * true if the new location was validated
 	 * false if the new location was rejected
@@ -187,7 +187,7 @@ public:
 	/*
 	 * Copy the upper left point of borders into origin.
 	 * Origin is relative to the owner's origin.
-	 * 
+	 *
 	 * PARAMETERS OUT
 	 * Point &origin - view's origin
 	 */
@@ -199,7 +199,7 @@ public:
 	 * set to (width - 1, height - 1).
 	 * NOTE: width and height are computed in pixels and include
 	 * both vertical and horizontal lines.
-	 * 
+	 *
 	 * PARAMETERS OUT
 	 * Rectangle &extent - reference to a Rectangle set to the extents of the view
 	 */
@@ -316,7 +316,7 @@ public:
 	 * and the PRESSED bit is set, the view will select herself
 	 * and notify with a message its owner.
 	 * NO memory management is to be performed on evt.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * Event *evt - a pointer to an Event object
 	 */
@@ -340,7 +340,7 @@ public:
 	 * This is a wrap around for sendCommand(cons uint16_t, void *, void*).
 	 * Messages are sent to BROADCAST_OBJECT with target set to the sender object;
 	 * so it is just like calling sendCommand(command, BROADCAST_OBJECT, this)
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * uint16_t command - the command code
 	 * void *destination - the receipient of the message
@@ -362,7 +362,7 @@ public:
 	bool isEventPositional(Event *evt);
 
 	/*
-	 * Verify the validity of the event for this view and returns 
+	 * Verify the validity of the event for this view and returns
 	 * a boolean according to the evaluation.
 	 * A positional event is valid if:
 	 * 	1) the pointer is not null
@@ -386,7 +386,7 @@ protected:
 	/*
 	 * Apply new coordinates.
 	 * Borders are stored in a rectangle in owners coordinates.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Rectangle &newrect - new view borders
 	 */
@@ -395,7 +395,7 @@ protected:
 	/*
 	 * Copy borders into rect.
 	 * Borders are stored in a rectangle in owners coordinates.
-	 * 
+	 *
 	 * PARAMETERS OUT
 	 * Rectangle &rect - view borders
 	 */
@@ -404,7 +404,7 @@ protected:
 	/*
 	 * Apply new coordinates and set the view for re-drawing.
 	 * Borders are stored in a rectangle in owners coordinates.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Rectangle &newrect - the new boundaries
 	 */
@@ -419,7 +419,7 @@ protected:
 	 * The child view origin will have a pixel coordinates of (x, y) on screen, so
 	 * using global coordinates (screen coordinates) a point inside the child view
 	 * can have values ranging from (x, y) to (x + viewwidth - 1, y + viewheigth - 1).
-	 * 
+	 *
 	 *origin+----------------------------------------+
 	 *     |                                        |
 	 *     |     (x,y)                              |
@@ -438,12 +438,12 @@ protected:
 	 * origin is assumed to be valorized with root parent coordinates,
 	 * so that input origin(0,0) is the origin of the root parent, which
 	 * is usually the size of the screen.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * Point &origin - global coordinates (screen coordinates)
-	 * 
+	 *
 	 * PARAMETERS OUT
-	* Point &origin - local coordinates (view coordinates)
+	 * Point &origin - local coordinates (view coordinates)
 	 */
 	void makeLocal(Point &origin);
 
@@ -452,12 +452,12 @@ protected:
 	 * to global (screen coordinates).
 	 * origin is assumed to be valorized with view coordinates,
 	 * so that input origin(0,0) is the upper left view corner.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * Point &origin - local coordinates (view coordinates)
-	 * 
+	 *
 	 * PARAMETERS OUT
-	* Point &origin - global coordinates (screen coordinates)
+	 * Point &origin - global coordinates (screen coordinates)
 	 */
 	void makeGlobal(Point &origin);
 
@@ -468,7 +468,7 @@ protected:
 	 *
 	 * PARAMETERS IN
 	 * Event *evt - the event
-	 * 
+	 *
 	 * RETURN
 	 * true if the event is in range for this view, i.e. the event has coordinates
 	 *      falling inside the view limits
@@ -482,7 +482,7 @@ protected:
 	 *
 	 * PARAMETERS IN
 	 * Event *evt - the event
-	 * 
+	 *
 	 * RETURN
 	 * true if the event is a command with destObject == this
 	 * false in any other case
@@ -520,7 +520,7 @@ private:
 	 */
 	Palette *palette;
 	/*
-	 * borders is expressed in owners coordinates
+	 * borders is expressed in owner's coordinates
 	 */
 	Rectangle borders;
 	/*
@@ -544,7 +544,7 @@ public:
 	 * and then invokes changeLimits to apply them.
 	 * The new location must be included in the owner limits
 	 * if owner is valid.
-	 * 
+	 *
 	 * PARAMETERS IN
 	 * const Rectangle &loc - the new location
 	 */
