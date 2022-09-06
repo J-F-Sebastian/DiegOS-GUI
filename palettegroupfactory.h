@@ -27,6 +27,7 @@ enum PaletteGroupType
     PALETTE_WINOS2,
     PALETTE_MACINTOSH,
     PALETTE_RISCOS,
+    PALETTE_DIEGOS,
     PALETTE_DEBUG
 };
 
