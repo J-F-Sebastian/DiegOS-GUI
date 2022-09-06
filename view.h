@@ -206,6 +206,15 @@ public:
 	void getExtent(Rectangle &extent);
 
 	/*
+	 * Copy borders into rect.
+	 * Borders are stored in a rectangle in owners coordinates.
+	 *
+	 * PARAMETERS OUT
+	 * Rectangle &rect - view borders
+	 */
+	void getBorders(Rectangle &rect);
+
+	/*
 	 * Convert rectangle coordinates from global (root owner view)
 	 * to local (this view).
 	 *
@@ -418,15 +427,6 @@ protected:
 	 * const Rectangle &newrect - new view borders
 	 */
 	void setBorders(const Rectangle &newrect);
-
-	/*
-	 * Copy borders into rect.
-	 * Borders are stored in a rectangle in owners coordinates.
-	 *
-	 * PARAMETERS OUT
-	 * Rectangle &rect - view borders
-	 */
-	void getBorders(Rectangle &rect);
 
 	/*
 	 * Apply new coordinates and set the view for re-drawing.
