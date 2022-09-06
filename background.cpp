@@ -36,7 +36,10 @@ void Background::draw()
     globalize(viewRect);
     unsigned color;
 
-    palette->getPalette(BACKGROUND_COLOR, color);
+    if (getState(VIEW_STATE_DISABLED))
+        palette->getPalette(BACKGROUND_BG_DISABLED, color);
+    else
+        palette->getPalette(BACKGROUND_BG, color);
 
     renderer->filledRectangle(viewRect, color);
 }
