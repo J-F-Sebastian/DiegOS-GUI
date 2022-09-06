@@ -47,8 +47,11 @@ enum
 
 enum
 {
+    // Single click
     POS_EVT_PRESSED = 1 << 0,
+    // Double click
     POS_EVT_DOUBLE = 1 << 1,
+    // Button pressed while moving
     POS_EVT_LONG = 1 << 2
 };
 
@@ -153,7 +156,7 @@ struct MessageEvent
     void *targetObject;
     /*
      * Optional payload, up to the message implementation.
-    */
+     */
     void *payload;
 };
 
