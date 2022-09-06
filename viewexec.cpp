@@ -4,7 +4,7 @@
 ViewExec::ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent) : ViewGroup(limits, rnd, pals, parent), evtM(evt), background(nullptr)
 {
     clearOptions(VIEW_OPT_ALL);
-    setState(VIEW_STATE_VISIBLE | VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED | VIEW_STATE_EXPOSED);
+    setState(VIEW_STATE_VISIBLE | VIEW_STATE_SELECTED | VIEW_STATE_EXPOSED);
 }
 
 void ViewExec::initDesktop()
@@ -30,7 +30,7 @@ void ViewExec::run()
     draw();
     while (getState(VIEW_STATE_EVLOOP))
     {
-        if (evtM->wait(&event, 1000))
+        while (evtM->wait(&event, 1000))
             handleEvent(&event);
     }
     clearState(VIEW_STATE_EVLOOP);
@@ -41,6 +41,7 @@ void ViewExec::draw()
     if (getState(VIEW_STATE_EVLOOP))
     {
         getRenderer()->clear(0);
+        computeExposure();
         ViewGroup::draw();
         getRenderer()->show();
     }
@@ -51,6 +52,7 @@ void ViewExec::reDraw()
     if (getState(VIEW_STATE_EVLOOP))
     {
         getRenderer()->clear(0);
+        computeExposure();
         ViewGroup::reDraw();
         getRenderer()->show();
     }
