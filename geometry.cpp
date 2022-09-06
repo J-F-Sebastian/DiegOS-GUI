@@ -55,6 +55,13 @@ void Point::sub(Point &other)
 	y -= other.y;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
 Rectangle::Rectangle() : ul(0, 0), lr(0, 0) {}
 
 Rectangle::Rectangle(Point &upleft, Point &lowright) : ul(upleft), lr(lowright) {}
@@ -76,6 +83,40 @@ void Rectangle::move(int deltax, int deltay)
 {
 	ul.move(deltax, deltay);
 	lr.move(deltax, deltay);
+}
+
+void Rectangle::moveClipped(int deltax, int deltay, Rectangle &clipping)
+{
+	/* Should we return some status here? Clipping is supposed to be alwaing including this rectangle !!! */
+	if (!clipping.includes(*this))
+		return;
+
+	ul.move(deltax, deltay);
+	lr.move(deltax, deltay);
+
+	if (!clipping.includes(*this))
+	{
+		if ((lr.x > clipping.lr.x) || (lr.y > clipping.lr.y))
+		{
+			if (lr.x > clipping.lr.x)
+				deltax = clipping.lr.x - lr.x;
+			if (lr.y > clipping.lr.y)
+				deltay = clipping.lr.y - lr.y;
+
+			ul.move(deltax, deltay);
+			lr.move(deltax, deltay);
+		}
+		else if ((ul.x < clipping.ul.x) || (ul.y < clipping.ul.y))
+		{
+			if (ul.x < clipping.ul.x)
+				deltax = clipping.ul.x - ul.x;
+			if (ul.y > clipping.ul.y)
+				deltay = clipping.ul.y - ul.y;
+
+			ul.move(deltax, deltay);
+			lr.move(deltax, deltay);
+		}
+	}
 }
 
 void Rectangle::zoom(int deltax, int deltay)
@@ -105,21 +146,14 @@ void Rectangle::intersection(Rectangle &other)
 
 void Rectangle::join(Rectangle &other)
 {
-	if (intersect(other))
-	{
-		if (ul.x > other.ul.x)
-			ul.x = other.ul.x;
-		if (ul.y > other.ul.y)
-			ul.y = other.ul.y;
-		if (lr.x < other.lr.x)
-			lr.x = other.lr.x;
-		if (lr.y < other.lr.y)
-			lr.y = other.lr.y;
-	}
-	else
-	{
-		ul = lr = {0, 0};
-	}
+	if (ul.x > other.ul.x)
+		ul.x = other.ul.x;
+	if (ul.y > other.ul.y)
+		ul.y = other.ul.y;
+	if (lr.x < other.lr.x)
+		lr.x = other.lr.x;
+	if (lr.y < other.lr.y)
+		lr.y = other.lr.y;
 }
 
 void Rectangle::center(Rectangle &other)
@@ -137,20 +171,16 @@ void Rectangle::center(Rectangle &other)
 
 bool Rectangle::intersect(Rectangle &other)
 {
-	if ((ul.x < other.ul.x) &&
-	    (lr.x < other.lr.x))
+	if (lr.x < other.ul.x)
 		return false;
 
-	if ((ul.x > other.lr.x) &&
-	    (lr.x > other.lr.x))
+	if (ul.x > other.lr.x)
 		return false;
 
-	if ((ul.y < other.ul.y) &&
-	    (lr.y < other.lr.y))
+	if (lr.y < other.ul.y)
 		return false;
 
-	if ((ul.y > other.lr.y) &&
-	    (lr.y > other.lr.y))
+	if (ul.y > other.lr.y)
 		return false;
 
 	return true;
@@ -184,6 +214,11 @@ void Rectangle::delta(Rectangle &other)
 	temp.ul.sub(other.ul);
 	temp.lr.sub(other.lr);
 	other = temp;
+}
+
+void Rectangle::clip(Rectangle &clipping)
+{
+	intersection(clipping);
 }
 
 int Rectangle::width() const

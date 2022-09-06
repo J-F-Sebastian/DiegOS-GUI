@@ -97,27 +97,147 @@ public:
 	Rectangle(int upleftx, int uplefty, int lowrightx, int lowrighty);
 	Rectangle(Rectangle &other);
 
-	void set(Point &upleft);
+	/*
+	 * Sets the coordinates of the upper left and lower right points
+	 * of a rectangle.
+	 *
+	 * PARAMETERS IN
+	 * upleft   - upper left coordinates
+	 * lowright - lower right coordinates
+	 */
 	void set(Point &upleft, Point &lowright);
+
+	/*
+	 * Move the rectangle. Adds deltax and deltay to both
+	 * upper left and lower right corners.
+	 * Area and form factor are not affected by this operation.
+	 *
+	 * PARAMETERS IN
+	 * deltax   - x value (can be negative)
+	 * deltay   - y value (can be negative)
+	 */
 	void move(int deltax, int deltay);
+
+	/*
+	 * Move the rectangle. Adds deltax and deltay to both
+	 * upper left and lower right corners.
+	 * The rectangle cannot exceed boundaries explicited in clipping,
+	 * i.e. the move operation is clipped to the clipping boundaries.
+	 * Area and form factor are not affected by this operation.
+	 *
+	 * PARAMETERS IN
+	 * deltax   - x value (can be negative)
+	 * deltay   - y value (can be negative)
+	 * clipping - clipping boundaries, this rectangle cannot move outside these limits
+	 */
+	void moveClipped(int deltax, int deltay, Rectangle &clipping);
+	/*
+	 * Zoom the rectangle. Subtracts deltax and deltay from
+	 * upper left corner and adds deltax and deltay to lower right corner.
+	 * Area and form factor may be affected by this operation.
+	 *
+	 * PARAMETERS IN
+	 * deltax   - x value (can be negative)
+	 * deltay   - y value (can be negative)
+	 */
 	void zoom(int deltax, int deltay);
+
+	/*
+	 * Compute the intersection with the input rectangle
+	 * and store the result internally.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to intersect with
+	 */
 	void intersection(Rectangle &other);
+
+	/*
+	 * Compute the union with the input rectangle
+	 * and store the result internally.
+	 * Union equals a rectangle including both this
+	 * and other rectangles.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to join with
+	 */
 	void join(Rectangle &other);
+
+	/*
+	 * Move the rectangle to be centered within the
+	 * other rectangle.
+	 * The other rectangle must include the object's rectangle.
+	 * Area and form factor are not affected by this operation.
+	 * The coordinates will be altered to have the centers of the
+	 * 2 rectangles be the same.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to use for centering
+	 */
 	void center(Rectangle &other);
+
+	/*
+	 * Check if the intersection with the other rectangle
+	 * is void or not.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to intersect with
+	 *
+	 * RETURNS
+	 * true if the intersection is not void, i.e. the intersection
+	 *      would be a rectangle with a not null area
+	 * false in any other case
+	 */
 	bool intersect(Rectangle &other);
+
+	/*
+	 * Check if the other rectangle is included in this or not.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to check
+	 *
+	 * RETURNS
+	 * true if other rectangle is completely included in this rectangle
+	 * false in any other case
+	 */
 	bool includes(Rectangle &other);
+
+	/*
+	 * Check if the other point is included in this rectangle.
+	 *
+	 * PARAMETERS IN
+	 * other - the point to be check
+	 *
+	 * RETURNS
+	 * true if the point is included in this rectangle
+	 * false in any other case
+	 */
 	bool includes(Point &point);
+
 	/*
 	 * computes the difference between other and this rectangle.
 	 * Output is stored in other.
-	 * 
+	 *
 	 * PARAMETERS IN
-	 * Rectangle &other - the rectangle to subtract 
-	 * 
+	 * Rectangle &other - the rectangle to subtract
+	 *
 	 * PRAMETERS OUT
 	 * Rectangle &other - the result of the difference this -= other
 	 */
 	void delta(Rectangle &other);
+
+	/*
+	 * Perform clipping of this rectangle using clipping as boundaries.
+	 * The result of the operation equals computing the intersection
+	 * between this and clipping.
+	 * Clipping is assumed to either contain this rectangle or to have a
+	 * not null intersection, otherwise the result of clipping would be
+	 * a void rectangle.
+	 *
+	 * PARAMETERS IN
+	 * clipping - the clipping rectangle
+	 */
+	void clip(Rectangle &clipping);
+
 	int width(void) const;
 	int height(void) const;
 	void width(int w);
