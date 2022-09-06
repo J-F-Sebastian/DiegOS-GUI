@@ -30,7 +30,7 @@ ViewEventSDL::ViewEventSDL() : ViewEventManager()
     else
     {
         SDL_EventState(SDL_WINDOWEVENT, SDL_IGNORE);
-        //SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+        // SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
         myEventType = SDL_RegisterEvents(1);
         if (myEventType == -1U)
@@ -58,12 +58,20 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
     SDL_FlushEvents(SDL_APP_TERMINATING, SDL_SYSWMEVENT);
     SDL_FlushEvents(SDL_CLIPBOARDUPDATE, SDL_DROPCOMPLETE);
 
-    if (timeoutms > 0)
-        retval = SDL_WaitEventTimeout(&sdlevt, timeoutms);
-    else if (timeoutms == 0)
-        retval = SDL_PollEvent(&sdlevt);
-    else
-        retval = SDL_WaitEvent(&sdlevt);
+    retval = SDL_PollEvent(&sdlevt);
+
+    /*
+     * If no event is ready, go waiting if specified by timeoutms.
+     * If the user wants polling, or wants to sleep but an event is ready,
+     * go ahead and return the event.
+     */
+    if (!retval)
+    {
+        if (timeoutms > 0)
+            retval = SDL_WaitEventTimeout(&sdlevt, timeoutms);
+        else if (timeoutms < 0)
+            retval = SDL_WaitEvent(&sdlevt);
+    }
 
     if (retval)
     {
@@ -90,16 +98,19 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
                 mouse.buttons = 1 << 0;
 
             if (sdlevt.button.state == SDL_PRESSED)
-                mouse.status |= POS_EVT_PRESSED;
-            if (sdlevt.button.clicks == 2)
-                mouse.status |= POS_EVT_DOUBLE;
+            {
+                if (sdlevt.button.clicks == 1)
+                    mouse.status = POS_EVT_PRESSED;
+                else if (sdlevt.button.clicks == 2)
+                    mouse.status = POS_EVT_DOUBLE;
+            }
             mouse.x = sdlevt.button.x;
             mouse.y = sdlevt.button.y;
             evt->setPositionalEvent(mouse);
         }
         break;
 
-        //case SDL_MOUSEWHEEL:
+        // case SDL_MOUSEWHEEL:
         case SDL_MOUSEMOTION:
         {
             PositionalEvent mouse = {0, 0, 0, 0};
@@ -111,7 +122,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
                 mouse.buttons = 1 << 0;
 
             if (sdlevt.motion.state & (SDL_BUTTON_LMASK | SDL_BUTTON_MMASK | SDL_BUTTON_RMASK))
-                mouse.status |= POS_EVT_PRESSED;
+                mouse.status = POS_EVT_LONG;
 
             mouse.x = sdlevt.motion.x;
             mouse.y = sdlevt.motion.y;
