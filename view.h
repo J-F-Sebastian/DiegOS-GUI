@@ -265,9 +265,27 @@ public:
 	virtual void setBackground(void);
 
 	/*
-	 * If the view is visible set VIEW_STATE_EXPOSED, otherwise clear it.
+	 * If the view is visible set or clear VIEW_STATE_EXPOSED according to
+	 * exposed value.
+	 * If the view is not visible VIEW_STATE_EXPOSED is forcibely cleared.
+	 *
+	 * PARAMETERS IN
+	 * bool exposed - the view exposure
 	 */
-	void setExposed(void);
+	virtual void setExposed(bool exposed);
+
+	/*
+	 * If the view borders are included in covered rectangle, the view
+	 * cannot be exposed (drawn) on video, so setExposed(false) will be called.
+	 * If the view borders are not included in covered rectangle, the covering
+	 * rectangle is only partially overlapped with the view borders, as well as it
+	 * may not intersect at all.
+	 * In this case no action is taken.
+	 *
+	 * PARAMETERS IN
+	 * Rectangle &covered - reference to the covering rectangle
+	 */
+	virtual void clearExposed(Rectangle &covered);
 
 	/*
 	 * Operate on the view resize options flags.
@@ -559,6 +577,9 @@ public:
 	 */
 	virtual bool setLocation(const Rectangle &loc) override;
 
+	virtual void setExposed(bool exposed) override;
+	virtual void clearExposed(Rectangle &covered) override;
+
 	virtual void draw(void) override;
 
 	virtual void reDraw(void) override;
@@ -587,6 +608,8 @@ protected:
 	void toTheTop(View *target);
 
 	bool thisViewIsMine(View *who);
+
+	void computeExposure(void);
 
 	Rectangle lastLimits;
 	View *focused;

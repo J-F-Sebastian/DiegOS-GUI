@@ -211,7 +211,9 @@ static const unsigned char SVALIDATE = (VIEW_STATE_VISIBLE |
 					VIEW_STATE_FOCUSED |
 					VIEW_STATE_DISABLED |
 					VIEW_STATE_DRAGGING |
-					VIEW_STATE_EVLOOP);
+					VIEW_STATE_EVLOOP |
+					VIEW_STATE_FOREGROUND |
+					VIEW_STATE_EXPOSED);
 
 void View::setState(unsigned char flags)
 {
@@ -443,15 +445,24 @@ void View::makeGlobal(Point &origin)
 	origin += borders.ul;
 }
 
-void View::setExposed()
+void View::setExposed(bool exposed)
 {
-	if (getState(VIEW_STATE_VISIBLE))
+	if (getState(VIEW_STATE_VISIBLE) && exposed)
 	{
 		setState(VIEW_STATE_EXPOSED);
 	}
 	else
 	{
 		clearState(VIEW_STATE_EXPOSED);
+	}
+}
+
+void View::clearExposed(Rectangle &covered)
+{
+	if (covered.includes(borders))
+	{
+		std::cout << covered.ul.x << "," << covered.ul.y << " " << covered.lr.x << "," << covered.lr.y << std::endl;
+		setExposed(false);
 	}
 }
 
@@ -882,4 +893,75 @@ bool ViewGroup::thisViewIsMine(View *who)
 	List<View *>::iterator it(viewList, &who);
 
 	return (it != viewList.end()) ? true : false;
+}
+
+void ViewGroup::setExposed(bool exposed)
+{
+	View::setExposed(exposed);
+
+	VIEWLISTITFOR(it)
+	{
+		(*it)->setExposed(exposed);
+	}
+}
+
+void ViewGroup::clearExposed(Rectangle &covered)
+{
+	Rectangle local;
+
+	View::clearExposed(covered);
+	getBorders(local);
+
+	if (local.intersect(covered))
+	{
+		local.intersection(covered);
+		localize(local);
+		VIEWLISTITFOR(it)
+		{
+			(*it)->clearExposed(local);
+		}
+	}
+}
+
+void ViewGroup::computeExposure()
+{
+	/*
+	 * Reset exposure of all views; note that invisible views
+	 * will be forced to be not exposed.
+	 */
+	setExposed(true);
+
+	/*
+	 * Make a list of visible views to compute the
+	 * covering areas
+	 */
+	List<View *> visible;
+
+	VIEWLISTITFOR(it)
+	{
+		if ((*it)->getState(VIEW_STATE_VISIBLE))
+			visible.addTail(*it);
+	}
+
+	/*
+	 * Optimization (?!?): if no view is visible, or there is only one
+	 * visible view, drop out
+	 */
+	if (visible.count() < 2)
+		return;
+
+	List<View *>::iterator target(visible);
+	List<View *>::iterator firstVisible = target;
+
+	while (++target != visible.end())
+	{
+		List<View *>::iterator predecessors = visible.begin();
+		while (predecessors != target)
+		{
+			Rectangle predR;
+			(*predecessors)->getBorders(predR);
+			(*target)->clearExposed(predR);
+			predecessors++;
+		}
+	}
 }
