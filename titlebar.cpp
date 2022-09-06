@@ -30,23 +30,32 @@ TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title
 
 void TitleBar::draw()
 {
-    unsigned color;
+    unsigned color, color2;
     Rectangle viewRect;
     ViewRender *renderer = getRenderer();
     Palette *palette = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
 
-    palette->getPalette(TITLEBAR_BG, color);
-
-    //The titlebar frame
+    std::cout << " ### " << getState(VIEW_STATE_FOREGROUND) << std::endl;
+    if (getState(VIEW_STATE_FOREGROUND))
+    {
+        palette->getPalette(TITLEBAR_BG, color);
+        palette->getPalette(TITLEBAR_TEXT, color2);
+    }
+    else
+    {
+        palette->getPalette(TITLEBAR_BG_DISABLED, color);
+        palette->getPalette(TITLEBAR_TEXT_DISABLED, color2);
+    }
+    // The titlebar frame
     renderer->filledRectangle(viewRect, color);
-    //The title
+    // The title
     Rectangle temp;
     renderer->textBox(title.c_str(), temp);
     temp.move(viewRect.ul.x, viewRect.ul.y);
     temp.center(viewRect);
-    palette->getPalette(TITLEBAR_TEXT, color);
+    palette->getPalette(TITLEBAR_TEXT, color2);
     renderer->text(temp, color, title.c_str());
 }
 
