@@ -35,10 +35,10 @@ public:
         PAL_MENU,
         PAL_POPUP,
         PAL_BUTTON,
-        PAL_SCROLLER,
         PAL_LIST,
         PAL_DESKTOP,
         PAL_WINICON,
+        PAL_SCROLLBAR,
         PAL_NUM
     };
 
