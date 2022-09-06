@@ -533,10 +533,14 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 
 void ViewGroup::draw()
 {
-	// Draw children back-to-top, following the painter algorithm
-	for (List<View *>::riterator it = viewList.rbegin(); it != viewList.rend(); it++)
+	if (getState(VIEW_STATE_EXPOSED))
 	{
-		(*it)->draw();
+		//  Draw children back-to-top, following the painter algorithm
+		VIEWLISTREVITFOR(it)
+		{
+			if ((*it)->getState(VIEW_STATE_EXPOSED))
+				(*it)->draw();
+		}
 	}
 }
 
