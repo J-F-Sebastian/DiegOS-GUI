@@ -12,8 +12,7 @@ void ViewExec::initDesktop()
     Rectangle rect;
     getExtent(rect);
     background = new Background(rect);
-    background->clearOptions(VIEW_OPT_ALL);
-    background->clearResizeMode(VIEW_RESIZEABLE);
+    background->clearResizeMode(VIEW_RESIZEABLE | VIEW_ZOOMED);
     background->setPalette(palettes->getPalette(PaletteGroup::PAL_DESKTOP));
     insert(background);
 }
