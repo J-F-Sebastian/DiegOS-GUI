@@ -48,6 +48,16 @@ bool Event::isEventPositional()
     return (myEventData.what == EVT_POS) ? true : false;
 }
 
+bool Event::isEventKey()
+{
+    return (myEventData.what == EVT_KBD) ? true : false;
+}
+
+bool Event::isEventUnknown()
+{
+    return (myEventData.what == EVT_UNKNOWN) ? true : false;
+}
+
 struct PositionalEvent *Event::getPositionalEvent()
 {
     return (myEventData.what == EVT_POS) ? &myEventData.position : nullptr;

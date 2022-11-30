@@ -28,6 +28,9 @@ struct CharScanType
     uint8_t scanCode;
 };
 
+// REMAPPING NEEDED;-() for keys
+// Manage modifiers
+
 struct KeyDownEvent
 {
     union
@@ -129,7 +132,7 @@ enum
     RESPONSE_NEXT
 };
 
-#define BROADCAST_OBJECT (void *)(-1UL)
+#define BROADCAST_OBJECT (void *)(-1)
 struct MessageEvent
 {
     /* Command ID */
@@ -179,6 +182,8 @@ public:
 
     enum EventType getEventType(void);
     bool isEventPositional(void);
+    bool isEventKey(void);
+    bool isEventUnknown(void);
 
     struct PositionalEvent *getPositionalEvent(void);
     struct KeyDownEvent *getKeyDownEvent(void);
