@@ -32,11 +32,11 @@ Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, Palett
 
     Rectangle temp;
     getExtent(temp);
-    View *tmpView = new Frame(temp);
+    View *tmpView = new Frame(temp, 5);
     tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_FRAME));
     insert(tmpView);
 
-    temp.zoom(-4, -4);
+    temp.zoom(-5, -5);
     temp.ul.y += 26;
     tmpView = new Background(temp);
     tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_BACKGROUND));
