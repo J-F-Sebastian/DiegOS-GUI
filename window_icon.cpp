@@ -39,7 +39,7 @@ void WindowIconClose::draw()
     palette->getPalette(WINICON_BRIGHT, color);
     palette->getPalette(WINICON_DARK, color2);
 
-    //Outer shadow
+    // Outer shadow
 
     /*
      *    BBBBBBBBB
@@ -56,7 +56,7 @@ void WindowIconClose::draw()
     ul.move(-viewRect.width(), viewRect.height() - 1);
     renderer->hline(ul, viewRect.width() - 1, color2);
 
-    //The button frame
+    // The button frame
     palette->getPalette(WINICON_MAIN, color);
     viewRect.zoom(-1, -1);
     renderer->filledRectangle(viewRect, color);
@@ -116,7 +116,7 @@ void WindowIconClose::handleEvent(Event *evt)
             // Update the pressure state, if the new state is RELEASED, it means
             // the icon was pressed and then released, in this case the object
             // will generate an event.
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
                 if (!isDown() && getParent())
@@ -155,7 +155,7 @@ void WindowIconZoom::draw()
     palette->getPalette(WINICON_BRIGHT, color);
     palette->getPalette(WINICON_DARK, color2);
 
-    //Outer shadow
+    // Outer shadow
 
     /*
      *    BBBBBBBBB
@@ -172,7 +172,7 @@ void WindowIconZoom::draw()
     ul.move(-viewRect.width(), viewRect.height() - 1);
     renderer->hline(ul, viewRect.width() - 1, color2);
 
-    //The button frame
+    // The button frame
     palette->getPalette(WINICON_MAIN, color);
     viewRect.zoom(-1, -1);
     renderer->filledRectangle(viewRect, color);
@@ -216,7 +216,7 @@ void WindowIconZoom::handleEvent(Event *evt)
             // Update the pressure state, if the new state is RELEASED, it means
             // the icon was pressed and then released, in this case the object
             // will generate an event and toggle isZoom.
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
                 if (!isDown())
