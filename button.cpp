@@ -40,7 +40,7 @@ void Button::draw()
     palette->getPalette(BUTTON_BRIGHT, color);
     palette->getPalette(BUTTON_DARK, color2);
 
-    //Outer shadow
+    // Outer shadow
 
     /*
      *    BBBBBBBBB
@@ -57,7 +57,7 @@ void Button::draw()
     ul.move(-temp.width(), temp.height() - 1);
     renderer->hline(ul, temp.width() - 1, color2);
 
-    //Inner shadow
+    // Inner shadow
 
     /*
      *    DDDDDDDDD
@@ -75,7 +75,7 @@ void Button::draw()
     ul.move(-temp.width(), temp.height() - 1);
     renderer->hline(ul, temp.width() - 1, color);
 
-    //Outer shadow
+    // Outer shadow
 
     /*
      *    BBBBBBBBB
@@ -126,7 +126,7 @@ void Button::handleEvent(Event *evt)
     {
         if (isEventPositionInRange(evt))
         {
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
                 /* Now ask for redrawing */
