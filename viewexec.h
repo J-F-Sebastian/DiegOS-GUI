@@ -26,10 +26,10 @@
 class ViewExec : public ViewGroup
 {
 public:
-    //TBD
+    // TBD
     void executeDialog(void){};
 
-    //protected:
+    // protected:
     ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
 
     virtual void initDesktop(void);
@@ -39,6 +39,8 @@ public:
     virtual void draw(void) override;
     virtual void reDraw(void) override;
     virtual void sendEvent(Event *evt) override;
+
+    virtual void handleEvent(Event *evt) override;
 
 private:
     ViewEventManager *evtM;
