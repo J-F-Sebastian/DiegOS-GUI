@@ -24,7 +24,7 @@
 
 /*
  * Window control flags.
- * They dictates which abilites the window have:
+ * They dictates which abilities the window have:
  *     the window can be moved around by dragging the title bar
  *     the window can be resized by dragging the lower right corner
  *     the window can be closed
