@@ -301,12 +301,14 @@ void View::handleEvent(Event *evt)
 {
 	if (isEventPositionValid(evt))
 	{
-		if (evt->testPositionalEventStatus(POS_EVT_PRESSED))
+		if (evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_DOUBLE))
 		{
 			if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_DISABLED) && getOptions(VIEW_OPT_SELECTABLE))
 			{
 				select();
 			}
+			if (!getState(VIEW_STATE_FOREGROUND))
+				sendCommand(CMD_FOREGROUND, getParent(), getParent());
 		}
 	}
 }
@@ -386,7 +388,7 @@ void View::select()
 	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
 		return;
 
-	std::cout << __func__ << reinterpret_cast<intptr_t>(this) << std::endl;
+	std::cout << __PRETTY_FUNCTION__ << " " << reinterpret_cast<intptr_t>(this) << std::endl;
 
 	setState(VIEW_STATE_SELECTED);
 
@@ -398,7 +400,7 @@ void View::select()
 		if (parentView->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
-		sendCommand(CMD_FOREGROUND, getParent(), this);
+		// sendCommand(CMD_SELECT, getParent(), this);
 	}
 }
 
@@ -579,6 +581,7 @@ void ViewGroup::handleEvent(Event *evt)
 		}
 		evt->clear();
 	}
+
 	/*
 	 * If the event is a message (a command) then the event is processed if the destination
 	 * is either this view or the broadcast object.
@@ -614,10 +617,12 @@ void ViewGroup::handleEvent(Event *evt)
 			{
 			case CMD_FOREGROUND:
 				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				toTheTop(static_cast<View *>(msg->targetObject));
-				/* FALLTHRU */
+				setForeground();
+				break;
+
 			case CMD_SELECT:
 				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				toTheTop(static_cast<View *>(msg->targetObject));
 				selectView(static_cast<View *>(msg->targetObject));
 				break;
 
@@ -767,8 +772,10 @@ void ViewGroup::insert(View *newView)
 			if (selected)
 			{
 				selected->clearState(VIEW_STATE_SELECTED);
+				selected->setBackground();
 			}
 			newView->setState(VIEW_STATE_SELECTED);
+			newView->setForeground();
 			selected = newView;
 		}
 		else
@@ -875,7 +882,7 @@ void ViewGroup::selectView(View *target)
 		{
 			selected->clearState(VIEW_STATE_SELECTED);
 		}
-		target->setState(VIEW_STATE_SELECTED);
+		// target->setState(VIEW_STATE_SELECTED);
 		selected = target;
 		/* Now ask for redrawing */
 		sendCommand(CMD_DRAW);
@@ -895,6 +902,8 @@ void ViewGroup::toTheTop(View *target)
 		it = viewList.erase(it);
 		viewList.addHead(target);
 		viewList.getHead()->setForeground();
+		/* Now ask for redrawing */
+		sendCommand(CMD_DRAW);
 	}
 }
 
@@ -915,7 +924,7 @@ void ViewGroup::maximize()
 
 void ViewGroup::minimize()
 {
-	//FIX ME
+	// FIX ME
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
 }
