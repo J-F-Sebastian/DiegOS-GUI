@@ -26,7 +26,7 @@
 #include "eventqueue.h"
 #include "palettegroupfactory.h"
 
-//Screen dimension constants
+// Screen dimension constants
 static const int SCREEN_WIDTH = 1024;
 static const int SCREEN_HEIGHT = 768;
 
@@ -52,6 +52,10 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
     Button *newButton = new Button(buttonLimits);
     newButton->setPalette(palg->getPalette(PaletteGroup::PAL_BUTTON));
     newWindow->insert(newButton);
+    buttonLimits.move(25, 25);
+    ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
+    newProgBar->setPalette(palg->getPalette(PaletteGroup::PAL_PROGRESSBAR));
+    newWindow->insert(newProgBar);
     app->insert(newWindow);
     return newWindow;
 }
