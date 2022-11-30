@@ -25,6 +25,7 @@
 
 TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), lastPressure(0, 0)
 {
+    setOptions(VIEW_OPT_SELECTABLE);
     setResizeMode(VIEW_RESIZE_LX);
 }
 
