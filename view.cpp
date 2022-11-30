@@ -549,7 +549,7 @@ void ViewGroup::reDraw()
 	if (getState(VIEW_CHANGED_REDRAW))
 	{
 		// Draw children back-to-top, following the painter algorithm
-		for (List<View *>::riterator it = viewList.rbegin(); it != viewList.rend(); it++)
+		VIEWLISTREVITFOR(it)
 		{
 			(*it)->reDraw();
 		}
@@ -567,10 +567,11 @@ void ViewGroup::handleEvent(Event *evt)
 	 */
 	if (isEventPositionValid(evt))
 	{
-		List<View *>::iterator it;
-		for (it = viewList.begin(); it != viewList.end(); it++)
+		VIEWLISTITFOR(it)
 		{
 			(*it)->handleEvent(evt);
+			if (evt->isEventUnknown())
+				return;
 		}
 		evt->clear();
 	}
@@ -684,13 +685,37 @@ void ViewGroup::handleEvent(Event *evt)
 					draw();
 					break;
 				}
+				/*
+				 * Forward message to all children.
+				 */
+				VIEWLISTITFOR(it)
+				{
+					(*it)->handleEvent(evt);
+				}
 			}
 			/*
-			 * Forward messages.
+			 * Process unicast and leave the message as is.
 			 */
-			for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+			else
 			{
-				(*it)->handleEvent(evt);
+				/*
+				 * Forward message, try unicast, if unknown, go broadcast.
+				 */
+				List<View *>::iterator lkup(viewList, reinterpret_cast<View **>(&msg->destObject));
+
+				if (lkup != viewList.end())
+				{
+					(*lkup)->handleEvent(evt);
+				}
+				else
+				{
+					VIEWLISTITFOR(it)
+					{
+						(*it)->handleEvent(evt);
+						if (evt->isEventUnknown())
+							return;
+					}
+				}
 			}
 		}
 	}
@@ -699,23 +724,31 @@ void ViewGroup::handleEvent(Event *evt)
 	 */
 	else
 	{
-		for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+		VIEWLISTITFOR(it)
+		{
 			(*it)->handleEvent(evt);
+			if (evt->isEventUnknown())
+				return;
+		}
 	}
 }
 
 void ViewGroup::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);
-	for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+	VIEWLISTITFOR(it)
+	{
 		(*it)->setForeground();
+	}
 }
 
 void ViewGroup::setBackground()
 {
 	clearState(VIEW_STATE_FOREGROUND);
-	for (List<View *>::iterator it = viewList.begin(); it != viewList.end(); it++)
+	VIEWLISTITFOR(it)
+	{
 		(*it)->setBackground();
+	}
 }
 
 void ViewGroup::insert(View *newView)
