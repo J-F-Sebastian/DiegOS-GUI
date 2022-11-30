@@ -80,7 +80,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         case SDL_KEYDOWN:
         {
             KeyDownEvent kbd;
-            kbd.keyCode = sdlevt.key.keysym.scancode;
+            kbd.keyCode = (uint16_t)sdlevt.key.keysym.scancode;
             evt->setKeyDownEvent(kbd);
         }
         break;
@@ -149,7 +149,6 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         return true;
     }
 
-    std::cout << "SDL event error! SDL_Error: " << SDL_GetError() << std::endl;
     return false;
 }
 
