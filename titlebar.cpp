@@ -69,14 +69,14 @@ void TitleBar::handleEvent(Event *evt)
         if (isEventPositionInRange(evt))
         {
             uint8_t status = evt->getPositionalEvent()->status;
-            if ((status & (POS_EVT_DOUBLE | POS_EVT_PRESSED)) == POS_EVT_DOUBLE)
+            if (status & POS_EVT_DOUBLE)
             {
                 if (getParent())
                 {
                     sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
                 }
             }
-            else if (status & POS_EVT_PRESSED)
+            else if (status & POS_EVT_LONG)
             {
                 Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
                 Point deltaPressure(newPressure);
