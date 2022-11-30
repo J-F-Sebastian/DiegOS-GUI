@@ -66,3 +66,16 @@ void ViewExec::sendEvent(Event *evt)
     else
         View::sendEvent(evt);
 }
+
+void ViewExec::handleEvent(Event *evt)
+{
+    ViewGroup::handleEvent(evt);
+
+    if (evt->isEventKey())
+    {
+        KeyDownEvent *key = evt->getKeyDownEvent();
+        // switch (key->keyCode)
+        //{
+        //         }
+    }
+}
