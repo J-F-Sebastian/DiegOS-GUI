@@ -1,7 +1,7 @@
 /*
  * DiegOS Operating System source code
  *
- * Copyright (C) 2012 - 2019 Diego Gallizioli
+ * Copyright (C) 2012 - 2022 Diego Gallizioli
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ enum
  */
 enum
 {
-	/* View is visible */
+	/* View is visible, it can be drawn on display */
 	VIEW_STATE_VISIBLE = (1 << 0),
 	/* View is selected, i.e. it is the actual selection */
 	VIEW_STATE_SELECTED = (1 << 1),
@@ -66,9 +66,9 @@ enum
 	VIEW_STATE_DRAGGING = (1 << 4),
 	/* View is running the event loop */
 	VIEW_STATE_EVLOOP = (1 << 5),
-	/* View is to be drawn on video */
+	/* View is exposed, all of it of part of are not covered by other views */
 	VIEW_STATE_EXPOSED = (1 << 6),
-	/* View is in foreground, so it has to be visible and exposed, and is first on screen */
+	/* View is in foreground */
 	VIEW_STATE_FOREGROUND = (1 << 7)
 };
 
@@ -77,7 +77,7 @@ enum
  */
 enum
 {
-	/* View can be selected or get the focus */
+	/* View can be selected or can get the focus */
 	VIEW_OPT_SELECTABLE = (1 << 0),
 	/* View will be moved to foreground when selected */
 	VIEW_OPT_TOPSELECT = (1 << 1),
@@ -417,6 +417,17 @@ public:
 	virtual bool isEventPositionValid(Event *evt);
 
 protected:
+	/*
+	 * View constructor.
+	 * By default - after creation - the view is configured with
+	 *
+	 * Borders and extent from limits parameter
+	 * ParentView, renderer and palette from their respective parameters
+	 * rflags set to (0), no resize allowed
+	 * sflags set to (VIEW_STATE_VISIBLE), view is visible
+	 * oflags set to (0), no options set
+	 * cflags set to (VIEW_CHANGED_REDRAW), view need to be drawn
+	 */
 	explicit View(Rectangle &limits, ViewRender *rnd = nullptr, Palette *pal = nullptr, View *parent = nullptr);
 
 	/*
