@@ -331,8 +331,8 @@ void View::sendCommand(const uint16_t command)
 
 void View::sendEvent(Event *evt)
 {
-	if (parentView)
-		parentView->sendEvent(evt);
+	if (getParent())
+		getParent()->sendEvent(evt);
 }
 
 bool View::isEventPositional(Event *evt)
@@ -373,7 +373,7 @@ bool View::focus()
 		return false;
 
 	bool checkflags = !getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
-	if ((parentView == nullptr) || (checkflags && parentView->focus()))
+	if ((getParent() == nullptr) || (checkflags && getParent()->focus()))
 	{
 		select();
 		sflags |= VIEW_STATE_FOCUSED;
@@ -395,9 +395,9 @@ void View::select()
 	if (!getOptions(VIEW_OPT_TOPSELECT))
 		return;
 
-	if (parentView)
+	if (getParent())
 	{
-		if (parentView->getState(VIEW_STATE_FOCUSED))
+		if (getParent()->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
 		// sendCommand(CMD_SELECT, getParent(), this);
