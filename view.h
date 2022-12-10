@@ -537,7 +537,7 @@ protected:
 	 */
 	virtual void sendEvent(Event *evt);
 
-	View *getParent(void) { return parentView; }
+	inline View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
 	Palette *getPalette(void) { return palette; }
 
