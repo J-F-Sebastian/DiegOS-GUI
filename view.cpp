@@ -303,12 +303,7 @@ void View::handleEvent(Event *evt)
 	{
 		if (evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_DOUBLE))
 		{
-			if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_DISABLED) && getOptions(VIEW_OPT_SELECTABLE))
-			{
-				select();
-			}
-			if (!getState(VIEW_STATE_FOREGROUND))
-				sendCommand(CMD_FOREGROUND, getParent(), getParent());
+			select();
 		}
 	}
 }
@@ -400,7 +395,7 @@ void View::select()
 		if (getParent()->getState(VIEW_STATE_FOCUSED))
 			setState(VIEW_STATE_FOCUSED);
 
-		// sendCommand(CMD_SELECT, getParent(), this);
+		sendCommand(CMD_SELECT, getParent(), this);
 	}
 }
 
