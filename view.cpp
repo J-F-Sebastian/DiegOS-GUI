@@ -371,7 +371,7 @@ bool View::focus()
 	if ((getParent() == nullptr) || (checkflags && getParent()->focus()))
 	{
 		select();
-		sflags |= VIEW_STATE_FOCUSED;
+		setState(VIEW_STATE_FOCUSED);
 		return true;
 	}
 
@@ -877,10 +877,7 @@ void ViewGroup::selectView(View *target)
 		{
 			selected->clearState(VIEW_STATE_SELECTED);
 		}
-		// target->setState(VIEW_STATE_SELECTED);
 		selected = target;
-		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW);
 	}
 }
 
