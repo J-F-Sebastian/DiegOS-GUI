@@ -22,22 +22,10 @@
 
 #include <cstdint>
 
-struct CharScanType
-{
-    uint8_t charCode;
-    uint8_t scanCode;
-};
-
-// REMAPPING NEEDED;-() for keys
-// Manage modifiers
-
 struct KeyDownEvent
 {
-    union
-    {
-        uint16_t keyCode;
-        CharScanType charScan;
-    };
+    uint16_t keyCode;
+    uint16_t modifier;
 };
 
 enum
