@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "vieweventsdl.h"
+#include "event_keyboard.h"
 #include "SDL.h"
 
 ViewEventSDL::ViewEventSDL() : ViewEventManager()
@@ -80,7 +81,11 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
         case SDL_KEYDOWN:
         {
             KeyDownEvent kbd;
-            kbd.keyCode = (uint16_t)sdlevt.key.keysym.scancode;
+            kbd.modifier = sdlevt.key.keysym.mod;
+            if (sdlevt.key.keysym.sym > SDLK_DELETE)
+                kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym & ~SDLK_SCANCODE_MASK) + SDLK_DELETE;
+            else
+                kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym);
             evt->setKeyDownEvent(kbd);
         }
         break;
