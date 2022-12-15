@@ -20,7 +20,7 @@
 #ifndef _VIEWEXEC_H_
 #define _VIEWEXEC_H_
 
-#include "view.h"
+#include "viewgroup.h"
 #include "vieweventmgr.h"
 
 class ViewExec : public ViewGroup

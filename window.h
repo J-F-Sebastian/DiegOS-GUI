@@ -20,7 +20,7 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include "view.h"
+#include "viewgroup.h"
 
 /*
  * Window control flags.
