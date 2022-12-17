@@ -60,12 +60,10 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	delta.y = loc.height() - update.height();
 	setBorders(loc);
 
-	List<View *>::iterator it = viewList.begin();
-	while (it != viewList.end())
+	VIEWLISTITFOR(it)
 	{
 		(*it)->calcLimits(delta, update);
 		(*it)->setLocation(update);
-		it++;
 	}
 
 	return true;
