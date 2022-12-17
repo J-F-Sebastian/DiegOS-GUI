@@ -154,8 +154,8 @@ void ViewGroup::handleEvent(Event *evt)
 
 			case CMD_SELECT:
 				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				toTheTop(static_cast<View *>(msg->targetObject));
 				selectView(static_cast<View *>(msg->targetObject));
+				toTheTop(static_cast<View *>(msg->targetObject));
 				break;
 
 			case CMD_CLOSE:

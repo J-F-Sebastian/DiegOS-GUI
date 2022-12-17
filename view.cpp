@@ -295,7 +295,8 @@ void View::handleEvent(Event *evt)
 	{
 		if (evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_DOUBLE))
 		{
-			select();
+			if (!focus())
+				evt->clear();
 		}
 	}
 }
@@ -352,22 +353,23 @@ bool View::isEventCmdForMe(Event *evt)
 	return false;
 }
 
-static const unsigned char FOCUSVAL = (VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
-
 bool View::focus()
 {
-	if (!getOptions(VIEW_OPT_SELECTABLE))
-		return false;
-
-	bool checkflags = !getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP);
-	if ((getParent() == nullptr) || (checkflags && getParent()->focus()))
+	if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP))
 	{
-		select();
-		setState(VIEW_STATE_FOCUSED);
-		return true;
+		if (getParent() && getParent()->focus())
+		{
+			select();
+			setState(VIEW_STATE_FOCUSED);
+			return true;
+		}
+		/*
+		 * Focus should not be grabbed !!! FIX ME check if focus can be granted
+		 */
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 void View::select()
@@ -376,15 +378,8 @@ void View::select()
 		return;
 
 	setState(VIEW_STATE_SELECTED);
-
-	if (!getOptions(VIEW_OPT_TOPSELECT))
-		return;
-
 	if (getParent())
 	{
-		if (getParent()->getState(VIEW_STATE_FOCUSED))
-			setState(VIEW_STATE_FOCUSED);
-
 		sendCommand(CMD_SELECT, getParent(), this);
 	}
 }

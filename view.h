@@ -65,7 +65,7 @@ enum
 	VIEW_STATE_DRAGGING = (1 << 4),
 	/* View is running the event loop */
 	VIEW_STATE_EVLOOP = (1 << 5),
-	/* View is exposed, all of it of part of are not covered by other views */
+	/* View is exposed, all of it or part of are not covered by other views */
 	VIEW_STATE_EXPOSED = (1 << 6),
 	/* View is in foreground */
 	VIEW_STATE_FOREGROUND = (1 << 7)
@@ -415,6 +415,9 @@ public:
 	 */
 	virtual bool isEventPositionValid(Event *evt);
 
+	bool focus(void);
+	void select(void);
+
 protected:
 	/*
 	 * View constructor.
@@ -539,9 +542,6 @@ protected:
 	inline View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
 	Palette *getPalette(void) { return palette; }
-
-	bool focus(void);
-	void select(void);
 
 private:
 	/*
