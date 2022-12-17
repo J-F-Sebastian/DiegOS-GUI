@@ -29,6 +29,7 @@
 Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, PaletteGroup *pals, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, rnd, pals, parent), wFlags(ctrlflags), isZoomed(false)
 {
     setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
+    setResizeMode(VIEW_RESIZEABLE);
 
     Rectangle temp;
     getExtent(temp);
