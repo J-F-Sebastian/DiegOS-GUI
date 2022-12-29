@@ -17,30 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _VIEWEXEC_H_
-#define _VIEWEXEC_H_
+#ifndef _VIEWAPPLICATION_H_
+#define _VIEWAPPLICATION_H_
 
-#include "viewgroup.h"
-#include "vieweventmgr.h"
+#include "viewexec.h"
 
-class ViewExec : public ViewGroup
+class ViewApplication : public ViewExec
 {
 public:
-    // TBD
-    void executeDialog(void){};
+	ViewApplication(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
+	virtual ~ViewApplication();
 
-    virtual void run(void);
+	virtual void initDesktop(void);
+	virtual void initMenu(void);
 
-    virtual void draw(void) override;
-    virtual void reDraw(void) override;
-    virtual void sendEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 
-    virtual void handleEvent(Event *evt) override;
-
-    ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
-
-protected:
-    ViewEventManager *evtM;
+private:
+	View *background;
 };
 
 #endif
