@@ -312,7 +312,7 @@ void View::sendCommand(const uint16_t command, void *destination, void *target)
 void View::sendCommand(const uint16_t command)
 {
 	Event evt;
-	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, this, nullptr};
+	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, BROADCAST_OBJECT, nullptr};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
 }
