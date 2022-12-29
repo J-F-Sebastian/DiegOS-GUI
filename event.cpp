@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstring>
+#include <iostream>
 
 #include "event.h"
 
@@ -114,4 +115,51 @@ void Event::clear()
 {
     memset(&myEventData, 0, sizeof(myEventData));
     myEventData.what = EVT_UNKNOWN;
+}
+
+void Event::print()
+{
+    switch (myEventData.what)
+    {
+    case EVT_POS:
+    {
+        std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
+        std::string temp("");
+        if (myEventData.position.status & POS_EVT_PRESSED)
+            temp += "pressed ";
+        if (myEventData.position.status & POS_EVT_DOUBLE)
+            temp += "double ";
+        if (myEventData.position.status & POS_EVT_LONG)
+            temp += "long ";
+        if (myEventData.position.status == 0)
+            temp += "none ";
+        std::cout << " STATUS " << temp;
+        temp.clear();
+        if (myEventData.position.buttons & POS_EVT_RIGHT)
+            temp += "right";
+        if (myEventData.position.buttons & POS_EVT_MIDDLE)
+            temp += "middle";
+        if (myEventData.position.buttons & POS_EVT_LEFT)
+            temp += "left";
+        if (myEventData.position.buttons & POS_EVT_TAP)
+            temp += "tap";
+        std::cout << " BUTTONS " << temp << std::endl;
+    }
+    break;
+    case EVT_KBD:
+        std::cout << "KBD: KEYCODE " << std::hex << myEventData.keyDown.keyCode;
+        std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
+        break;
+    case EVT_CMD:
+        std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand;
+        std::cout << " SENDER: " << myEventData.message.senderObject;
+        std::cout << " DEST: " << myEventData.message.destObject;
+        std::cout << " TARGET: " << myEventData.message.targetObject;
+        std::cout << std::dec << std::endl;
+        break;
+    case EVT_UNKNOWN:
+    default:
+        std::cout << "UNKNOWN" << std::endl;
+        break;
+    }
 }

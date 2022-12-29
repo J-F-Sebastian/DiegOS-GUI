@@ -22,9 +22,18 @@
 
 #include <cstdint>
 
+// Not really needed, but a convenience when handling events
+#include "event_keyboard.h"
+
 struct KeyDownEvent
 {
+	/*
+	 * enum KEYCODE_CODE
+	 */
 	uint16_t keyCode;
+	/*
+	 * enum KEYCODE_MODIFIER
+	 */
 	uint16_t modifier;
 };
 
@@ -185,6 +194,8 @@ public:
 	bool testPositionalEventStatus(char bitmap);
 
 	void clear(void);
+
+	void print(void);
 
 private:
 	struct EventData
