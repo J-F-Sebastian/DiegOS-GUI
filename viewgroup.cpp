@@ -23,7 +23,7 @@
 #define VIEWLISTITFOR(x) for (List<View *>::iterator x = viewList.begin(); x != viewList.end(); x++)
 #define VIEWLISTREVITFOR(x) for (List<View *>::riterator x = viewList.rbegin(); x != viewList.rend(); x++)
 
-ViewGroup::ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent) : View(limits, rnd, nullptr, parent), lastLimits(limits), focused(nullptr), selected(nullptr), palettes(pals), viewList()
+ViewGroup::ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent) : View(limits, rnd, nullptr, parent), lastLimits(limits), actual(nullptr), palettes(pals), viewList()
 {
 	setOptions(VIEW_OPT_SELECTABLE);
 }
@@ -165,8 +165,10 @@ void ViewGroup::handleEvent(Event *evt)
 				{
 					sendCommand(CMD_CLOSE, getParent(), this);
 				}
-				/* We are instructed to close one of our views */
-				else if (msg->senderObject == msg->targetObject)
+				/*
+				 * Check if we are instructed to close one of our views
+				 */
+				else
 				{
 					View *target = reinterpret_cast<View *>(msg->targetObject);
 					if (target)
@@ -174,15 +176,12 @@ void ViewGroup::handleEvent(Event *evt)
 						List<View *>::iterator it(viewList, &target);
 						if (it != viewList.end())
 						{
-							// FIXME THIS IS NOT GONNA WORK AS EXPECTED...
-							if (target->getState(VIEW_STATE_FOCUSED))
-								focusNext(true);
-							if (target->getState(VIEW_STATE_SELECTED))
-								selectNext(true);
-							viewList.erase(it);
-							delete target;
-							/* Now ask for redrawing */
-							sendCommand(CMD_DRAW);
+							if (remove(target))
+							{
+								delete target;
+								/* Now ask for redrawing */
+								sendCommand(CMD_DRAW);
+							}
 						}
 					}
 				}
@@ -314,14 +313,18 @@ void ViewGroup::insert(View *newView)
 		if (newView->getOptions(VIEW_OPT_TOPSELECT))
 		{
 			viewList.addHead(newView);
-			if (selected)
+			if (actual)
 			{
-				selected->clearState(VIEW_STATE_SELECTED);
-				selected->setBackground();
+				actual->setBackground();
 			}
-			newView->setState(VIEW_STATE_SELECTED);
-			newView->setForeground();
-			selected = newView;
+			if (focusView(newView))
+			{
+				newView->setForeground();
+			}
+			else
+			{
+				actual->setForeground();
+			}
 		}
 		else
 		{
@@ -342,6 +345,28 @@ void ViewGroup::insertBefore(View *newView, View *target)
 	}
 }
 
+bool ViewGroup::remove(View *target)
+{
+	if (!target)
+		return false;
+
+	if (target == actual)
+	{
+		if (!focusNext(true))
+		{
+			return false;
+		}
+	}
+	List<View *>::iterator it(viewList, &target);
+	if (it != viewList.end())
+	{
+		it = viewList.erase(it);
+		return true;
+	}
+
+	return false;
+}
+
 void ViewGroup::setPalettes(PaletteGroup *pals)
 {
 	if (pals && !palettes)
@@ -360,14 +385,14 @@ bool ViewGroup::focusNext(bool forward)
 	// FIXME missing check if focus can be handed off
 	if (forward)
 	{
-		List<View *>::iterator it(viewList, &focused);
+		List<View *>::iterator it(viewList, &actual);
 
 		if (++it != viewList.end())
 			temp = (*it);
 	}
 	else
 	{
-		List<View *>::riterator it(viewList, &focused);
+		List<View *>::riterator it(viewList, &actual);
 
 		if (++it != viewList.rend())
 			temp = (*it);
@@ -385,14 +410,14 @@ void ViewGroup::selectNext(bool forward)
 
 	if (forward)
 	{
-		List<View *>::iterator it(viewList, &selected);
+		List<View *>::iterator it(viewList, &actual);
 
 		if (++it != viewList.end())
 			temp = (*it);
 	}
 	else
 	{
-		List<View *>::riterator it(viewList, &selected);
+		List<View *>::riterator it(viewList, &actual);
 
 		if (++it != viewList.rend())
 			temp = (*it);
@@ -406,14 +431,13 @@ bool ViewGroup::focusView(View *target)
 	if (!target)
 		return false;
 
-	if (focused)
+	if (target->focus())
 	{
-		focused->clearState(VIEW_STATE_FOCUSED);
+		selectView(target);
+		return true;
 	}
-	target->setState(VIEW_STATE_FOCUSED);
-	focused = target;
 
-	return true;
+	return false;
 }
 
 void ViewGroup::selectView(View *target)
@@ -423,11 +447,11 @@ void ViewGroup::selectView(View *target)
 
 	if (thisViewIsMine(target))
 	{
-		if (selected)
+		if (actual)
 		{
-			selected->clearState(VIEW_STATE_SELECTED);
+			actual->clearState(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED);
 		}
-		selected = target;
+		actual = target;
 	}
 }
 

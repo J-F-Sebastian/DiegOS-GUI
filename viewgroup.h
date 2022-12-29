@@ -58,6 +58,7 @@ public:
 
 	void insert(View *newView);
 	void insertBefore(View *newView, View *target);
+	bool remove(View *target);
 
 	void setPalettes(PaletteGroup *pals);
 
@@ -75,8 +76,7 @@ protected:
 	void computeExposure(void);
 
 	Rectangle lastLimits;
-	View *focused;
-	View *selected;
+	View *actual;
 	PaletteGroup *palettes;
 
 private:
