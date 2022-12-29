@@ -23,236 +23,236 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-//Yes a MACRO to avoid repeated adjustments ...
+// Yes a MACRO to avoid repeated adjustments ...
 #define A_RECT \
-    SDL_Rect srect = {.x = rect.ul.x, .y = rect.ul.y, .w = rect.width() + 1, .h = rect.height() + 1}
+	SDL_Rect srect = {.x = rect.ul.x, .y = rect.ul.y, .w = rect.width() + 1, .h = rect.height() + 1}
 
-//The window we'll be rendering to
+// The window we'll be rendering to
 static SDL_Window *window = NULL;
-//The renderer
+// The renderer
 static SDL_Renderer *renderer = NULL;
-//The font
+// The font
 static TTF_Font *font = NULL;
 
 ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, yres, bitdepth)
 {
-    //Initialize SDL
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-    {
-        std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-        return;
-    }
+	// Initialize SDL
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+	{
+		std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+		return;
+	}
 
-    //Create window
-    if (SDL_CreateWindowAndRenderer(xres, yres, 0, &window, &renderer))
-    //if (SDL_CreateWindowAndRenderer(xres, yres, SDL_WINDOW_FULLSCREEN, &window, &renderer))
-    {
-        std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-        return;
-    }
+	// Create window
+	if (SDL_CreateWindowAndRenderer(xres, yres, 0, &window, &renderer))
+	// if (SDL_CreateWindowAndRenderer(xres, yres, SDL_WINDOW_FULLSCREEN, &window, &renderer))
+	{
+		std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+		return;
+	}
 
-    //Initialize Font
-    if (TTF_Init())
-    {
-        std::cout << "Font could not be inited! SDL_Error: " << TTF_GetError() << std::endl;
-    }
+	// Initialize Font
+	if (TTF_Init())
+	{
+		std::cout << "Font could not be inited! SDL_Error: " << TTF_GetError() << std::endl;
+	}
 
-    font = TTF_OpenFont("C:\\windows\\fonts\\segoeui.ttf", 14);
-    if (!font)
-    {
-        std::cout << "Font could not be loaded! SDL_Error: " << TTF_GetError() << std::endl;
-    }
+	font = TTF_OpenFont("C:\\windows\\fonts\\segoeui.ttf", 14);
+	if (!font)
+	{
+		std::cout << "Font could not be loaded! SDL_Error: " << TTF_GetError() << std::endl;
+	}
 
-    SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer);
 }
 
 ViewRenderHW::~ViewRenderHW()
 {
-    if (renderer && window)
-    {
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-    }
-    if (font)
-        TTF_CloseFont(font);
+	if (renderer && window)
+	{
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+	}
+	if (font)
+		TTF_CloseFont(font);
 
-    renderer = NULL;
-    window = NULL;
-    font = NULL;
+	renderer = NULL;
+	window = NULL;
+	font = NULL;
 
-    if (TTF_WasInit())
-        TTF_Quit();
-    if (SDL_WasInit(SDL_INIT_VIDEO))
-        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	if (TTF_WasInit())
+		TTF_Quit();
+	if (SDL_WasInit(SDL_INIT_VIDEO))
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 void ViewRenderHW::line(const Point &a, const Point &b, uint32_t color)
 {
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
 }
 
 void ViewRenderHW::hline(const Point &a, int len, uint32_t color)
 {
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(renderer, a.x, a.y, a.x + len, a.y);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawLine(renderer, a.x, a.y, a.x + len, a.y);
 }
 
 void ViewRenderHW::vline(const Point &a, int len, uint32_t color)
 {
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(renderer, a.x, a.y, a.x, a.y + len);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawLine(renderer, a.x, a.y, a.x, a.y + len);
 }
 
 void ViewRenderHW::rectangle(const Rectangle &rect, uint32_t color)
 {
-    A_RECT;
+	A_RECT;
 
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawRect(renderer, &srect);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawRect(renderer, &srect);
 }
 
 void ViewRenderHW::filledRectangle(const Rectangle &rect, uint32_t color)
 {
-    A_RECT;
+	A_RECT;
 
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(renderer, &srect);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderFillRect(renderer, &srect);
 }
 
 void ViewRenderHW::filledRectangle2(const Rectangle &rect, uint32_t colors[2])
 {
-    A_RECT;
+	A_RECT;
 
-    union ARGBColor c[2];
-    toARGBColor(colors[0], &c[0]);
-    toARGBColor(colors[1], &c[1]);
-    SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawRect(renderer, &srect);
-    srect.x++;
-    srect.y++;
-    srect.w -= 2;
-    srect.h -= 2;
-    SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(renderer, &srect);
+	union ARGBColor c[2];
+	toARGBColor(colors[0], &c[0]);
+	toARGBColor(colors[1], &c[1]);
+	SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawRect(renderer, &srect);
+	srect.x++;
+	srect.y++;
+	srect.w -= 2;
+	srect.h -= 2;
+	SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderFillRect(renderer, &srect);
 }
 
 void ViewRenderHW::textBox(const char *text, Rectangle &out)
 {
-    int w, h;
+	int w, h;
 
-    out.ul.x = out.ul.y = 0;
-    if (!text || TTF_SizeText(font, text, &w, &h))
-    {
-        out.lr.x = out.lr.y = 0;
-    }
-    else
-    {
-        out.lr.x = w;
-        out.lr.y = h;
-    }
+	out.ul.x = out.ul.y = 0;
+	if (!text || TTF_SizeText(font, text, &w, &h))
+	{
+		out.lr.x = out.lr.y = 0;
+	}
+	else
+	{
+		out.lr.x = w;
+		out.lr.y = h;
+	}
 }
 
 void ViewRenderHW::text(const Rectangle &rect, uint32_t color, const char *text)
 {
-    A_RECT;
+	A_RECT;
 
-    if (!text)
-        return;
+	if (!text)
+		return;
 
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_Color clor;
-    clor.a = c.colorARGB.a;
-    clor.b = c.colorARGB.b;
-    clor.g = c.colorARGB.g;
-    clor.r = c.colorARGB.r;
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_Color clor;
+	clor.a = c.colorARGB.a;
+	clor.b = c.colorARGB.b;
+	clor.g = c.colorARGB.g;
+	clor.r = c.colorARGB.r;
 
-    SDL_Surface *surface = TTF_RenderText_Solid(font, text, clor);
-    SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_RenderCopy(renderer, message, NULL, &srect);
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(message);
+	SDL_Surface *surface = TTF_RenderText_Solid(font, text, clor);
+	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_RenderCopy(renderer, message, NULL, &srect);
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(message);
 }
 
 void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text)
 {
-    A_RECT;
+	A_RECT;
 
-    if (!text)
-        return;
+	if (!text)
+		return;
 
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_Color clor;
-    clor.a = c.colorARGB.a;
-    clor.b = c.colorARGB.b;
-    clor.g = c.colorARGB.g;
-    clor.r = c.colorARGB.r;
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_Color clor;
+	clor.a = c.colorARGB.a;
+	clor.b = c.colorARGB.b;
+	clor.g = c.colorARGB.g;
+	clor.r = c.colorARGB.r;
 
-    SDL_Surface *surface = TTF_RenderUNICODE_Solid(font, text, clor);
-    SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_RenderCopy(renderer, message, NULL, &srect);
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(message);
+	SDL_Surface *surface = TTF_RenderUNICODE_Solid(font, text, clor);
+	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_RenderCopy(renderer, message, NULL, &srect);
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(message);
 }
 
 void *ViewRenderHW::loadBMP(const char *name)
 {
-    SDL_Surface *surf = SDL_LoadBMP(name);
-    if (!surf)
-        return nullptr;
+	SDL_Surface *surf = SDL_LoadBMP(name);
+	if (!surf)
+		return nullptr;
 
-    SDL_Texture *bmp = SDL_CreateTextureFromSurface(renderer, surf);
-    SDL_FreeSurface(surf);
+	SDL_Texture *bmp = SDL_CreateTextureFromSurface(renderer, surf);
+	SDL_FreeSurface(surf);
 
-    return static_cast<void *>(bmp);
+	return static_cast<void *>(bmp);
 }
 
 bool ViewRenderHW::unloadBMP(void *bmp)
 {
-    SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
+	SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
 
-    if (mybmp)
-    {
-        SDL_DestroyTexture(mybmp);
-        return true;
-    }
+	if (mybmp)
+	{
+		SDL_DestroyTexture(mybmp);
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 {
-    SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
+	SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
 
-    if (mybmp)
-    {
-        A_RECT;
-        SDL_RenderCopy(renderer, mybmp, NULL, &srect);
-    }
+	if (mybmp)
+	{
+		A_RECT;
+		SDL_RenderCopy(renderer, mybmp, NULL, &srect);
+	}
 }
 
 void ViewRenderHW::show()
 {
-    //Update the surface
-    SDL_RenderPresent(renderer);
+	// Update the surface
+	SDL_RenderPresent(renderer);
 }
 
 void ViewRenderHW::clear(uint32_t color)
 {
-    union ARGBColor c;
-    toARGBColor(color, &c);
-    SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
+	union ARGBColor c;
+	toARGBColor(color, &c);
+	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(renderer);
 }
