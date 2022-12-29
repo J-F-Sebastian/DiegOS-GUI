@@ -38,7 +38,6 @@ void TitleBar::draw()
     getExtent(viewRect);
     globalize(viewRect);
 
-    std::cout << " ### " << getState(VIEW_STATE_FOREGROUND) << std::endl;
     if (getState(VIEW_STATE_FOREGROUND))
     {
         palette->getPalette(TITLEBAR_BG, color);
