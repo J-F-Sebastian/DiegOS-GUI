@@ -28,8 +28,6 @@ public:
     explicit Background(Rectangle &rect);
 
     virtual void draw(void) override;
-
-    virtual void handleEvent(Event *evt) override;
 };
 
 #endif

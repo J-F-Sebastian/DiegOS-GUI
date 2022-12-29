@@ -30,15 +30,15 @@ Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 void Button::draw()
 {
     Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *r = getRenderer();
+    Palette *p = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
     Rectangle temp(viewRect);
 
     unsigned color, color2;
-    palette->getPalette(BUTTON_BRIGHT, color);
-    palette->getPalette(BUTTON_DARK, color2);
+    p->getPalette(BUTTON_BRIGHT, color);
+    p->getPalette(BUTTON_DARK, color2);
 
     // Outer shadow
 
@@ -50,12 +50,12 @@ void Button::draw()
      *    DDDDDDDDD
      */
     Point ul(temp.ul);
-    renderer->hline(ul, temp.width(), color);
-    renderer->vline(ul, temp.height() - 1, color);
+    r->hline(ul, temp.width(), color);
+    r->vline(ul, temp.height() - 1, color);
     ul.move(temp.width(), 1);
-    renderer->vline(ul, temp.height() - 1, color2);
+    r->vline(ul, temp.height() - 1, color2);
     ul.move(-temp.width(), temp.height() - 1);
-    renderer->hline(ul, temp.width() - 1, color2);
+    r->hline(ul, temp.width() - 1, color2);
 
     // Inner shadow
 
@@ -68,12 +68,12 @@ void Button::draw()
      */
     temp.zoom(-1, -1);
     ul = temp.ul;
-    renderer->hline(ul, temp.width(), color2);
-    renderer->vline(ul, temp.height() - 1, color2);
+    r->hline(ul, temp.width(), color2);
+    r->vline(ul, temp.height() - 1, color2);
     ul.move(temp.width(), 1);
-    renderer->vline(ul, temp.height() - 1, color);
+    r->vline(ul, temp.height() - 1, color);
     ul.move(-temp.width(), temp.height() - 1);
-    renderer->hline(ul, temp.width() - 1, color);
+    r->hline(ul, temp.width() - 1, color);
 
     // Outer shadow
 
@@ -86,35 +86,35 @@ void Button::draw()
      */
     temp.zoom(-1, -1);
     ul = temp.ul;
-    renderer->hline(ul, temp.width(), color);
-    renderer->vline(ul, temp.height() - 1, color);
+    r->hline(ul, temp.width(), color);
+    r->vline(ul, temp.height() - 1, color);
     ul.move(temp.width(), 1);
-    renderer->vline(ul, temp.height() - 1, color2);
+    r->vline(ul, temp.height() - 1, color2);
     ul.move(-temp.width(), temp.height() - 1);
-    renderer->hline(ul, temp.width() - 1, color2);
+    r->hline(ul, temp.width() - 1, color2);
 
     temp.zoom(-1, -1);
     if (getState(VIEW_STATE_DISABLED))
     {
-        palette->getPalette(BUTTON_DISABLED, color);
-        renderer->filledRectangle(temp, color);
+        p->getPalette(BUTTON_DISABLED, color);
+        r->filledRectangle(temp, color);
     }
     else if (getState(VIEW_STATE_SELECTED))
     {
         if (isDown())
         {
-            palette->getPalette(BUTTON_PRESSED, color);
+            p->getPalette(BUTTON_PRESSED, color);
         }
         else
         {
-            palette->getPalette(BUTTON_SELECTED, color);
+            p->getPalette(BUTTON_SELECTED, color);
         }
-        renderer->filledRectangle(temp, color);
+        r->filledRectangle(temp, color);
     }
     else
     {
-        palette->getPalette(BUTTON_MAIN, color);
-        renderer->filledRectangle(temp, color);
+        p->getPalette(BUTTON_MAIN, color);
+        r->filledRectangle(temp, color);
     }
 }
 

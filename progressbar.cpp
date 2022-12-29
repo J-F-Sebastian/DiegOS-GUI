@@ -31,25 +31,25 @@ void ProgressBar::draw()
 {
   unsigned color;
   int pxcent;
-  ViewRender *renderer = getRenderer();
-  Palette *palette = getPalette();
+  ViewRender *r = getRenderer();
+  Palette *p = getPalette();
   Rectangle viewRect;
   getExtent(viewRect);
   globalize(viewRect);
 
-  palette->getPalette(PROGRESSBAR_BG, color);
-  renderer->filledRectangle(viewRect, color);
+  p->getPalette(PROGRESSBAR_BG, color);
+  r->filledRectangle(viewRect, color);
   viewRect.zoom(-2, -2);
   pxcent = viewRect.width() * percent / 100;
   viewRect.width(pxcent);
-  palette->getPalette(PROGRESSBAR_FG, color);
-  renderer->filledRectangle(viewRect, color);
+  p->getPalette(PROGRESSBAR_FG, color);
+  r->filledRectangle(viewRect, color);
   if (showPercent)
   {
     char buffer[5];
     snprintf(buffer, sizeof(buffer), "%3d%%", percent);
-    palette->getPalette(PROGRESSBAR_TEXT, color);
-    renderer->text(viewRect, color, buffer);
+    p->getPalette(PROGRESSBAR_TEXT, color);
+    r->text(viewRect, color, buffer);
   }
 }
 

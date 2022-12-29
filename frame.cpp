@@ -39,15 +39,15 @@ void Frame::draw()
     getExtent(viewRect);
     globalize(viewRect);
     unsigned color, color2;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *r = getRenderer();
+    Palette *p = getPalette();
 
     if (style == FRAME_FLAT)
     {
-        palette->getPalette(FRAME_MAIN, color);
+        p->getPalette(FRAME_MAIN, color);
         for (unsigned i = 0; i < width; i++)
         {
-            renderer->rectangle(viewRect, color);
+            r->rectangle(viewRect, color);
             viewRect.zoom(-1, -1);
         }
     }
@@ -55,61 +55,61 @@ void Frame::draw()
     {
         Rectangle temp(viewRect);
 
-        palette->getPalette(FRAME_BRIGHT, color);
-        palette->getPalette(FRAME_DARK, color2);
+        p->getPalette(FRAME_BRIGHT, color);
+        p->getPalette(FRAME_DARK, color2);
 
-        //Outer shadow
+        // Outer shadow
 
         /*
-        *    BBBBBBBBB
-        *    B       D
-        *    B       D
-        *    B       D
-        *    DDDDDDDDD
-        */
+         *    BBBBBBBBB
+         *    B       D
+         *    B       D
+         *    B       D
+         *    DDDDDDDDD
+         */
         Point ul(temp.ul);
-        renderer->hline(ul, temp.width(), color);
-        renderer->vline(ul, temp.height() - 1, color);
+        r->hline(ul, temp.width(), color);
+        r->vline(ul, temp.height() - 1, color);
         ul.move(temp.width(), 1);
-        renderer->vline(ul, temp.height() - 1, color2);
+        r->vline(ul, temp.height() - 1, color2);
         ul.move(-temp.width(), temp.height() - 1);
-        renderer->hline(ul, temp.width() - 1, color2);
+        r->hline(ul, temp.width() - 1, color2);
 
         temp.zoom(-1, -1);
         ul = temp.ul;
-        renderer->hline(ul, temp.width(), color);
-        renderer->vline(ul, temp.height() - 1, color);
+        r->hline(ul, temp.width(), color);
+        r->vline(ul, temp.height() - 1, color);
         ul.move(temp.width(), 1);
-        renderer->vline(ul, temp.height() - 1, color2);
+        r->vline(ul, temp.height() - 1, color2);
         ul.move(-temp.width(), temp.height() - 1);
-        renderer->hline(ul, temp.width() - 1, color2);
+        r->hline(ul, temp.width() - 1, color2);
 
-        //The frame
-        palette->getPalette(FRAME_MAIN, color);
+        // The frame
+        p->getPalette(FRAME_MAIN, color);
         for (unsigned i = 0; i < width - 3; i++)
         {
             temp.zoom(-1, -1);
-            renderer->rectangle(temp, color);
+            r->rectangle(temp, color);
         }
 
-        //Inner shadow
+        // Inner shadow
 
         /*
-        *    DDDDDDDDD
-        *    D       B
-        *    D       B
-        *    D       B
-        *    BBBBBBBBB
-        */
+         *    DDDDDDDDD
+         *    D       B
+         *    D       B
+         *    D       B
+         *    BBBBBBBBB
+         */
         temp.zoom(-1, -1);
-        palette->getPalette(FRAME_BRIGHT, color);
+        p->getPalette(FRAME_BRIGHT, color);
         ul = temp.ul;
-        renderer->hline(ul, temp.width(), color2);
-        renderer->vline(ul, temp.height() - 1, color2);
+        r->hline(ul, temp.width(), color2);
+        r->vline(ul, temp.height() - 1, color2);
         ul.move(temp.width(), 1);
-        renderer->vline(ul, temp.height() - 1, color);
+        r->vline(ul, temp.height() - 1, color);
         ul.move(-temp.width(), temp.height() - 1);
-        renderer->hline(ul, temp.width() - 1, color);
+        r->hline(ul, temp.width() - 1, color);
     }
 }
 

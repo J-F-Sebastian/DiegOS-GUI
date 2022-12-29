@@ -33,30 +33,30 @@ void TitleBar::draw()
 {
     unsigned color, color2;
     Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *r = getRenderer();
+    Palette *p = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
 
     if (getState(VIEW_STATE_FOREGROUND))
     {
-        palette->getPalette(TITLEBAR_BG, color);
-        palette->getPalette(TITLEBAR_TEXT, color2);
+        p->getPalette(TITLEBAR_BG, color);
+        p->getPalette(TITLEBAR_TEXT, color2);
     }
     else
     {
-        palette->getPalette(TITLEBAR_BG_DISABLED, color);
-        palette->getPalette(TITLEBAR_TEXT_DISABLED, color2);
+        p->getPalette(TITLEBAR_BG_DISABLED, color);
+        p->getPalette(TITLEBAR_TEXT_DISABLED, color2);
     }
     // The titlebar frame
-    renderer->filledRectangle(viewRect, color);
+    r->filledRectangle(viewRect, color);
     // The title
     Rectangle temp;
-    renderer->textBox(title.c_str(), temp);
+    r->textBox(title.c_str(), temp);
     temp.move(viewRect.ul.x, viewRect.ul.y);
     temp.center(viewRect);
-    palette->getPalette(TITLEBAR_TEXT, color2);
-    renderer->text(temp, color, title.c_str());
+    p->getPalette(TITLEBAR_TEXT, color2);
+    r->text(temp, color, title.c_str());
 }
 
 void TitleBar::handleEvent(Event *evt)

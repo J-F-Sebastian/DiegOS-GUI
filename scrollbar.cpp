@@ -30,13 +30,13 @@ void ScrollBar::draw()
 	getExtent(viewRect);
 	globalize(viewRect);
 	unsigned color, color2;
-	ViewRender *renderer = getRenderer();
-	Palette *palette = getPalette();
+	ViewRender *r = getRenderer();
+	Palette *p = getPalette();
 
 	Rectangle temp(viewRect);
 
-	palette->getPalette(SCROLLBAR_BRIGHT, color);
-	palette->getPalette(SCROLLBAR_DARK, color2);
+	p->getPalette(SCROLLBAR_BRIGHT, color);
+	p->getPalette(SCROLLBAR_DARK, color2);
 
 	// Outer shadow
 
@@ -48,26 +48,26 @@ void ScrollBar::draw()
 	 *    DDDDDDDDD
 	 */
 	Point ul(temp.ul);
-	renderer->hline(ul, temp.width(), color);
-	renderer->vline(ul, temp.height() - 1, color);
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
 	ul.move(temp.width(), 1);
-	renderer->vline(ul, temp.height() - 1, color2);
+	r->vline(ul, temp.height() - 1, color2);
 	ul.move(-temp.width(), temp.height() - 1);
-	renderer->hline(ul, temp.width() - 1, color2);
+	r->hline(ul, temp.width() - 1, color2);
 
 	temp.zoom(-1, -1);
 	ul = temp.ul;
-	renderer->hline(ul, temp.width(), color);
-	renderer->vline(ul, temp.height() - 1, color);
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
 	ul.move(temp.width(), 1);
-	renderer->vline(ul, temp.height() - 1, color2);
+	r->vline(ul, temp.height() - 1, color2);
 	ul.move(-temp.width(), temp.height() - 1);
-	renderer->hline(ul, temp.width() - 1, color2);
+	r->hline(ul, temp.width() - 1, color2);
 
 	// The pad
-	palette->getPalette(SCROLLBAR_FG, color);
+	p->getPalette(SCROLLBAR_FG, color);
 	temp.zoom(-1, -1);
-	renderer->filledRectangle(temp, color);
+	r->filledRectangle(temp, color);
 }
 
 void ScrollBar::handleEvent(Event *evt)

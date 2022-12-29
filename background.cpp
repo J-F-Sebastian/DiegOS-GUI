@@ -29,21 +29,16 @@ Background::Background(Rectangle &rect) : View(rect)
 void Background::draw()
 {
     Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *r = getRenderer();
+    Palette *p = getPalette();
     getExtent(viewRect);
     globalize(viewRect);
     unsigned color;
 
     if (getState(VIEW_STATE_DISABLED))
-        palette->getPalette(BACKGROUND_BG_DISABLED, color);
+        p->getPalette(BACKGROUND_BG_DISABLED, color);
     else
-        palette->getPalette(BACKGROUND_BG, color);
+        p->getPalette(BACKGROUND_BG, color);
 
-    renderer->filledRectangle(viewRect, color);
-}
-
-void Background::handleEvent(Event *evt)
-{
-    View::handleEvent(evt);
+    r->filledRectangle(viewRect, color);
 }
