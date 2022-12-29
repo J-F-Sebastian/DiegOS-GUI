@@ -113,7 +113,34 @@ void ViewGroup::handleEvent(Event *evt)
 		}
 		evt->clear();
 	}
-
+	/*
+	 * If the event is a key press, process the event only if we are selected and focused.
+	 */
+	else if (evt->isEventKey())
+	{
+		if (getStateAll(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED))
+		{
+			KeyDownEvent *key = evt->getKeyDownEvent();
+			if (key->modifier == KBD_MOD_NONE)
+			{
+				switch (key->keyCode)
+				{
+				case KBD_CODE_F5:
+					if (getResizeMode(VIEW_RESIZEABLE))
+					{
+						if (getResizeMode(VIEW_ZOOMED))
+							restore();
+						else
+							maximize();
+						evt->clear();
+					}
+					break;
+				}
+			}
+		}
+		if (actual && !evt->isEventUnknown())
+			actual->handleEvent(evt);
+	}
 	/*
 	 * If the event is a message (a command) then the event is processed if the destination
 	 * is either this view or the broadcast object.
@@ -131,6 +158,14 @@ void ViewGroup::handleEvent(Event *evt)
 	 * |  broadcast    |    and   |
 	 * |               |  forward |
 	 * +---------------+----------+
+	 * |               |          |
+	 * |  child view   |  forward |
+	 * |               |          |
+	 * +---------------+----------+
+	 * |               |          |
+	 * |  unknown view |  clear   |
+	 * |               |          |
+	 * +---------------+----------+
 	 *
 	 * The targetObject is part of the header message but is used to address the action
 	 * of the command, not the destination.
@@ -140,13 +175,25 @@ void ViewGroup::handleEvent(Event *evt)
 	 * until the destination view is reached; the message will be forwarded from root to leaves
 	 * until the destination leave (a View) is reached.
 	 */
-	else if (evt->getEventType() == Event::EVT_CMD)
+	else if (evt->isEventCommand())
 	{
 		MessageEvent *msg = evt->getMessageEvent();
-		if (msg->destObject == this)
+		if ((msg->destObject == this) || (msg->destObject == BROADCAST_OBJECT))
 		{
 			switch (msg->command)
 			{
+			case CMD_QUIT:
+				std::cout << "QUIT CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				/*
+				 * We are instructed to close all of our views
+				 */
+				VIEWLISTITFOR(it)
+				{
+					delete (*it);
+				}
+				viewList.clear();
+				break;
+
 			case CMD_FOREGROUND:
 				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				setForeground();
@@ -164,6 +211,22 @@ void ViewGroup::handleEvent(Event *evt)
 				if (msg->targetObject == this)
 				{
 					sendCommand(CMD_CLOSE, getParent(), this);
+				}
+				/*
+				 * If the target is BROADCAST_OBJECT close all views
+				 */
+				else if (msg->targetObject == BROADCAST_OBJECT)
+				{
+					List<View *>::iterator it(viewList);
+					while (it != viewList.end())
+					{
+						if ((*it)->getState(VIEW_STATE_FOCUSED))
+							focusNext(true);
+						if ((*it)->getState(VIEW_STATE_SELECTED))
+							selectNext(true);
+						delete (*it);
+						it = viewList.erase(it);
+					}
 				}
 				/*
 				 * Check if we are instructed to close one of our views
@@ -210,79 +273,43 @@ void ViewGroup::handleEvent(Event *evt)
 				reDraw();
 				break;
 			}
-			evt->clear();
-		}
-		else
-		{
-			/*
-			 * Process BROADCAST_OBJECT and leave the message as is.
-			 */
-			if (msg->destObject == BROADCAST_OBJECT)
-			{
-				switch (msg->command)
-				{
-				case CMD_DRAW:
-					draw();
-					break;
 
-				case CMD_CLOSE:
-					List<View *>::iterator it(viewList);
-					while (it != viewList.end())
-					{
-						if ((*it)->getState(VIEW_STATE_FOCUSED))
-							focusNext(true);
-						if ((*it)->getState(VIEW_STATE_SELECTED))
-							selectNext(true);
-						delete (*it);
-						it = viewList.erase(it);
-					}
-					break;
-				}
-				/*
-				 * Forward message to all children.
-				 */
+			if (msg->destObject == this)
+			{
+				evt->clear();
+			}
+			/*
+			 * Forward message to all children.
+			 */
+			else
+			{
 				VIEWLISTITFOR(it)
 				{
 					(*it)->handleEvent(evt);
 				}
 			}
+		}
+		else
+		{
 			/*
-			 * Process unicast and leave the message as is.
+			 * Forward message, try unicast, if not a child, clear.
 			 */
+			List<View *>::iterator lkup(viewList, reinterpret_cast<View **>(&msg->destObject));
+
+			if (lkup != viewList.end())
+			{
+				(*lkup)->handleEvent(evt);
+			}
 			else
 			{
-				/*
-				 * Forward message, try unicast, if unknown, go broadcast.
-				 */
-				List<View *>::iterator lkup(viewList, reinterpret_cast<View **>(&msg->destObject));
-
-				if (lkup != viewList.end())
-				{
-					(*lkup)->handleEvent(evt);
-				}
-				else
-				{
-					VIEWLISTITFOR(it)
-					{
-						(*it)->handleEvent(evt);
-						if (evt->isEventUnknown())
-							return;
-					}
-				}
+				evt->clear();
 			}
 		}
 	}
-	/*
-	 * FIXME: Other events are processed by all views and applied by the focused view.
-	 */
-	else
+	else if (evt->isEventUnknown())
 	{
-		VIEWLISTITFOR(it)
-		{
-			(*it)->handleEvent(evt);
-			if (evt->isEventUnknown())
-				return;
-		}
+		std::cout << "UNKNOWN EVENT: ";
+		evt->print();
 	}
 }
 
@@ -482,7 +509,6 @@ void ViewGroup::maximize()
 		getParent()->getExtent(max);
 		setLocation(max);
 		lastrflags = getResizeMode();
-		clearResizeMode(VIEW_BOUNDED);
 		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
 		sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
