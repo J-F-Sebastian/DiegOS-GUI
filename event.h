@@ -180,6 +180,7 @@ public:
 	enum EventType getEventType(void);
 	bool isEventPositional(void);
 	bool isEventKey(void);
+	bool isEventCommand(void);
 	bool isEventUnknown(void);
 
 	struct PositionalEvent *getPositionalEvent(void);

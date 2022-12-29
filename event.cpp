@@ -54,6 +54,11 @@ bool Event::isEventKey()
     return (myEventData.what == EVT_KBD) ? true : false;
 }
 
+bool Event::isEventCommand()
+{
+    return (myEventData.what == EVT_CMD) ? true : false;
+}
+
 bool Event::isEventUnknown()
 {
     return (myEventData.what == EVT_UNKNOWN) ? true : false;
