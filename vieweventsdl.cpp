@@ -19,7 +19,6 @@
 #include <iostream>
 
 #include "vieweventsdl.h"
-#include "event_keyboard.h"
 #include "SDL.h"
 
 ViewEventSDL::ViewEventSDL() : ViewEventManager()
@@ -34,7 +33,7 @@ ViewEventSDL::ViewEventSDL() : ViewEventManager()
 		// SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
 		myEventType = SDL_RegisterEvents(1);
-		if (myEventType == -1UL)
+		if (myEventType == -1U)
 		{
 			SDL_QuitSubSystem(SDL_INIT_EVENTS);
 			std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -83,10 +82,9 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 			KeyDownEvent kbd;
 			kbd.modifier = sdlevt.key.keysym.mod;
 			if (sdlevt.key.keysym.sym > SDLK_DELETE)
-				kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym & ~SDLK_SCANCODE_MASK) + SDLK_DELETE;
+				kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym - SDLK_CAPSLOCK + 1) + SDLK_DELETE;
 			else
 				kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym);
-			std::cout << std::hex << kbd.keyCode << "   " << kbd.modifier << std::endl;
 			evt->setKeyDownEvent(kbd);
 		}
 		break;
