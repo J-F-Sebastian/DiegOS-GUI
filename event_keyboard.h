@@ -27,22 +27,22 @@ enum KEYCODE_MODIFIER
 	KBD_MOD_RSHIFT = (1 << 1),
 	KBD_MOD_LCTRL = (1 << 6),
 	KBD_MOD_RCTRL = (1 << 7),
-	KBD_MOD_LALT = (1 << 16),
-	KBD_MOD_RALT = (1 << 17),
+	KBD_MOD_LALT = (1 << 8),
+	KBD_MOD_RALT = (1 << 9),
 	/*
 	 * windows key, command (apple)
 	 */
-	KBD_MOD_LGUI = (1 << 18),
-	KBD_MOD_RGUI = (1 << 19),
+	KBD_MOD_LGUI = (1 << 10),
+	KBD_MOD_RGUI = (1 << 11),
 	/*
 	 * NUM lock, CAPS lock
 	 */
-	KBD_MOD_NUM = (1 << 20),
-	KBD_MOD_CAPS = (1 << 21),
+	KBD_MOD_NUM = (1 << 12),
+	KBD_MOD_CAPS = (1 << 13),
 	/*
 	 * SCROLL lock
 	 */
-	KBD_MOD_SCROLL = (1 << 23),
+	KBD_MOD_SCROLL = (1 << 15),
 
 	KBD_MOD_CTRL = KBD_MOD_LCTRL | KBD_MOD_RCTRL,
 	KBD_MOD_SHIFT = KBD_MOD_LSHIFT | KBD_MOD_RSHIFT,
