@@ -39,7 +39,7 @@ DesktopApp::DesktopApp()
     he = ViewEventFactory::create(EST_SDL);
     palg = PaletteGroupFactory::create(PALETTE_WINOS2, 32);
 
-    app = new ViewExec(master, vr, palg, he);
+    app = new ViewApplication(master, vr, palg, he);
     app->initDesktop();
 }
 

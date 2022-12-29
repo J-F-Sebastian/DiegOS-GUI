@@ -21,7 +21,7 @@
 #define _DESKTOPAPP_H_
 
 #include "vieweventfactory.h"
-#include "viewexec.h"
+#include "viewapplication.h"
 #include "viewrenderfactory.h"
 #include "window.h"
 
@@ -39,7 +39,7 @@ private:
   PaletteGroup *palg;
   ViewRender *vr;
   ViewEventManager *he;
-  ViewExec *app;
+  ViewApplication *app;
 };
 
 #endif
