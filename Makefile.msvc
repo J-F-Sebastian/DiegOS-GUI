@@ -5,11 +5,13 @@ MYOBJS = $(MYOBJS) $(MYOBJDIR)\frame.obj $(MYOBJDIR)\geometry.obj $(MYOBJDIR)\pa
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettegroupfactory.obj $(MYOBJDIR)\viewrenderfactory.obj $(MYOBJDIR)\viewrenderhw.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\vieweventfactory.obj $(MYOBJDIR)\vieweventsdl.obj $(MYOBJDIR)\titlebar.obj $(MYOBJDIR)\window.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\background.obj $(MYOBJDIR)\progressbar.obj $(MYOBJDIR)\button.obj $(MYOBJDIR)\window_icon.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj $(MYOBJDIR)\scrollbar.obj $(MYOBJDIR)\testdesktopapp.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj $(MYOBJDIR)\scrollbar.obj $(MYOBJDIR)\testdesktopapp.obj $(MYOBJDIR)\viewgroup.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewapplication.obj
 
 MYLIBSDIR = E:\sviluppo\
 
 CPPFLAGS = /O2 /Oi /favor:INTEL64 /EHcs /W4 /std:c++20 /GA /c
+#CPPFLAGS = /Zi /Oi /favor:INTEL64 /EHcs /W4 /std:c++20 /GA /c
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2\include\SDL2
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2_ttf\include
 
