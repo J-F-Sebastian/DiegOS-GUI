@@ -178,14 +178,14 @@ void ViewGroup::handleEvent(Event *evt)
 	else if (evt->isEventCommand())
 	{
 		MessageEvent *msg = evt->getMessageEvent();
-		if ((msg->destObject == this) || (msg->destObject == BROADCAST_OBJECT))
+		if (isEventCmdForMe(evt))
 		{
 			switch (msg->command)
 			{
 			case CMD_QUIT:
 				std::cout << "QUIT CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
-				 * We are instructed to close all of our views
+				 * We are instructed to close all of our views, in fact the target is ignored.
 				 */
 				VIEWLISTITFOR(it)
 				{
@@ -196,7 +196,8 @@ void ViewGroup::handleEvent(Event *evt)
 
 			case CMD_FOREGROUND:
 				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				setForeground();
+				if (msg->targetObject == this)
+					setForeground();
 				break;
 
 			case CMD_SELECT:
@@ -207,7 +208,9 @@ void ViewGroup::handleEvent(Event *evt)
 
 			case CMD_CLOSE:
 				std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				/* We are instructed to close, so send and event to our owner */
+				/*
+				 * We are instructed to close, so send an event to our owner
+				 */
 				if (msg->targetObject == this)
 				{
 					sendCommand(CMD_CLOSE, getParent(), this);
@@ -251,21 +254,28 @@ void ViewGroup::handleEvent(Event *evt)
 				break;
 
 			case CMD_MAXIMIZE:
-				maximize();
+				if (msg->targetObject == this)
+					maximize();
 				break;
 
 			case CMD_RESTORE:
-				restore();
+				if (msg->targetObject == this)
+					restore();
 				break;
 
 			case CMD_DRAW:
 			{
-				View *target = static_cast<View *>(msg->targetObject);
-				List<View *>::iterator it(viewList, &target);
-				if (it != viewList.end())
-					(*it)->draw();
-				else
+				if (isEventCmdTargetMe(evt))
+				{
 					draw();
+				}
+				else
+				{
+					View *target = static_cast<View *>(msg->targetObject);
+					List<View *>::iterator it(viewList, &target);
+					if (it != viewList.end())
+						(*it)->draw();
+				}
 			}
 			break;
 
@@ -292,9 +302,11 @@ void ViewGroup::handleEvent(Event *evt)
 		else
 		{
 			/*
-			 * Forward message, try unicast, if not a child, clear.
+			 * Forward message, if the destination is a child go unicast.
+			 * If the destination is unknown, go broadcast.
 			 */
-			List<View *>::iterator lkup(viewList, reinterpret_cast<View **>(&msg->destObject));
+			View *target = reinterpret_cast<View *>(msg->targetObject);
+			List<View *>::iterator lkup(viewList, &target);
 
 			if (lkup != viewList.end())
 			{
@@ -302,7 +314,10 @@ void ViewGroup::handleEvent(Event *evt)
 			}
 			else
 			{
-				evt->clear();
+				VIEWLISTITFOR(it)
+				{
+					(*it)->handleEvent(evt);
+				}
 			}
 		}
 	}
