@@ -348,8 +348,25 @@ bool View::isEventPositionInRange(Event *evt)
 
 bool View::isEventCmdForMe(Event *evt)
 {
-	if (evt && evt->getEventType() == Event::EVT_CMD)
-		return (evt->getMessageEvent()->destObject == this) ? true : false;
+	if (evt->isEventCommand())
+	{
+		MessageEvent *msg = evt->getMessageEvent();
+		if ((msg->destObject == this) || (msg->destObject == BROADCAST_OBJECT))
+			return true;
+	}
+
+	return false;
+}
+
+bool View::isEventCmdTargetMe(Event *evt)
+{
+	if (evt->isEventCommand())
+	{
+		MessageEvent *msg = evt->getMessageEvent();
+		if ((msg->targetObject == this) || (msg->targetObject == BROADCAST_OBJECT))
+			return true;
+	}
+
 	return false;
 }
 

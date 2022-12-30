@@ -366,7 +366,7 @@ public:
 	 *
 	 * PARAMETERS IN
 	 * uint16_t command - the command code
-	 * void *destination - the receipient of the message
+	 * void *destination - the receiver of the message
 	 * void *target - the view the command applies to
 	 */
 	virtual void sendCommand(const uint16_t command, void *destination, void *target);
@@ -524,10 +524,23 @@ protected:
 	 * Event *evt - the event
 	 *
 	 * RETURN
-	 * true if the event is a command with destObject == this
+	 * true if the event is a command with destObject set to this view or BROADCAST_OBJECT
 	 * false in any other case
 	 */
 	bool isEventCmdForMe(Event *evt);
+
+	/*
+	 * Verify that the event is a command and the target object matches this
+	 * instance.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a command with targetObject set to this view or BROADCAST_OBJECT
+	 * false in any other case
+	 */
+	bool isEventCmdTargetMe(Event *evt);
 
 	/*
 	 * Send an event to the view's owner.
