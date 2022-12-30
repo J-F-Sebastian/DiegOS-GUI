@@ -119,20 +119,22 @@ void WindowIconClose::handleEvent(Event *evt)
             bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
+                setChanged(VIEW_CHANGED_REDRAW);
+                /* Now ask for redrawing */
+                sendCommand(CMD_REDRAW);
                 if (!isDown() && getParent())
                 {
                     sendCommand(CMD_CLOSE, getParent(), getParent());
                 }
                 evt->clear();
-                /* Now ask for redrawing */
-                sendCommand(CMD_DRAW, getParent(), getParent());
             }
         }
         else if (isDown())
         {
             updateButtonState(false);
+            setChanged(VIEW_CHANGED_REDRAW);
             /* Now ask for redrawing */
-            sendCommand(CMD_DRAW, getParent(), getParent());
+            sendCommand(CMD_REDRAW);
         }
     }
 }
@@ -219,6 +221,9 @@ void WindowIconZoom::handleEvent(Event *evt)
             bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
+                setChanged(VIEW_CHANGED_REDRAW);
+                /* Now ask for redrawing */
+                sendCommand(CMD_REDRAW);
                 if (!isDown())
                 {
                     if (getParent())
@@ -226,16 +231,15 @@ void WindowIconZoom::handleEvent(Event *evt)
                         sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
                     }
                 }
-                /* Now ask for redrawing */
-                sendCommand(CMD_DRAW, getParent(), getParent());
             }
             evt->clear();
         }
         else if (isDown())
         {
             updateButtonState(false);
+            setChanged(VIEW_CHANGED_REDRAW);
             /* Now ask for redrawing */
-            sendCommand(CMD_DRAW, getParent(), getParent());
+            sendCommand(CMD_REDRAW);
         }
     }
 }
