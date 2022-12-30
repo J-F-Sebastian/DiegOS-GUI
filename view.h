@@ -543,6 +543,19 @@ protected:
 	bool isEventCmdTargetMe(Event *evt);
 
 	/*
+	 * Verify that the event is a command and the destination and target object match this
+	 * instance exactly (no broadcast involved).
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a command with destObject and targetObject set to this view
+	 * false in any other case
+	 */
+	bool isEventCmdMe(Event *evt);
+
+	/*
 	 * Send an event to the view's owner.
 	 * The method will recursively look for the top owner.
 	 * NO memory management is to be performed on evt.

@@ -370,6 +370,18 @@ bool View::isEventCmdTargetMe(Event *evt)
 	return false;
 }
 
+bool View::isEventCmdMe(Event *evt)
+{
+	if (evt->isEventCommand())
+	{
+		MessageEvent *msg = evt->getMessageEvent();
+		if ((msg->destObject == this) && (msg->targetObject == this))
+			return true;
+	}
+
+	return false;
+}
+
 bool View::focus()
 {
 	if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP))
