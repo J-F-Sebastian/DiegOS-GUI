@@ -37,8 +37,6 @@ void ViewExec::reDraw()
 {
     if (getState(VIEW_STATE_EVLOOP))
     {
-        getRenderer()->clear(0);
-        computeExposure();
         ViewGroup::reDraw();
         getRenderer()->show();
     }
