@@ -505,13 +505,14 @@ void ViewGroup::maximize()
 {
 	if (getParent())
 	{
+		getBorders(lastLimits);
 		Rectangle max;
 		getParent()->getExtent(max);
 		setLocation(max);
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
+		sendCommand(CMD_DRAW, getParent(), getParent());
 	}
 }
 
@@ -528,7 +529,7 @@ void ViewGroup::restore()
 	setResizeMode(lastrflags);
 	setLocation(lastLimits);
 	/* Now ask for redrawing */
-	sendCommand(CMD_DRAW, BROADCAST_OBJECT, getParent());
+	sendCommand(CMD_DRAW);
 }
 
 bool ViewGroup::thisViewIsMine(View *who)

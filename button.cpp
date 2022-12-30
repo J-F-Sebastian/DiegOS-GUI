@@ -130,7 +130,7 @@ void Button::handleEvent(Event *evt)
             if (updateButtonState(pressed))
             {
                 /* Now ask for redrawing */
-                sendCommand(CMD_DRAW);
+                sendCommand(CMD_DRAW, getParent(), this);
             }
             evt->clear();
         }
@@ -138,7 +138,7 @@ void Button::handleEvent(Event *evt)
         {
             updateButtonState(false);
             /* Now ask for redrawing */
-            sendCommand(CMD_DRAW);
+            sendCommand(CMD_DRAW, getParent(), this);
         }
     }
 }
