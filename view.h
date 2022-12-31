@@ -357,64 +357,6 @@ public:
 	 */
 	virtual void handleEvent(Event *evt);
 
-	/*
-	 * Create an event and send it up to the root parent.
-	 * This is a wrap around for sendEvent().
-	 * The message will be passed down the children hierarchy
-	 * to the destination object (if specified), or to all objects (if
-	 * BROADCAST_OBJECT is set as destination).
-	 *
-	 * PARAMETERS IN
-	 * uint16_t command - the command code
-	 * void *destination - the receiver of the message
-	 * void *target - the view the command applies to
-	 */
-	virtual void sendCommand(const uint16_t command, void *destination, void *target);
-
-	/*
-	 * This is a wrap around for sendCommand(cons uint16_t, void *, void*).
-	 * Messages are sent to BROADCAST_OBJECT with target set to the sender object;
-	 * so it is just like calling sendCommand(command, BROADCAST_OBJECT, this)
-	 *
-	 * PARAMETERS IN
-	 * uint16_t command - the command code
-	 * void *destination - the receipient of the message
-	 * void *target - the view the command applies to
-	 */
-	void sendCommand(const uint16_t command);
-
-	/*
-	 * Verify the validity of the event (not nullptr) and check
-	 * if it is a positional event.
-	 *
-	 * PARAMETERS IN
-	 * Event *evt - the event to be validated
-	 *
-	 * RETURN
-	 * true if the event is a valid pointer and a positional event
-	 * false in any other case
-	 */
-	bool isEventPositional(Event *evt);
-
-	/*
-	 * Verify the validity of the event for this view and returns
-	 * a boolean according to the evaluation.
-	 * A positional event is valid if:
-	 * 	1) the pointer is not null
-	 * 	2) the event is positional
-	 * 	3) the event coordinates are in the view's range
-	 *
-	 * PARAMETERS IN
-	 * Event *evt - the event to be validated
-	 *
-	 * RETURN
-	 * true if the event is valid for this view, i.e. the event has coordinates
-	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
-	 * false if the event is not valid for this view and should not be processed by
-	 *       handleEvent
-	 */
-	virtual bool isEventPositionValid(Event *evt);
-
 	bool focus(void);
 	void select(void);
 
@@ -502,6 +444,38 @@ protected:
 	void makeGlobal(Point &origin);
 
 	/*
+	 * Verify the validity of the event (not nullptr) and check
+	 * if it is a positional event.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event to be validated
+	 *
+	 * RETURN
+	 * true if the event is a valid pointer and a positional event
+	 * false in any other case
+	 */
+	bool isEventPositional(Event *evt);
+
+	/*
+	 * Verify the validity of the event for this view and returns
+	 * a boolean according to the evaluation.
+	 * A positional event is valid if:
+	 * 	1) the pointer is not null
+	 * 	2) the event is positional
+	 * 	3) the event coordinates are in the view's range
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event to be validated
+	 *
+	 * RETURN
+	 * true if the event is valid for this view, i.e. the event has coordinates
+	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
+	 * false if the event is not valid for this view and should not be processed by
+	 *       handleEvent
+	 */
+	virtual bool isEventPositionValid(Event *evt);
+
+	/*
 	 * Verify that coordinates of the positional event are in the view's range.
 	 * The method will not check for pointer validity OR positional validity.
 	 * Use as a speedup but with caution.
@@ -564,6 +538,32 @@ protected:
 	 * Event *evt - a pointer to an event object
 	 */
 	virtual void sendEvent(Event *evt);
+
+	/*
+	 * Create an event and send it up to the root parent.
+	 * This is a wrap around for sendEvent().
+	 * The message will be passed down the children hierarchy
+	 * to the destination object (if specified), or to all objects (if
+	 * BROADCAST_OBJECT is set as destination).
+	 *
+	 * PARAMETERS IN
+	 * uint16_t command - the command code
+	 * void *destination - the receiver of the message
+	 * void *target - the view the command applies to
+	 */
+	virtual void sendCommand(const uint16_t command, void *destination, void *target);
+
+	/*
+	 * This is a wrap around for sendCommand(cons uint16_t, void *, void*).
+	 * Messages are sent to BROADCAST_OBJECT with target set to the sender object;
+	 * so it is just like calling sendCommand(command, BROADCAST_OBJECT, this)
+	 *
+	 * PARAMETERS IN
+	 * uint16_t command - the command code
+	 * void *destination - the receipient of the message
+	 * void *target - the view the command applies to
+	 */
+	void sendCommand(const uint16_t command);
 
 	inline View *getParent(void) { return parentView; }
 	ViewRender *getRenderer(void) { return renderer; }
