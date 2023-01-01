@@ -423,18 +423,21 @@ bool View::isEventCmdMe(Event *evt)
 
 bool View::focus()
 {
-	if (!getState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP))
+	if (getState(VIEW_STATE_FOCUSED))
+		return true;
+
+	if (!getState(VIEW_STATE_EVLOOP))
 	{
-		if (getParent() && getParent()->focus())
+		if (!getState(VIEW_STATE_SELECTED))
 		{
-			select();
-			setState(VIEW_STATE_FOCUSED);
-			return true;
+			if (select())
+			{
+				setState(VIEW_STATE_FOCUSED);
+				return true;
+			}
+
+			return false;
 		}
-		/*
-		 * Focus should not be grabbed !!! FIX ME check if focus can be granted
-		 */
-		return false;
 	}
 
 	return true;
