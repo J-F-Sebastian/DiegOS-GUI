@@ -401,16 +401,14 @@ bool View::focus()
 	return true;
 }
 
-void View::select()
+bool View::select()
 {
 	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
-		return;
+		return false;
 
 	setState(VIEW_STATE_SELECTED);
-	if (getParent())
-	{
-		sendCommand(CMD_SELECT, getParent(), this);
-	}
+
+	return true;
 }
 
 void View::setBorders(const Rectangle &newrect)

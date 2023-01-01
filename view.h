@@ -358,7 +358,7 @@ public:
 	virtual void handleEvent(Event *evt);
 
 	bool focus(void);
-	void select(void);
+	bool select(void);
 
 protected:
 	/*
