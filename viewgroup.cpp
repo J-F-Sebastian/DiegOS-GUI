@@ -328,6 +328,82 @@ void ViewGroup::handleEvent(Event *evt)
 	}
 }
 
+bool ViewGroup::executeCommand(const uint16_t command)
+{
+	switch (command)
+	{
+	case CMD_DRAW:
+		draw();
+		return true;
+
+	case CMD_REDRAW:
+		reDraw();
+		return true;
+
+	case CMD_REQ_FOCUS:
+		if (validateCommand(command))
+		{
+			/*
+			 * If we are the root node or we are running the
+			 * event loop (could it be different ?!?) return true
+			 * as we cannot grab or release the focus.
+			 */
+			if (!getParent() || getState(VIEW_STATE_EVLOOP))
+				return true;
+
+			/*
+			 * A cast resulting in nullptr would mean a View was set as
+			 * a parent of a group .... does it make sense ?
+			 */
+			ViewGroup *parent = dynamic_cast<ViewGroup *>(getParent());
+			if (parent)
+			{
+				if (this != parent->actualView())
+				{
+					if (parent->actualView()->executeCommand(CMD_REL_FOCUS))
+					{
+						return parent->focusView(this);
+					}
+				}
+				return true;
+			}
+		}
+		break;
+
+	case CMD_REL_FOCUS:
+		if (validateCommand(command))
+		{
+			/*
+			 * If we are the root node or we are running the
+			 * event loop (could it be different ?!?) return true
+			 * as we cannot grab or release the focus.
+			 */
+			if (!getParent() || getState(VIEW_STATE_EVLOOP))
+				return true;
+
+			bool retval = true;
+
+			if (actual)
+				retval = actual->executeCommand(command);
+
+			if (retval)
+			{
+				clearState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
+				actual = nullptr;
+				return true;
+			}
+		}
+		break;
+	}
+
+	return false;
+}
+
+bool ViewGroup::validateCommand(const uint16_t command)
+{
+	return true;
+}
+
 void ViewGroup::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);

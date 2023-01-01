@@ -48,6 +48,8 @@ public:
 	virtual void reDraw(void) override;
 
 	virtual void handleEvent(Event *evt) override;
+	virtual bool executeCommand(const uint16_t command) override;
+	virtual bool validateCommand(const uint16_t command) override;
 
 	virtual void setForeground(void) override;
 	virtual void setBackground(void) override;
