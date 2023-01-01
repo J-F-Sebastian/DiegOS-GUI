@@ -348,7 +348,7 @@ public:
 	 * Make use of the Event object to perform tasks.
 	 * The default handleEvent will evaluate positional events,
 	 * in case the event coordinates are inside the view limits
-	 * and the PRESSED bit is set, the view will select herself
+	 * and the PRESSED bit is set, the view will select itself
 	 * and notify with a message its owner.
 	 * NO memory management is to be performed on evt.
 	 *
@@ -356,6 +356,35 @@ public:
 	 * Event *evt - a pointer to an Event object
 	 */
 	virtual void handleEvent(Event *evt);
+
+	/*
+	 * Execute the command specified as parameter.
+	 * Success or failure are reported.
+	 * Different classes can support different sets of commands.
+	 *
+	 * PARAMETERS IN
+	 * const uint16_t command - a command as found in event.h, enum CMD_*
+	 *
+	 * RETURN
+	 * true if the command was executed successfully
+	 * false in any other case
+	 */
+	virtual bool executeCommand(const uint16_t command);
+
+	/*
+	 * Validate the command specified as parameter.
+	 * Possible success or failure are reported.
+	 * NOTE: Command must NOT be executed.
+	 * Different classes can support different sets of commands.
+	 *
+	 * PARAMETERS IN
+	 * const uint16_t command - a command as found in event.h, enum CMD_*
+	 *
+	 * RETURN
+	 * true if the command is applicable, i.e. will be succesfully executed.
+	 * false in any other case
+	 */
+	virtual bool validateCommand(const uint16_t command);
 
 	bool focus(void);
 	bool select(void);

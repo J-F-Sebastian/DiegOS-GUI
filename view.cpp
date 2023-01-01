@@ -301,6 +301,45 @@ void View::handleEvent(Event *evt)
 	}
 }
 
+bool View::executeCommand(const uint16_t command)
+{
+	switch (command)
+	{
+	case CMD_DRAW:
+		draw();
+		return true;
+
+	case CMD_REDRAW:
+		reDraw();
+		return true;
+
+	case CMD_REQ_FOCUS:
+		if (validateCommand(command))
+		{
+			if (getParent())
+				return getParent()->executeCommand(command);
+			else
+				return focus();
+		}
+		break;
+
+	case CMD_REL_FOCUS:
+		if (validateCommand(command))
+		{
+			clearState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
+			return true;
+		}
+		break;
+	}
+
+	return false;
+}
+
+bool View::validateCommand(const uint16_t command)
+{
+	return true;
+}
+
 void View::sendCommand(const uint16_t command, void *destination, void *target)
 {
 	Event evt;
