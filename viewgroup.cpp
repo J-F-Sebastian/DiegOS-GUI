@@ -471,7 +471,7 @@ bool ViewGroup::remove(View *target)
 	{
 		if (!focusNext(true))
 		{
-			return false;
+			actual = nullptr;
 		}
 	}
 	List<View *>::iterator it(viewList, &target);
@@ -511,6 +511,8 @@ bool ViewGroup::focusNext(bool forward)
 
 		if (++it != viewList.end())
 			temp = (*it);
+		else
+			temp = viewList.getHead();
 	}
 	else
 	{
@@ -518,6 +520,8 @@ bool ViewGroup::focusNext(bool forward)
 
 		if (++it != viewList.rend())
 			temp = (*it);
+		else
+			temp = viewList.getTail();
 	}
 
 	return focusView(temp);
@@ -536,6 +540,8 @@ void ViewGroup::selectNext(bool forward)
 
 		if (++it != viewList.end())
 			temp = (*it);
+		else
+			temp = viewList.getHead();
 	}
 	else
 	{
@@ -543,6 +549,8 @@ void ViewGroup::selectNext(bool forward)
 
 		if (++it != viewList.rend())
 			temp = (*it);
+		else
+			temp = viewList.getTail();
 	}
 
 	selectView(temp);
@@ -592,7 +600,6 @@ void ViewGroup::toTheTop(View *target)
 		it = viewList.erase(it);
 		viewList.addHead(target);
 		viewList.getHead()->setForeground();
-		std::cout << __FUNCTION__ << std::endl;
 		/* Now ask for redrawing */
 		sendCommand(CMD_DRAW);
 	}
