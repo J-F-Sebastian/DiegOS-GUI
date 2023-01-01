@@ -202,8 +202,7 @@ void ViewGroup::handleEvent(Event *evt)
 
 			case CMD_SELECT:
 				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				selectView(static_cast<View *>(msg->targetObject));
-				toTheTop(static_cast<View *>(msg->targetObject));
+				selectView(reinterpret_cast<View *>(msg->targetObject));
 				break;
 
 			case CMD_CLOSE:
@@ -575,6 +574,8 @@ void ViewGroup::selectView(View *target)
 			actual->clearState(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED);
 		}
 		actual = target;
+		if (actual->getOptions(VIEW_OPT_TOPSELECT))
+			toTheTop(actual);
 	}
 }
 
