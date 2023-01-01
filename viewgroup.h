@@ -59,6 +59,7 @@ public:
 	void insert(View *newView);
 	void insertBefore(View *newView, View *target);
 	bool remove(View *target);
+	View *actualView(void);
 
 	void setPalettes(PaletteGroup *pals);
 

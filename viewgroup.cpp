@@ -409,6 +409,11 @@ bool ViewGroup::remove(View *target)
 	return false;
 }
 
+View *ViewGroup::actualView()
+{
+	return actual;
+}
+
 void ViewGroup::setPalettes(PaletteGroup *pals)
 {
 	if (pals && !palettes)
