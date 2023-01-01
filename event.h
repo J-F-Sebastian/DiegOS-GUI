@@ -159,7 +159,7 @@ struct MessageEvent
 	/*
 	 * Optional payload, up to the message implementation.
 	 */
-	void *payload;
+	uint32_t payload[4];
 };
 
 class Event
