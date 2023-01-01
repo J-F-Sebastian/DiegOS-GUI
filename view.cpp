@@ -295,7 +295,7 @@ void View::handleEvent(Event *evt)
 	{
 		if (evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_DOUBLE))
 		{
-			if (!focus())
+			if (!executeCommand(CMD_REQ_FOCUS))
 				evt->clear();
 		}
 	}
