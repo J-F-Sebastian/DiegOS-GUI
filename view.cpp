@@ -343,15 +343,18 @@ bool View::validateCommand(const uint16_t command)
 void View::sendCommand(const uint16_t command, void *destination, void *target)
 {
 	Event evt;
-	MessageEvent cmd = {command, 0, this, destination, target, nullptr};
-	evt.setMessageEvent(cmd);
-	sendEvent(&evt);
+	MessageEvent cmd = {command, 0, this, destination, target, {0, 0, 0, 0}};
+	if (destination && target)
+	{
+		evt.setMessageEvent(cmd);
+		sendEvent(&evt);
+	}
 }
 
 void View::sendCommand(const uint16_t command)
 {
 	Event evt;
-	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, BROADCAST_OBJECT, nullptr};
+	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, BROADCAST_OBJECT, {0, 0, 0, 0}};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
 }
