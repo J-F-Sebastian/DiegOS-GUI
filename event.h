@@ -102,8 +102,10 @@ enum
 	CMD_FOREGROUND,
 	/* Select a view */
 	CMD_SELECT,
-	/* Focus a view */
-	CMD_FOCUS,
+	/* Request the focus */
+	CMD_REQ_FOCUS,
+	/* Request to release the focus */
+	CMD_REL_FOCUS,
 	/* Update the view with data found in the message */
 	CMD_UPDATE,
 	/* Redraw the view */
