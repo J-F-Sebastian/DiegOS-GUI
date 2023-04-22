@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstring>
+
 #include "palettegroupfactory.h"
 #include "viewrenderhw.h"
 #include "background_palette.h"
@@ -27,7 +29,6 @@
 #include "window_palette.h"
 #include "window_icon_palette.h"
 #include "scrollbar_palette.h"
-#include <cstring>
 
 #define BLACK 0x000000
 #define MAROON 0x800000
@@ -253,7 +254,6 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
     }
 
     return new PaletteGroup(pal, PaletteGroup::PAL_NUM);
-    ;
 }
 
 PaletteGroupFactory::PaletteGroupFactory()
