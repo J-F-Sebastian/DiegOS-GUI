@@ -18,6 +18,7 @@
  */
 #include <iostream>
 
+#include "viewinstances.h"
 #include "background.h"
 #include "background_palette.h"
 
@@ -29,8 +30,8 @@ Background::Background(Rectangle &rect) : View(rect)
 void Background::draw()
 {
     Rectangle viewRect;
-    ViewRender *r = getRenderer();
-    Palette *p = getPalette();
+    ViewRender *r = GRenderer;
+    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
     getExtent(viewRect);
     globalize(viewRect);
     unsigned color;

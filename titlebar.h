@@ -33,7 +33,7 @@ public:
 
     virtual void handleEvent(Event *evt) override;
 
-    void setTitle(const char *title);
+    void setTitle(const char *ntitle);
 
 private:
     std::string title;

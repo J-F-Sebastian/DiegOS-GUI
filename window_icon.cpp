@@ -19,6 +19,7 @@
 
 #include <iostream>
 
+#include "viewinstances.h"
 #include "window_icon.h"
 #include "window_icon_palette.h"
 
@@ -30,8 +31,8 @@ WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
 void WindowIconClose::draw()
 {
     Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *renderer = GRenderer;
+    Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
     getExtent(viewRect);
     globalize(viewRect);
 
@@ -148,8 +149,8 @@ WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect)
 void WindowIconZoom::draw()
 {
     Rectangle viewRect;
-    ViewRender *renderer = getRenderer();
-    Palette *palette = getPalette();
+    ViewRender *renderer = GRenderer;
+    Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
     getExtent(viewRect);
     globalize(viewRect);
 

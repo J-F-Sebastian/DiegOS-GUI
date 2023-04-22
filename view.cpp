@@ -20,15 +20,13 @@
 
 #include "view.h"
 
-View::View(Rectangle &limits, ViewRender *rnd, Palette *pal, View *parent) : parentView(parent), renderer(rnd), palette(pal), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0), cflags(VIEW_CHANGED_REDRAW)
+View::View(Rectangle &limits, View *parent) : parentView(parent), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0), cflags(VIEW_CHANGED_REDRAW)
 {
 }
 
 View::~View()
 {
 	parentView = nullptr;
-	renderer = nullptr;
-	palette = nullptr;
 }
 
 void View::sizeLimits(Point &min, Point &max)
@@ -115,22 +113,6 @@ void View::setParent(View *par)
 	if (!parentView && par)
 	{
 		parentView = par;
-	}
-}
-
-void View::setRenderer(ViewRender *rnd)
-{
-	if (!renderer && rnd)
-	{
-		renderer = rnd;
-	}
-}
-
-void View::setPalette(Palette *pal)
-{
-	if (pal && !palette)
-	{
-		palette = pal;
 	}
 }
 

@@ -19,6 +19,7 @@
 
 #include <iostream>
 
+#include "viewinstances.h"
 #include "frame.h"
 #include "frame_palette.h"
 
@@ -39,8 +40,8 @@ void Frame::draw()
     getExtent(viewRect);
     globalize(viewRect);
     unsigned color, color2;
-    ViewRender *r = getRenderer();
-    Palette *p = getPalette();
+    ViewRender *r = GRenderer;
+    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
 
     if (style == FRAME_FLAT)
     {

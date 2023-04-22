@@ -37,7 +37,7 @@ public:
 
     virtual void handleEvent(Event *evt) override;
 
-    ViewExec(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
+    ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent = nullptr);
 
 protected:
     ViewEventManager *evtM;

@@ -26,7 +26,7 @@
 class ViewGroup : public View
 {
 public:
-	explicit ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent = nullptr);
+	explicit ViewGroup(Rectangle &limits, View *parent = nullptr);
 	virtual ~ViewGroup();
 
 	/*
@@ -63,8 +63,6 @@ public:
 	bool remove(View *target);
 	View *actualView(void);
 
-	void setPalettes(PaletteGroup *pals);
-
 protected:
 	bool focusNext(bool forward);
 	void selectNext(bool forward);
@@ -80,7 +78,6 @@ protected:
 
 	Rectangle lastLimits;
 	View *actual;
-	PaletteGroup *palettes;
 
 private:
 	List<View *> viewList;

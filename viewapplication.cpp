@@ -2,7 +2,7 @@
 #include "background.h"
 #include "event_keyboard.h"
 
-ViewApplication::ViewApplication(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent) : ViewExec(limits, rnd, pals, evt, parent), background(nullptr)
+ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewExec(limits, evt, parent), background(nullptr)
 {
 }
 
@@ -16,7 +16,6 @@ void ViewApplication::initDesktop()
 	getExtent(rect);
 	background = new Background(rect);
 	background->clearResizeMode(VIEW_RESIZEABLE | VIEW_ZOOMED);
-	background->setPalette(palettes->getPalette(PaletteGroup::PAL_DESKTOP));
 	insert(background);
 }
 

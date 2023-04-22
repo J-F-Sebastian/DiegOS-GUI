@@ -42,7 +42,7 @@ enum
 class Window : public ViewGroup
 {
 public:
-    Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, PaletteGroup *pals, View *parent, unsigned char ctrlflags = WINDOW_DEFAULT);
+    Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags = WINDOW_DEFAULT);
 
 protected:
     bool canMove() { return (wFlags & WINDOW_MOVE) ? true : false; }

@@ -25,7 +25,7 @@
 class ViewApplication : public ViewExec
 {
 public:
-	ViewApplication(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, ViewEventManager *evt, View *parent = nullptr);
+	ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent = nullptr);
 	virtual ~ViewApplication();
 
 	virtual void initDesktop(void);

@@ -26,7 +26,7 @@
 #include "titlebar.h"
 #include "background.h"
 
-Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, PaletteGroup *pals, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, rnd, pals, parent), wFlags(ctrlflags), isZoomed(false)
+Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent), wFlags(ctrlflags), isZoomed(false)
 {
     setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
     setResizeMode(VIEW_RESIZEABLE);
@@ -34,13 +34,11 @@ Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, Palett
     Rectangle temp;
     getExtent(temp);
     View *tmpView = new Frame(temp, 5);
-    tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_FRAME));
     insert(tmpView);
 
     temp.zoom(-5, -5);
     temp.ul.y += 26;
     tmpView = new Background(temp);
-    tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_BACKGROUND));
     insert(tmpView);
 
     getExtent(temp);
@@ -52,7 +50,6 @@ Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, Palett
         iconRect.lr.x = iconRect.ul.x + 24;
         temp.ul.x += 25;
         tmpView = new WindowIconClose(iconRect);
-        tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_WINICON));
         insert(tmpView);
     }
     if (wFlags & WINDOW_ZOOM)
@@ -61,10 +58,8 @@ Window::Window(Rectangle &viewLimits, const char *title, ViewRender *rnd, Palett
         iconRect.ul.x = iconRect.lr.x - 24;
         temp.lr.x -= 25;
         tmpView = new WindowIconZoom(iconRect);
-        tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_WINICON));
         insert(tmpView);
     }
     tmpView = new TitleBar(temp, title);
-    tmpView->setPalette(palettes->getPalette(PaletteGroup::PAL_TITLEBAR));
     insert(tmpView);
 }

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "viewinstances.h"
 #include "scrollbar.h"
 #include "scrollbar_palette.h"
 
@@ -30,8 +31,8 @@ void ScrollBar::draw()
 	getExtent(viewRect);
 	globalize(viewRect);
 	unsigned color, color2;
-	ViewRender *r = getRenderer();
-	Palette *p = getPalette();
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
 
 	Rectangle temp(viewRect);
 

@@ -23,7 +23,7 @@
 #define VIEWLISTITFOR(x) for (List<View *>::iterator x = viewList.begin(); x != viewList.end(); x++)
 #define VIEWLISTREVITFOR(x) for (List<View *>::riterator x = viewList.rbegin(); x != viewList.rend(); x++)
 
-ViewGroup::ViewGroup(Rectangle &limits, ViewRender *rnd, PaletteGroup *pals, View *parent) : View(limits, rnd, nullptr, parent), lastLimits(limits), actual(nullptr), palettes(pals), viewList()
+ViewGroup::ViewGroup(Rectangle &limits, View *parent) : View(limits, parent), lastLimits(limits), actual(nullptr), viewList()
 {
 	setOptions(VIEW_OPT_SELECTABLE);
 }
@@ -426,7 +426,6 @@ void ViewGroup::insert(View *newView)
 	if (newView)
 	{
 		newView->setParent(this);
-		newView->setRenderer(getRenderer());
 		if (newView->getOptions(VIEW_OPT_TOPSELECT))
 		{
 			viewList.addHead(newView);
@@ -457,7 +456,6 @@ void ViewGroup::insertBefore(View *newView, View *target)
 		if (viewList.insert(newView, target))
 		{
 			newView->setParent(this);
-			newView->setRenderer(getRenderer());
 		}
 	}
 }
@@ -487,14 +485,6 @@ bool ViewGroup::remove(View *target)
 View *ViewGroup::actualView()
 {
 	return actual;
-}
-
-void ViewGroup::setPalettes(PaletteGroup *pals)
-{
-	if (pals && !palettes)
-	{
-		palettes = pals;
-	}
 }
 
 bool ViewGroup::focusNext(bool forward)

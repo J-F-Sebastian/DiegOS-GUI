@@ -19,6 +19,7 @@
 
 #include <iostream>
 
+#include "viewinstances.h"
 #include "button.h"
 #include "button_palette.h"
 
@@ -30,8 +31,8 @@ Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 void Button::draw()
 {
     Rectangle viewRect;
-    ViewRender *r = getRenderer();
-    Palette *p = getPalette();
+    ViewRender *r = GRenderer;
+    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
     getExtent(viewRect);
     globalize(viewRect);
     Rectangle temp(viewRect);

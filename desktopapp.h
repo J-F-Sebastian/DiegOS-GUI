@@ -22,7 +22,6 @@
 
 #include "vieweventfactory.h"
 #include "viewapplication.h"
-#include "viewrenderfactory.h"
 #include "window.h"
 
 class DesktopApp
@@ -36,8 +35,6 @@ public:
   Window *createWindow(Rectangle &viewLimits, const char *title);
 
 private:
-  PaletteGroup *palg;
-  ViewRender *vr;
   ViewEventManager *he;
   ViewApplication *app;
 };

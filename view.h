@@ -22,8 +22,6 @@
 
 #include "geometry.h"
 #include "event.h"
-#include "palettegroup.h"
-#include "viewrender.h"
 
 /*
  * resize flags; there are 4 flags for resizing, one for each coordinate
@@ -243,22 +241,6 @@ public:
 	void setParent(View *par);
 
 	/*
-	 * Set the renderer instance.
-	 *
-	 * PARAMETERS IN
-	 * ViewRenderer *rnd - pointer to a ViewRender instance
-	 */
-	void setRenderer(ViewRender *rnd);
-
-	/*
-	 * Set the palette instance.
-	 *
-	 * PARAMETERS IN
-	 * Palette *pal - pointer to a Palette instance
-	 */
-	void setPalette(Palette *pal);
-
-	/*
 	 * Set state to foreground, this view is visible and on top
 	 * of others.
 	 * This state does not imply complete visibility on screen.
@@ -401,7 +383,7 @@ protected:
 	 * oflags set to (0), no options set
 	 * cflags set to (VIEW_CHANGED_REDRAW), view need to be drawn
 	 */
-	explicit View(Rectangle &limits, ViewRender *rnd = nullptr, Palette *pal = nullptr, View *parent = nullptr);
+	explicit View(Rectangle &limits, View *parent = nullptr);
 
 	/*
 	 * Apply new coordinates.
@@ -595,22 +577,12 @@ protected:
 	void sendCommand(const uint16_t command);
 
 	inline View *getParent(void) { return parentView; }
-	ViewRender *getRenderer(void) { return renderer; }
-	Palette *getPalette(void) { return palette; }
 
 private:
 	/*
 	 * The parent or Owner of this view, can be nullptr
 	 */
 	View *parentView;
-	/*
-	 * renderer instance, cannot be nullptr
-	 */
-	ViewRender *renderer;
-	/*
-	 * Color palette, cannot be nullptr
-	 */
-	Palette *palette;
 	/*
 	 * borders is expressed in owner's coordinates
 	 */

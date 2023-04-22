@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "viewinstances.h"
 #include "desktopapp.h"
 #include "SDL.h"
 #include "button.h"
@@ -24,7 +25,6 @@
 #include "window.h"
 #include "viewexec.h"
 #include "eventqueue.h"
-#include "palettegroupfactory.h"
 
 // Screen dimension constants
 static const int SCREEN_WIDTH = 1024;
@@ -35,11 +35,11 @@ DesktopApp::DesktopApp()
     SDL_Init(0);
 
     Rectangle master(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
-    vr = ViewRenderFactory::create(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
+    ViewRenderInstance::instance()->configure(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
     he = ViewEventFactory::create(EST_SDL);
-    palg = PaletteGroupFactory::create(PALETTE_WINOS2, 32);
+    PaletteGroupInstance::instance()->configure(PALETTE_WINOS2, 32);
 
-    app = new ViewApplication(master, vr, palg, he);
+    app = new ViewApplication(master, he);
     app->initDesktop();
 }
 
@@ -48,13 +48,11 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
     /* Relative to Window origin */
     Rectangle buttonLimits(25, 50, 125, 100);
 
-    Window *newWindow = new Window(viewLimits, title, vr, palg, app);
+    Window *newWindow = new Window(viewLimits, title, app);
     Button *newButton = new Button(buttonLimits);
-    newButton->setPalette(palg->getPalette(PaletteGroup::PAL_BUTTON));
     newWindow->insert(newButton);
     buttonLimits.move(25, 25);
     ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
-    newProgBar->setPalette(palg->getPalette(PaletteGroup::PAL_PROGRESSBAR));
     newWindow->insert(newProgBar);
     app->insert(newWindow);
     return newWindow;
@@ -68,8 +66,6 @@ void DesktopApp::run()
 DesktopApp::~DesktopApp()
 {
     delete app;
-    delete vr;
     delete he;
-    delete palg;
     SDL_Quit();
 }

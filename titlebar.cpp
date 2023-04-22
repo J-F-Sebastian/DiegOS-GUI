@@ -20,6 +20,7 @@
 #include <iostream>
 #include <cstring>
 
+#include "viewinstances.h"
 #include "titlebar.h"
 #include "titlebar_palette.h"
 
@@ -33,8 +34,8 @@ void TitleBar::draw()
 {
     unsigned color, color2;
     Rectangle viewRect;
-    ViewRender *r = getRenderer();
-    Palette *p = getPalette();
+    ViewRender *r = GRenderer;
+    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
     getExtent(viewRect);
     globalize(viewRect);
 
@@ -110,10 +111,10 @@ void TitleBar::handleEvent(Event *evt)
     }
 }
 
-void TitleBar::setTitle(const char *title)
+void TitleBar::setTitle(const char *ntitle)
 {
-    size_t len = strlen(title) + 1;
+    size_t len = strlen(ntitle) + 1;
     if (len > 64)
         len = 64;
-    this->title.assign(title, len);
+    this->title.assign(ntitle, len);
 }

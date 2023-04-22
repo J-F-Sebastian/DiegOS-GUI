@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cstdio>
 
+#include "viewinstances.h"
 #include "progressbar.h"
 #include "progressbar_palette.h"
 
@@ -31,8 +32,8 @@ void ProgressBar::draw()
 {
   unsigned color;
   int pxcent;
-  ViewRender *r = getRenderer();
-  Palette *p = getPalette();
+  ViewRender *r = GRenderer;
+  Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
   Rectangle viewRect;
   getExtent(viewRect);
   globalize(viewRect);
