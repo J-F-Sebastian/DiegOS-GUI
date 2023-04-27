@@ -20,7 +20,7 @@
 
 #include "view.h"
 
-View::View(Rectangle &limits, View *parent) : parentView(parent), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE), oflags(0), cflags(VIEW_CHANGED_REDRAW)
+View::View(Rectangle &limits, View *parent) : parentView(parent), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED), oflags(0), cflags(VIEW_CHANGED_REDRAW)
 {
 }
 
