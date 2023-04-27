@@ -25,7 +25,7 @@
 // Not really needed, but a convenience when handling events
 #include "event_keyboard.h"
 
-struct KeyDownEvent
+struct KeybEvent
 {
 	/*
 	 * enum KEYCODE_CODE
@@ -176,7 +176,7 @@ public:
 	Event() { myEventData.what = EVT_UNKNOWN; }
 	explicit Event(const Event &other) { myEventData = other.myEventData; }
 	explicit Event(const PositionalEvent &pos);
-	explicit Event(const KeyDownEvent &kbd);
+	explicit Event(const KeybEvent &kbd);
 	explicit Event(const MessageEvent &cmd);
 
 	enum EventType getEventType(void);
@@ -186,11 +186,11 @@ public:
 	bool isEventUnknown(void);
 
 	struct PositionalEvent *getPositionalEvent(void);
-	struct KeyDownEvent *getKeyDownEvent(void);
+	struct KeybEvent *getKeyDownEvent(void);
 	struct MessageEvent *getMessageEvent(void);
 
 	void setPositionalEvent(const PositionalEvent &pos);
-	void setKeyDownEvent(const KeyDownEvent &kbd);
+	void setKeyDownEvent(const KeybEvent &kbd);
 	void setMessageEvent(const MessageEvent &cmd);
 
 	bool testPositionalEventPos(char bitmap);
@@ -207,7 +207,7 @@ private:
 		union
 		{
 			PositionalEvent position;
-			KeyDownEvent keyDown;
+			KeybEvent keyDown;
 			MessageEvent message;
 		};
 	} myEventData;

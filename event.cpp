@@ -27,7 +27,7 @@ Event::Event(const PositionalEvent &pos)
     myEventData.position = pos;
 }
 
-Event::Event(const KeyDownEvent &kbd)
+Event::Event(const KeybEvent &kbd)
 {
     myEventData.what = EVT_KBD;
     myEventData.keyDown = kbd;
@@ -69,7 +69,7 @@ struct PositionalEvent *Event::getPositionalEvent()
     return (myEventData.what == EVT_POS) ? &myEventData.position : nullptr;
 }
 
-struct KeyDownEvent *Event::getKeyDownEvent()
+struct KeybEvent *Event::getKeyDownEvent()
 {
     return (myEventData.what == EVT_KBD) ? &myEventData.keyDown : nullptr;
 }
@@ -85,7 +85,7 @@ void Event::setPositionalEvent(const PositionalEvent &pos)
     myEventData.position = pos;
 }
 
-void Event::setKeyDownEvent(const KeyDownEvent &kbd)
+void Event::setKeyDownEvent(const KeybEvent &kbd)
 {
     myEventData.what = EVT_KBD;
     myEventData.keyDown = kbd;
