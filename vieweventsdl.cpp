@@ -79,7 +79,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 		{
 		case SDL_KEYDOWN:
 		{
-			KeyDownEvent kbd;
+			KeybEvent kbd;
 			kbd.modifier = sdlevt.key.keysym.mod;
 			if (sdlevt.key.keysym.sym > SDLK_DELETE)
 				kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym - SDLK_CAPSLOCK + 1) + SDLK_DELETE;

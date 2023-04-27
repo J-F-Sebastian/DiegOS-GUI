@@ -120,7 +120,7 @@ void ViewGroup::handleEvent(Event *evt)
 	{
 		if (getStateAll(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED))
 		{
-			KeyDownEvent *key = evt->getKeyDownEvent();
+			KeybEvent *key = evt->getKeyDownEvent();
 			if (key->modifier == KBD_MOD_NONE)
 			{
 				switch (key->keyCode)

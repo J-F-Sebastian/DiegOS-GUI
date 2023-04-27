@@ -29,7 +29,7 @@ void ViewApplication::handleEvent(Event *evt)
 
 	if (evt->isEventKey())
 	{
-		KeyDownEvent *key = evt->getKeyDownEvent();
+		KeybEvent *key = evt->getKeyDownEvent();
 		switch (key->keyCode)
 		{
 		case KBD_CODE_x:
