@@ -232,7 +232,11 @@ static const unsigned char CVALIDATE = (VIEW_CHANGED_REDRAW |
 void View::setChanged(unsigned char flags)
 {
 	if (flags & CVALIDATE)
+	{
 		cflags |= flags;
+		if (!getState(VIEW_STATE_EVLOOP) && getParent())
+			getParent()->setChanged(flags);
+	}
 }
 
 bool View::getChanged(unsigned char flags) const
