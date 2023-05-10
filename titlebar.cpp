@@ -64,49 +64,46 @@ void TitleBar::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
 
-    if (isEventPositional(evt))
+    if (getParent() && isEventPositional(evt))
     {
         if (isEventPositionInRange(evt))
         {
             uint8_t status = evt->getPositionalEvent()->status;
             if (status & POS_EVT_DOUBLE)
             {
-                if (getParent())
-                {
-                    sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
-                }
+                sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
             }
-            else if (status & POS_EVT_LONG)
+            else if (status & (POS_EVT_PRESSED | POS_EVT_LONG))
             {
                 Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
                 Point deltaPressure(newPressure);
                 deltaPressure -= lastPressure;
-                if (!getState(VIEW_STATE_DRAGGING))
+                if (!getParent()->getState(VIEW_STATE_DRAGGING))
                 {
                     lastPressure = newPressure;
-                    setState(VIEW_STATE_DRAGGING);
+                    getParent()->setState(VIEW_STATE_DRAGGING);
                 }
                 else if (lastPressure != newPressure)
                 {
                     lastPressure = newPressure;
-                    std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
-                    if (getParent())
-                        getParent()->moveLocation(deltaPressure);
+                    // std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
+
+                    getParent()->moveLocation(deltaPressure);
                     /* Now ask for redrawing */
                     sendCommand(CMD_DRAW);
                 }
             }
-            else
+            else if (getParent()->getState(VIEW_STATE_DRAGGING))
             {
                 /* Reset dragging */
-                clearState(VIEW_STATE_DRAGGING);
+                getParent()->clearState(VIEW_STATE_DRAGGING);
             }
             evt->clear();
         }
         else
         {
             /* Reset dragging */
-            clearState(VIEW_STATE_DRAGGING);
+            getParent()->clearState(VIEW_STATE_DRAGGING);
         }
     }
 }
