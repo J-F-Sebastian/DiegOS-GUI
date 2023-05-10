@@ -643,24 +643,7 @@ void ViewGroup::setExposed(bool exposed)
 	{
 		(*it)->setExposed(exposed);
 	}
-}
 
-void ViewGroup::clearExposed(Rectangle &covered)
-{
-	Rectangle local;
-
-	View::clearExposed(covered);
-	getBorders(local);
-
-	if (local.intersect(covered))
-	{
-		local.intersection(covered);
-		localize(local);
-		VIEWLISTITFOR(it)
-		{
-			(*it)->clearExposed(local);
-		}
-	}
 }
 
 void ViewGroup::computeExposure()

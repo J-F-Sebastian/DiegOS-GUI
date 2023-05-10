@@ -501,15 +501,6 @@ void View::setExposed(bool exposed)
 	}
 }
 
-void View::clearExposed(Rectangle &covered)
-{
-	if (covered.includes(borders))
-	{
-		std::cout << covered.ul.x << "," << covered.ul.y << " " << covered.lr.x << "," << covered.lr.y << std::endl;
-		setExposed(false);
-	}
-}
-
 void View::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);

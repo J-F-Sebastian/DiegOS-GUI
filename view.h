@@ -265,19 +265,6 @@ public:
 	virtual void setExposed(bool exposed);
 
 	/*
-	 * If the view borders are included in covered rectangle, the view
-	 * cannot be exposed (drawn) on video, so setExposed(false) will be called.
-	 * If the view borders are not included in covered rectangle, the covering
-	 * rectangle is only partially overlapped with the view borders, as well as it
-	 * may not intersect at all.
-	 * In this case no action is taken.
-	 *
-	 * PARAMETERS IN
-	 * Rectangle &covered - reference to the covering rectangle
-	 */
-	virtual void clearExposed(Rectangle &covered);
-
-	/*
 	 * Operate on the view resize options flags.
 	 */
 	void setResizeMode(unsigned char flags);

@@ -41,10 +41,8 @@ public:
 	virtual bool setLocation(const Rectangle &loc) override;
 
 	virtual void setExposed(bool exposed) override;
-	virtual void clearExposed(Rectangle &covered) override;
 
 	virtual void draw(void) override;
-
 	virtual void reDraw(void) override;
 
 	virtual void handleEvent(Event *evt) override;
