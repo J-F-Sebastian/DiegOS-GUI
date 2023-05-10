@@ -274,9 +274,8 @@ void ViewGroup::handleEvent(Event *evt)
 				else
 				{
 					View *target = static_cast<View *>(msg->targetObject);
-					List<View *>::iterator it(viewList, &target);
-					if (it != viewList.end())
-						(*it)->draw();
+					if (thisViewIsMine(target))
+						target->draw();
 				}
 			}
 			break;
