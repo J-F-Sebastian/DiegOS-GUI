@@ -111,6 +111,9 @@ void ViewGroup::handleEvent(Event *evt)
 			if (evt->isEventUnknown())
 				return;
 		}
+		/*
+		 * Clear the event, it was in our range.
+		 */
 		evt->clear();
 	}
 	/*
@@ -137,9 +140,9 @@ void ViewGroup::handleEvent(Event *evt)
 					break;
 				}
 			}
+			if (actual && !evt->isEventUnknown())
+				actual->handleEvent(evt);
 		}
-		if (actual && !evt->isEventUnknown())
-			actual->handleEvent(evt);
 	}
 	/*
 	 * If the event is a message (a command) then the event is processed if the destination
