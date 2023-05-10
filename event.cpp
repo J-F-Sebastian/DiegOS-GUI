@@ -128,7 +128,7 @@ void Event::print()
     {
     case EVT_POS:
     {
-        std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
+        // std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
         std::string temp("");
         if (myEventData.position.status & POS_EVT_PRESSED)
             temp += "pressed ";
@@ -138,7 +138,7 @@ void Event::print()
             temp += "long ";
         if (myEventData.position.status == 0)
             temp += "none ";
-        std::cout << " STATUS " << temp;
+        // std::cout << " STATUS " << temp;
         temp.clear();
         if (myEventData.position.buttons & POS_EVT_RIGHT)
             temp += "right";
@@ -148,12 +148,12 @@ void Event::print()
             temp += "left";
         if (myEventData.position.buttons & POS_EVT_TAP)
             temp += "tap";
-        std::cout << " BUTTONS " << temp << std::endl;
+        // std::cout << " BUTTONS " << temp << std::endl;
     }
     break;
     case EVT_KBD:
-        std::cout << "KBD: KEYCODE " << std::hex << myEventData.keyDown.keyCode;
-        std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
+        // std::cout << "KBD: KEYCODE " << std::hex << myEventData.keyDown.keyCode;
+        // std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
         break;
     case EVT_CMD:
         std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand;
