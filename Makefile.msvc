@@ -1,4 +1,12 @@
-MYOBJDIR = build
+#Global section
+MYLIBSDIR = E:\sviluppo\
+
+#Release or debug section
+!ifdef DEBUG
+MYOBJDIR = windowsdbg
+!else
+MYOBJDIR = windows
+!endif
 
 MYOBJS = $(MYOBJDIR)\event.obj $(MYOBJDIR)\eventqueue.obj $(MYOBJDIR)\view.obj $(MYOBJDIR)\viewexec.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\frame.obj $(MYOBJDIR)\geometry.obj $(MYOBJDIR)\palette.obj $(MYOBJDIR)\palettegroup.obj
@@ -9,15 +17,35 @@ MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj $(MYOBJDIR)\scrollbar.obj $(MYOBJD
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewapplication.obj $(MYOBJDIR)\palettegroupinstance.obj $(MYOBJDIR)\viewrenderinstance.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewzbuffer.obj
 
-MYLIBSDIR = E:\sviluppo\
+CPPFLAGS = /Oi /favor:INTEL64 /W4 /GA /std:c++20 /EHcs /MP2 /c
 
-CPPFLAGS = /O2 /Oi /favor:INTEL64 /EHcs /W4 /std:c++20 /GA /MP2 /c
-#CPPFLAGS = /Zi /Oi /favor:INTEL64 /EHcs /W4 /std:c++20 /GA /c
+!ifdef DEBUG
+CPPFLAGS = $(CPPFLAGS) /Zi /O1 /Oi
+!else
+CPPFLAGS = $(CPPFLAGS) /O2 /Oi
+!endif
+
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2\include\SDL2
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2_ttf\include
 
-all : $(MYOBJDIR) $(MYOBJS)
- $(CPP) /MT $(MYOBJS) /Fetestsys.exe $(MYLIBSDIR)\SDL2\lib\SDL2.lib $(MYLIBSDIR)\SDL2_ttf\lib\x64\SDL2_ttf.lib
+!ifdef DEBUG
+CPPFLAGS = $(CPPFLAGS) /Fdguidbg.pdb /Feguidb.exe
+!else
+CPPFLAGS = $(CPPFLAGS) /Fegui.exe
+!endif
+
+!ifdef DEBUG
+LNFLAGS = /Zf /Zi /favor:INTEL64 /GA /MTd
+LNFLAGS = $(LNFLAGS) /Fdguidbg.pdb /Feguidbg.exe
+!else
+LNFLAGS = /favor:INTEL64 /GA /MT
+LNFLAGS = $(LNFLAGS) /Fegui.exe
+!endif
+
+compileonly : $(MYOBJDIR) $(MYOBJS) *.h
+
+all : $(MYOBJDIR) $(MYOBJS) *.h
+ $(CPP) $(LNFLAGS) $(MYOBJS) $(MYLIBSDIR)\SDL2\lib\SDL2.lib $(MYLIBSDIR)\SDL2_ttf\lib\x64\SDL2_ttf.lib
 
 {}.cpp{$(MYOBJDIR)}.obj::
  $(CPP) $(CPPFLAGS) /Fo$(MYOBJDIR)\ $<
@@ -27,4 +55,18 @@ $(MYOBJDIR) :
 
 clean :
  del /Q $(MYOBJDIR)\*.*
- del testsys*.exe
+!ifdef DEBUG
+ del /Q guidbg.exe
+ del /Q guidbg.pdb
+ del /Q guidbg.ilk
+!else
+ del /Q gui.exe
+!endif
+
+cleanall :
+ del /Q windowsdbg\*.*
+ del /Q windows\*.*
+ del /Q guidbg.exe
+ del /Q guidbg.pdb
+ del /Q guidbg.ilk
+ del /Q gui.exe
