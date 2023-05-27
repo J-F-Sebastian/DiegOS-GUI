@@ -31,18 +31,17 @@ EventQueue::~EventQueue()
 
 void EventQueue::enqueue(Event *newEvt)
 {
-    if (!newEvt) return;
+    if (!newEvt)
+        return;
 
     eventsList.addTail(newEvt);
 }
 
 Event *EventQueue::dequeue()
-{    
+{
     if (eventsList.count())
     {
-        Event *retval = eventsList.getHead();
-        eventsList.popHead();
-        return retval;
+        return eventsList.popHead();
     }
 
     return nullptr;
