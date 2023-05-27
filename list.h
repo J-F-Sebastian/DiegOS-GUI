@@ -348,26 +348,35 @@ public:
     return true;
   }
 
-  void popHead(void)
+  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
+  T popHead(void)
   {
     if (items)
     {
       ListNode<T> *temp = head->prev;
+      T copy = head->prev->obj;
       delete temp;
       items -= 1;
+      return copy;
     }
+    return head->obj;
   }
 
-  void popTail(void)
+  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
+  T popTail(void)
   {
     if (items)
     {
       ListNode<T> *temp = tail->next;
+      T copy = tail->next->obj;
       delete temp;
       items -= 1;
+      return copy;
     }
+    return tail->obj;
   }
 
+  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
   T &getHead(void) { return (items) ? (head->prev->obj) : (head->obj); }
   T &getTail(void) { return (items) ? (tail->next->obj) : (tail->obj); }
 
@@ -399,7 +408,6 @@ public:
 
       target++;
       delete (find);
-      std::cout << "ddd " << count() << std::endl;
       items -= 1;
       return target;
     }
