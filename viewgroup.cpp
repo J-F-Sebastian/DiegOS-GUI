@@ -596,6 +596,10 @@ void ViewGroup::selectView(View *target)
 		actual = target;
 		if (actual->getOptions(VIEW_OPT_TOPSELECT))
 			toTheTop(actual);
+		// setChanged(VIEW_CHANGED_REDRAW);
+		/* Now ask for redrawing */
+		// sendCommand(CMD_REDRAW);
+		sendCommand(CMD_DRAW);
 	}
 }
 
