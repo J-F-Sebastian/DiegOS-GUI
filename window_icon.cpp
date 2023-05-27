@@ -25,7 +25,7 @@
 
 WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
 {
-    clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+    clearOptions(VIEW_OPT_VALIDATE);
 }
 
 void WindowIconClose::draw()
@@ -142,7 +142,7 @@ void WindowIconClose::handleEvent(Event *evt)
 
 WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect)
 {
-    clearOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+    clearOptions(VIEW_OPT_VALIDATE);
     setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
 }
 
