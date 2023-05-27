@@ -397,6 +397,31 @@ bool ViewGroup::executeCommand(const uint16_t command)
 			}
 		}
 		break;
+
+	case CMD_MAXIMIZE:
+		maximize();
+		return true;
+
+	case CMD_RESTORE:
+		restore();
+		return true;
+
+	case CMD_CLOSE:
+		sendCommand(CMD_CLOSE, getParent(), this);
+		return true;
+
+	case CMD_FOREGROUND:
+		setForeground();
+		break;
+
+	case CMD_QUIT:
+		VIEWLISTITFOR(it)
+		{
+			delete (*it);
+		}
+		viewList.clear();
+		actual = nullptr;
+		break;
 	}
 
 	return false;
