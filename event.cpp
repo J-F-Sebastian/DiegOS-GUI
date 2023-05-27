@@ -156,11 +156,11 @@ void Event::print()
         // std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
         break;
     case EVT_CMD:
-        std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand;
-        std::cout << " SENDER: " << myEventData.message.senderObject;
-        std::cout << " DEST: " << myEventData.message.destObject;
-        std::cout << " TARGET: " << myEventData.message.targetObject;
-        std::cout << std::dec << std::endl;
+        // std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand;
+        // std::cout << " SENDER: " << myEventData.message.senderObject;
+        // std::cout << " DEST: " << myEventData.message.destObject;
+        // std::cout << " TARGET: " << myEventData.message.targetObject;
+        // std::cout << std::dec << std::endl;
         break;
     case EVT_UNKNOWN:
     default:
