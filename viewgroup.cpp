@@ -648,13 +648,15 @@ bool ViewGroup::thisViewIsMine(View *who)
 
 void ViewGroup::setExposed(bool exposed)
 {
-	View::setExposed(exposed);
+	exposed = false;
 
 	VIEWLISTITFOR(it)
 	{
-		(*it)->setExposed(exposed);
+		if ((*it)->getState(VIEW_STATE_EXPOSED))
+			exposed = true;
 	}
 
+	View::setExposed(exposed);
 }
 
 void ViewGroup::computeExposure()
