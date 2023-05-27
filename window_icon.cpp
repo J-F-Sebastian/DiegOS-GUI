@@ -125,17 +125,16 @@ void WindowIconClose::handleEvent(Event *evt)
                 sendCommand(CMD_REDRAW);
                 if (!isDown() && getParent())
                 {
-                    sendCommand(CMD_CLOSE, getParent(), getParent());
+                    sendCommand(CMD_CLOSE, BROADCAST_OBJECT, getParent());
                 }
-                evt->clear();
             }
+            evt->clear();
         }
         else if (isDown())
         {
             updateButtonState(false);
-            setChanged(VIEW_CHANGED_REDRAW);
-            /* Now ask for redrawing */
-            sendCommand(CMD_REDRAW);
+            /* Now ask for drawing */
+            sendCommand(CMD_DRAW);
         }
     }
 }
@@ -229,7 +228,7 @@ void WindowIconZoom::handleEvent(Event *evt)
                 {
                     if (getParent())
                     {
-                        sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+                        sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
                     }
                 }
             }
@@ -238,9 +237,8 @@ void WindowIconZoom::handleEvent(Event *evt)
         else if (isDown())
         {
             updateButtonState(false);
-            setChanged(VIEW_CHANGED_REDRAW);
-            /* Now ask for redrawing */
-            sendCommand(CMD_REDRAW);
+            /* Now ask for drawing */
+            sendCommand(CMD_DRAW);
         }
     }
 }
