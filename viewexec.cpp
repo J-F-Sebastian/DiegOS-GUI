@@ -33,7 +33,7 @@ void ViewExec::run()
     Event event;
 
     setState(VIEW_STATE_EVLOOP);
-    sendCommand(CMD_REDRAW);
+    sendCommand(CMD_DRAW);
 
     while (getState(VIEW_STATE_EVLOOP))
     {
@@ -64,7 +64,6 @@ void ViewExec::reDraw()
 
 void ViewExec::sendEvent(Event *evt)
 {
-    std::cout << __FUNCTION__ << std::endl;
     if (getState(VIEW_STATE_EVLOOP))
     {
         evtM->put(evt);
