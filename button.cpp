@@ -130,18 +130,26 @@ void Button::handleEvent(Event *evt)
             bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
             if (updateButtonState(pressed))
             {
+                // if (getParent()->getState(VIEW_STATE_SELECTED))
+                //{
                 setChanged(VIEW_CHANGED_REDRAW);
                 /* Now ask for redrawing */
                 sendCommand(CMD_REDRAW);
+                // sendCommand(CMD_DRAW);
+                //}
+                // else
+                //{
+                /* Now ask for drawing */
+                //    sendCommand(CMD_DRAW);
+                //}
             }
             evt->clear();
         }
         else if (isDown())
         {
             updateButtonState(false);
-            setChanged(VIEW_CHANGED_REDRAW);
-            /* Now ask for redrawing */
-            sendCommand(CMD_REDRAW);
+            /* Now ask for drawing */
+            sendCommand(CMD_DRAW);
         }
     }
 }

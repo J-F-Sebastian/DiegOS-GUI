@@ -64,9 +64,10 @@ void ProgressBar::handleEvent(Event *evt)
     if (msg->command == CMD_UPDATE)
     {
       percent = (msg->subCommand > 100) ? 100 : msg->subCommand;
-      setChanged(VIEW_CHANGED_REDRAW);
+      // setChanged(VIEW_CHANGED_REDRAW);
       /* Now ask for redrawing */
-      sendCommand(CMD_REDRAW);
+      // sendCommand(CMD_REDRAW);
+      sendCommand(CMD_DRAW);
       evt->clear();
     }
   }

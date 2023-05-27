@@ -221,7 +221,7 @@ void *ViewRenderHW::loadBMP(const char *name)
 
 bool ViewRenderHW::unloadBMP(void *bmp)
 {
-	SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
+	SDL_Texture *mybmp = reinterpret_cast<SDL_Texture *>(bmp);
 
 	if (mybmp)
 	{
@@ -234,7 +234,7 @@ bool ViewRenderHW::unloadBMP(void *bmp)
 
 void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 {
-	SDL_Texture *mybmp = static_cast<SDL_Texture *>(bmp);
+	SDL_Texture *mybmp = reinterpret_cast<SDL_Texture *>(bmp);
 
 	if (mybmp)
 	{
