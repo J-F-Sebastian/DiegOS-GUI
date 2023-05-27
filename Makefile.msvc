@@ -15,7 +15,7 @@ MYOBJS = $(MYOBJS) $(MYOBJDIR)\vieweventfactory.obj $(MYOBJDIR)\vieweventsdl.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\background.obj $(MYOBJDIR)\progressbar.obj $(MYOBJDIR)\button.obj $(MYOBJDIR)\window_icon.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj $(MYOBJDIR)\scrollbar.obj $(MYOBJDIR)\testdesktopapp.obj $(MYOBJDIR)\viewgroup.obj
 MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewapplication.obj $(MYOBJDIR)\palettegroupinstance.obj $(MYOBJDIR)\viewrenderinstance.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewzbuffer.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewzbuffer.obj $(MYOBJDIR)\desktop.obj
 
 CPPFLAGS = /Oi /favor:INTEL64 /W4 /GA /std:c++20 /EHcs /MP2 /c
 
