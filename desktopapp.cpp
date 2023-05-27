@@ -25,10 +25,11 @@
 #include "window.h"
 #include "viewexec.h"
 #include "eventqueue.h"
+#include "viewzbuffer.h"
 
 // Screen dimension constants
-static const int SCREEN_WIDTH = 1024;
-static const int SCREEN_HEIGHT = 768;
+static const int SCREEN_WIDTH = 1280;
+static const int SCREEN_HEIGHT = 720;
 
 DesktopApp::DesktopApp()
 {
@@ -36,6 +37,7 @@ DesktopApp::DesktopApp()
 
     Rectangle master(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
     ViewRenderInstance::instance()->configure(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
+    ViewZBuffer::instance()->configure(master);
     he = ViewEventFactory::create(EST_SDL);
     PaletteGroupInstance::instance()->configure(PALETTE_WINOS2, 32);
 
