@@ -25,7 +25,7 @@
 
 ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPercent(showpercent), percent(36)
 {
-  setOptions(VIEW_OPT_TOPSELECT);
+  setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
 }
 
 void ProgressBar::draw()
