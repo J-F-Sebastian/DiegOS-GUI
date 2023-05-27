@@ -27,8 +27,8 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
 {
     if (style == FRAME_BEVELLED)
     {
-        if (width < 4)
-            width = 4;
+        if (width < 5)
+            width = 5;
     }
     setResizeMode(VIEW_RESIZEABLE);
     setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
@@ -59,7 +59,7 @@ void Frame::draw()
         p->getPalette(FRAME_BRIGHT, color);
         p->getPalette(FRAME_DARK, color2);
 
-        // Outer shadow
+        // Outer shadow, 2 pixels
 
         /*
          *    BBBBBBBBB
@@ -85,15 +85,15 @@ void Frame::draw()
         ul.move(-temp.width(), temp.height() - 1);
         r->hline(ul, temp.width() - 1, color2);
 
-        // The frame
+        // The frame, width - 4 pixels
         p->getPalette(FRAME_MAIN, color);
-        for (unsigned i = 0; i < width - 3; i++)
+        for (unsigned i = 0; i < width - 4; i++)
         {
             temp.zoom(-1, -1);
             r->rectangle(temp, color);
         }
 
-        // Inner shadow
+        // Inner shadow, 2 pixels
 
         /*
          *    DDDDDDDDD
@@ -104,6 +104,15 @@ void Frame::draw()
          */
         temp.zoom(-1, -1);
         p->getPalette(FRAME_BRIGHT, color);
+        ul = temp.ul;
+        r->hline(ul, temp.width(), color2);
+        r->vline(ul, temp.height() - 1, color2);
+        ul.move(temp.width(), 1);
+        r->vline(ul, temp.height() - 1, color);
+        ul.move(-temp.width(), temp.height() - 1);
+        r->hline(ul, temp.width() - 1, color);
+
+        temp.zoom(-1, -1);
         ul = temp.ul;
         r->hline(ul, temp.width(), color2);
         r->vline(ul, temp.height() - 1, color2);

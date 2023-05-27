@@ -31,7 +31,7 @@ public:
         FRAME_FLAT,
     };
 
-    explicit Frame(Rectangle &rect, unsigned width = 4, enum FrameStyle style = FRAME_BEVELLED);
+    explicit Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
 
     virtual void draw(void) override;
 
