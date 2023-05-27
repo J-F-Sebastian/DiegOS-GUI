@@ -268,7 +268,7 @@ void View::clearChanged(unsigned char flags)
 
 void View::reDraw()
 {
-	if (getChanged(VIEW_CHANGED_REDRAW))
+	if (getState(VIEW_STATE_EXPOSED) && getChanged(VIEW_CHANGED_REDRAW))
 	{
 		draw();
 		clearChanged(VIEW_CHANGED_REDRAW);

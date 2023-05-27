@@ -84,7 +84,7 @@ void ViewGroup::draw()
 
 void ViewGroup::reDraw()
 {
-	if (getState(VIEW_CHANGED_REDRAW))
+	if (getState(VIEW_STATE_EXPOSED) && getChanged(VIEW_CHANGED_REDRAW))
 	{
 		// Draw children back-to-top, following the painter algorithm
 		VIEWLISTREVITFOR(it)
