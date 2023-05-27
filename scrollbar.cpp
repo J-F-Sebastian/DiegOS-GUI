@@ -23,6 +23,7 @@
 
 ScrollBar::ScrollBar(Rectangle &viewLimits) : View(viewLimits), refElements(1), refSize(1), refPosition(0), activePad(viewLimits), lastPressure(0, 0)
 {
+	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
 void ScrollBar::draw()
