@@ -22,8 +22,10 @@
 
 #include "viewrenderinstance.h"
 #include "palettegroupinstance.h"
+#include "viewzbuffer.h"
 
 #define GRenderer ViewRenderInstance::instance()->get()
 #define GPaletteGroup PaletteGroupInstance::instance()->get()
+#define GZBuffer ViewZBuffer::instance()
 
 #endif
