@@ -30,122 +30,115 @@
 
 class ViewRender
 {
-  public:
-    virtual ~ViewRender() {};
+public:
+  virtual ~ViewRender(){};
 
-    /*
-     * Trace a line from a to b with the specified color.
-     *
-     * PARAMETER IN
-     *  Point &a - reference to the starting point on screen
-     *  Point &b - reference to the ending point on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer)
-     */
-    virtual void line(const Point &a, const Point &b, uint32_t color) = 0;
-    /*
-     * Trace a horizontal line of len pixels starting from a with the specified color.
-     *
-     * PARAMETER IN
-     *  Point &a - reference to the starting point on screen
-     *  int len - line length (left to right)
-     *  uint32_t color - the color to be used (bit depth depends on the renderer)
-     */
-    virtual void hline(const Point &a, int len, uint32_t color) = 0;
-    /*
-     * Trace a vertical line of len pixels starting from a with the specified color.
-     *
-     * PARAMETER IN
-     *  Point &a - reference to the starting point on screen
-     *  int len - line length (top to bottom)
-     *  uint32_t color - the color to be used (bit depth depends on the renderer)
-     */
-    virtual void vline(const Point &a, int len, uint32_t color) = 0;
-    /*
-     * Trace a rectangle using the coordinates stored in rect with the specified color.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer)
-     */
-    virtual void rectangle(const Rectangle &rect, uint32_t color) = 0;
-    /*
-     * Trace a rectangle using the coordinates stored in rect with the specified color.
-     * The rectangle is filled with the same color.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer)
-     */
-    virtual void filledRectangle(const Rectangle &rect, uint32_t color) = 0;
-    /*
-     * Trace a rectangle using the coordinates stored in rect with the specified color.
-     * The rectangle is filled with the second specified color.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t colors[] - the colors to be used (bit depth depends on the renderer),
-     *                           first color is applied to the border, second color is used
-     *                           to fill the rectangle.
-     */
-    virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) = 0;
-    /*
-     * Trace a rectangle using the coordinates stored in rect with the specified color.
-     * The rectangle is filled with the second specified color.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t colors[] - the colors to be used (bit depth depends on the renderer),
-     *                           first color is applied to the border, second color is used
-     *                           to fill the rectangle.
-     */
-    //void tile(Rectangle &source,  void *src, Rectangle &limits, void *dest, int flags);
-    /*
-     * Write the specified text using the coordinates stored in rect with the specified color.
-     * The rectangle is filled in height and width with respect to the font size and aspect ratio.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer),
-     *  char *text - Text to be written on screen
-     */
-    virtual void textBox(const char *text, Rectangle &out) = 0;
-    /*
-     * Write the specified text using the coordinates stored in rect with the specified color.
-     * The rectangle is filled in height and width with respect to the font size and aspect ratio.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer),
-     *  char *text - Text to be written on screen
-     */
-    virtual void text(const Rectangle &rect, uint32_t color, const char *text) = 0;
-    /*
-     * Write the specified text using the coordinates stored in rect with the specified color.
-     * The rectangle is filled in height and width with respect to the font size and aspect ratio.
-     *
-     * PARAMETER IN
-     *  Rectangle &rect - reference to the rectangle on screen
-     *  uint32_t color - the color to be used (bit depth depends on the renderer),
-     *  char *text - Text to be written on screen
-     */
-    virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) = 0;
+  /*
+   * Trace a line from a to b with the specified color.
+   *
+   * PARAMETER IN
+   *  Point &a - reference to the starting point on screen
+   *  Point &b - reference to the ending point on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer)
+   */
+  virtual void line(const Point &a, const Point &b, uint32_t color) = 0;
+  /*
+   * Trace a horizontal line of len pixels starting from a with the specified color.
+   *
+   * PARAMETER IN
+   *  Point &a - reference to the starting point on screen
+   *  int len - line length (left to right)
+   *  uint32_t color - the color to be used (bit depth depends on the renderer)
+   */
+  virtual void hline(const Point &a, int len, uint32_t color) = 0;
+  /*
+   * Trace a vertical line of len pixels starting from a with the specified color.
+   *
+   * PARAMETER IN
+   *  Point &a - reference to the starting point on screen
+   *  int len - line length (top to bottom)
+   *  uint32_t color - the color to be used (bit depth depends on the renderer)
+   */
+  virtual void vline(const Point &a, int len, uint32_t color) = 0;
+  /*
+   * Trace a rectangle using the coordinates stored in rect with the specified color.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer)
+   */
+  virtual void rectangle(const Rectangle &rect, uint32_t color) = 0;
+  /*
+   * Trace a rectangle using the coordinates stored in rect with the specified color.
+   * The rectangle is filled with the same color.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer)
+   */
+  virtual void filledRectangle(const Rectangle &rect, uint32_t color) = 0;
+  /*
+   * Trace a rectangle using the coordinates stored in rect with the specified color.
+   * The rectangle is filled with the second specified color.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t colors[] - the colors to be used (bit depth depends on the renderer),
+   *                           first color is applied to the border, second color is used
+   *                           to fill the rectangle.
+   */
+  virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) = 0;
+  /*
+   * Write the specified text using the coordinates stored in rect with the specified color.
+   * The rectangle is filled in height and width with respect to the font size and aspect ratio.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer),
+   *  char *text - Text to be written on screen
+   */
+  virtual void textBox(const char *text, Rectangle &out) = 0;
+  /*
+   * Write the specified text using the coordinates stored in rect with the specified color.
+   * The rectangle is filled in height and width with respect to the font size and aspect ratio.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer),
+   *  char *text - Text to be written on screen
+   */
+  virtual void text(const Rectangle &rect, uint32_t color, const char *text) = 0;
+  /*
+   * Write the specified text using the coordinates stored in rect with the specified color.
+   * The rectangle is filled in height and width with respect to the font size and aspect ratio.
+   *
+   * PARAMETER IN
+   *  Rectangle &rect - reference to the rectangle on screen
+   *  uint32_t color - the color to be used (bit depth depends on the renderer),
+   *  char *text - Text to be written on screen
+   */
+  virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) = 0;
 
-    virtual void *loadBMP(const char *name) = 0;
-    virtual bool unloadBMP(void *bmp) = 0;
-    virtual void drawBMP(void *bmp, const Rectangle &rect) = 0;
-    /*
-     * Show on screen the video buffer; should have no effect if the renderer use no buffering
-     * and writes directly to video memory.
-     */
-    virtual void show(void) = 0;
-  
-    virtual void clear(uint32_t color) = 0;
+  virtual void *loadBMP(const char *name) = 0;
+  virtual bool unloadBMP(void *bmp) = 0;
+  virtual void drawBMP(void *bmp, const Rectangle &rect) = 0;
+  /*
+   * Show on screen the video buffer; should have no effect if the renderer use no buffering
+   * and writes directly to video memory.
+   */
+  virtual void show(void) = 0;
+  /*
+   * Clear the screen using the specified color.
+   *
+   * PARAMETER IN
+   *  uint32_t color - the color to be used (bit depth depends on the renderer),
+   */
+  virtual void clear(uint32_t color) = 0;
 
-  protected:
-    ViewRender(int xres, int yres, int bitdepth) : xres(xres), yres(yres), bitDepth(bitdepth) {}
+protected:
+  ViewRender(int xres, int yres, int bitdepth) : xres(xres), yres(yres), bitDepth(bitdepth) {}
 
-    int xres, yres, bitDepth;
-
+  int xres, yres, bitDepth;
 };
 
 #endif
