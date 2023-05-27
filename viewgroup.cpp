@@ -187,7 +187,7 @@ void ViewGroup::handleEvent(Event *evt)
 			switch (msg->command)
 			{
 			case CMD_QUIT:
-				std::cout << "QUIT CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				// std::cout << "QUIT CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
 				 * We are instructed to close all of our views, in fact the target is ignored.
 				 */
@@ -196,21 +196,22 @@ void ViewGroup::handleEvent(Event *evt)
 					delete (*it);
 				}
 				viewList.clear();
+				actual = nullptr;
 				break;
 
 			case CMD_FOREGROUND:
-				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				// std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				if (msg->targetObject == this)
 					setForeground();
 				break;
 
 			case CMD_SELECT:
-				std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				// std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				selectView(reinterpret_cast<View *>(msg->targetObject));
 				break;
 
 			case CMD_CLOSE:
-				std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				// std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
 				 * We are instructed to close, so send an event to our owner
 				 */
