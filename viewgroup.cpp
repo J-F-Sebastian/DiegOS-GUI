@@ -599,6 +599,9 @@ void ViewGroup::toTheTop(View *target)
 
 void ViewGroup::maximize()
 {
+	if (getResizeModeAll(VIEW_BOUNDED))
+		return;
+
 	if (getParent())
 	{
 		getBorders(lastLimits);
@@ -608,19 +611,26 @@ void ViewGroup::maximize()
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW, getParent(), getParent());
+		sendCommand(CMD_DRAW);
 	}
 }
 
 void ViewGroup::minimize()
 {
+	if (getResizeModeAll(VIEW_BOUNDED))
+		return;
 	// FIX ME
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
+	/* Now ask for redrawing */
+	sendCommand(CMD_DRAW);
 }
 
 void ViewGroup::restore()
 {
+	if (getResizeModeAll(VIEW_BOUNDED))
+		return;
+
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
 	setLocation(lastLimits);
