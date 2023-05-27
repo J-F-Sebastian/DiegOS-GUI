@@ -1,5 +1,5 @@
 #include "viewapplication.h"
-#include "background.h"
+#include "desktop.h"
 #include "event_keyboard.h"
 
 ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewExec(limits, evt, parent), background(nullptr)
@@ -8,14 +8,14 @@ ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View 
 
 ViewApplication::~ViewApplication()
 {
+	delete background;
 }
 
 void ViewApplication::initDesktop()
 {
 	Rectangle rect;
 	getExtent(rect);
-	background = new Background(rect);
-	background->clearResizeMode(VIEW_RESIZEABLE | VIEW_ZOOMED);
+	background = new Desktop(rect);
 	insert(background);
 }
 
