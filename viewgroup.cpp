@@ -462,14 +462,7 @@ void ViewGroup::insert(View *newView)
 			{
 				actual->setBackground();
 			}
-			if (focusView(newView))
-			{
-				newView->setForeground();
-			}
-			else
-			{
-				actual->setForeground();
-			}
+			focusView(newView);
 		}
 		else
 		{
