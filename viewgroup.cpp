@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "viewgroup.h"
+#include "viewzbuffer.h"
 
 #define VIEWLISTITFOR(x) for (List<View *>::iterator x = viewList.begin(); x != viewList.end(); x++)
 #define VIEWLISTREVITFOR(x) for (List<View *>::riterator x = viewList.rbegin(); x != viewList.rend(); x++)
@@ -659,42 +660,16 @@ void ViewGroup::setExposed(bool exposed)
 void ViewGroup::computeExposure()
 {
 	/*
-	 * Reset exposure of all views; note that invisible views
-	 * will be forced to be not exposed.
+	 * Set in the Z buffer the layer depth of each view
 	 */
-	setExposed(true);
-
-	/*
-	 * Make a list of visible views to compute the
-	 * covering areas
-	 */
-	List<View *> visible;
-
 	VIEWLISTITFOR(it)
 	{
-		if ((*it)->getState(VIEW_STATE_VISIBLE))
-			visible.addTail(*it);
+		(*it)->computeExposure();
 	}
 
 	/*
-	 * Optimization (?!?): if no view is visible, or there is only one
-	 * visible view, drop out
+	 * true or false does not matter, the value is
+	 * recomputed by the method.
 	 */
-	if (visible.count() < 2)
-		return;
-
-	List<View *>::iterator target(visible);
-	List<View *>::iterator firstVisible = target;
-
-	while (++target != visible.end())
-	{
-		List<View *>::iterator predecessors = visible.begin();
-		while (predecessors != target)
-		{
-			Rectangle predR;
-			(*predecessors)->getBorders(predR);
-			(*target)->clearExposed(predR);
-			predecessors++;
-		}
-	}
+	setExposed(true);
 }

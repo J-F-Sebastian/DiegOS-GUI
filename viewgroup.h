@@ -72,13 +72,23 @@ protected:
 
 	bool thisViewIsMine(View *who);
 
-	void computeExposure(void);
+	virtual void computeExposure(void) override;
 
 	Rectangle lastLimits;
 	View *actual;
 
 private:
+	/*
+	 * List of views owned by this group; the list is Z-ordered from foreground to background,
+	 * is populated by calling insert or insertBefore, and can be reordered when the selected object
+	 * has the VIEW_OPT_TOPSELECT option set.
+	 */
 	List<View *> viewList;
+
+	/*
+	 * Store the previously used resize flags to restore them later.
+	 * This is useful for resizing/zooming operations.
+	 */
 	unsigned char lastrflags;
 };
 

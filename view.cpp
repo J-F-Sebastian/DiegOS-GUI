@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "view.h"
+#include "viewinstances.h"
 
 View::View(Rectangle &limits, View *parent) : parentView(parent), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED), oflags(0), cflags(VIEW_CHANGED_REDRAW)
 {
@@ -343,6 +344,17 @@ void View::sendCommand(const uint16_t command)
 	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, BROADCAST_OBJECT, {0, 0, 0, 0}};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
+}
+
+void View::computeExposure()
+{
+	Rectangle temp(extent);
+	globalize(temp);
+
+	setExposed(!GZBuffer->isAreaSet(temp));
+
+	if (getState(VIEW_STATE_EXPOSED))
+		GZBuffer->set(temp);
 }
 
 void View::sendEvent(Event *evt)

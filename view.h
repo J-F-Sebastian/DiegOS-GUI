@@ -355,6 +355,14 @@ public:
 	 */
 	virtual bool validateCommand(const uint16_t command);
 
+	/*
+	 * This method stores the area of the view in a Z-buffer for visibility tests.
+	 * First the Z-Buffer is checked, if the covered area is partially or totally clear
+	 * then setExposed(true) is called, otherwise setExposed(false) is called.
+	 * After this operation the view area must be set in the Z-Buffer.
+	 */
+	virtual void computeExposure(void);
+
 	bool focus(void);
 	bool select(void);
 
