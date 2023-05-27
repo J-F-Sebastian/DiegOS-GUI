@@ -156,3 +156,37 @@ bool Frame::isEventPositionValid(Event *evt)
     }
     return false;
 }
+
+void Frame ::computeExposure()
+{
+    Rectangle ext;
+    bool areaSet = true;
+
+    getExtent(ext);
+
+    {
+        Rectangle temp(0, 0, ext.width(), width);
+        globalize(temp);
+
+        areaSet = areaSet && GZBuffer->isAreaSet(temp);
+        GZBuffer->set(temp);
+
+        temp.move(0, ext.height() - width);
+        areaSet = areaSet && GZBuffer->isAreaSet(temp);
+        GZBuffer->set(temp);
+    }
+
+    {
+        Rectangle temp(0, width, width, ext.height() - width);
+        globalize(temp);
+
+        areaSet = areaSet && GZBuffer->isAreaSet(temp);
+        GZBuffer->set(temp);
+
+        temp.move(ext.width() - width, 0);
+        areaSet = areaSet && GZBuffer->isAreaSet(temp);
+        GZBuffer->set(temp);
+    }
+
+    setExposed(!areaSet);
+}

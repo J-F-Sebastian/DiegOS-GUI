@@ -39,6 +39,8 @@ public:
 
     virtual bool isEventPositionValid(Event *evt) override;
 
+    void computeExposure() override;
+
 private:
     enum FrameStyle style;
     unsigned width;
