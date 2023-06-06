@@ -25,7 +25,7 @@ void ViewApplication::initMenu()
 
 void ViewApplication::handleEvent(Event *evt)
 {
-	evt->print();
+	// evt->print();
 
 	if (evt->isEventKey())
 	{

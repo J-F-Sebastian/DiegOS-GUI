@@ -272,8 +272,8 @@ void View::reDraw()
 	if (getState(VIEW_STATE_EXPOSED) && getChanged(VIEW_CHANGED_REDRAW))
 	{
 		draw();
-		clearChanged(VIEW_CHANGED_REDRAW);
 	}
+	clearChanged(VIEW_CHANGED_REDRAW);
 }
 
 void View::handleEvent(Event *evt)
@@ -324,6 +324,12 @@ bool View::executeCommand(const uint16_t command)
 
 bool View::validateCommand(const uint16_t command)
 {
+	switch (command)
+	{
+	case CMD_REQ_FOCUS:
+		return !getState(VIEW_STATE_FOCUSED);
+	}
+
 	return true;
 }
 

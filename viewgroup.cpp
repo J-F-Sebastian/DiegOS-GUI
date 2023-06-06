@@ -92,8 +92,8 @@ void ViewGroup::reDraw()
 		{
 			(*it)->reDraw();
 		}
-		clearChanged(VIEW_CHANGED_REDRAW);
 	}
+	clearChanged(VIEW_CHANGED_REDRAW);
 }
 
 void ViewGroup::handleEvent(Event *evt)
@@ -104,7 +104,7 @@ void ViewGroup::handleEvent(Event *evt)
 	 * boundaries; first view accepting the coordinates of the event will process the
 	 * event with handleEvent() method.
 	 */
-	if (isEventPositionValid(evt))
+	if (isEventPositional(evt))
 	{
 		VIEWLISTITFOR(it)
 		{
@@ -112,10 +112,13 @@ void ViewGroup::handleEvent(Event *evt)
 			if (evt->isEventUnknown())
 				return;
 		}
-		/*
-		 * Clear the event, it was in our range.
-		 */
-		evt->clear();
+		if (isEventPositionInRange(evt))
+		{
+			/*
+			 * Clear the event, it was in our range.
+			 */
+			evt->clear();
+		}
 	}
 	/*
 	 * If the event is a key press, process the event only if we are selected and focused.
@@ -271,6 +274,7 @@ void ViewGroup::handleEvent(Event *evt)
 			{
 				if (isEventCmdTargetMe(evt))
 				{
+					evt->print();
 					draw();
 				}
 				else
@@ -596,10 +600,6 @@ void ViewGroup::selectView(View *target)
 		actual = target;
 		if (actual->getOptions(VIEW_OPT_TOPSELECT))
 			toTheTop(actual);
-		// setChanged(VIEW_CHANGED_REDRAW);
-		/* Now ask for redrawing */
-		// sendCommand(CMD_REDRAW);
-		sendCommand(CMD_DRAW);
 	}
 }
 
@@ -617,7 +617,7 @@ void ViewGroup::toTheTop(View *target)
 		viewList.addHead(target);
 		viewList.getHead()->setForeground();
 		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW);
+		// sendCommand(CMD_DRAW);
 	}
 }
 

@@ -58,8 +58,8 @@ void ViewExec::reDraw()
 {
     if (getState(VIEW_STATE_EVLOOP))
     {
-        // GZBuffer->clear();
-        // computeExposure();
+        GZBuffer->clear();
+        computeExposure();
         ViewGroup::reDraw();
         GRenderer->show();
     }

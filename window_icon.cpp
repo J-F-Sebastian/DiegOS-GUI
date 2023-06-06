@@ -117,15 +117,19 @@ void WindowIconClose::handleEvent(Event *evt)
             // Update the pressure state, if the new state is RELEASED, it means
             // the icon was pressed and then released, in this case the object
             // will generate an event.
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
-            if (updateButtonState(pressed))
+            // Skip move-on-hold events.
+            if (!evt->testPositionalEventStatus(POS_EVT_LONG))
             {
-                setChanged(VIEW_CHANGED_REDRAW);
-                /* Now ask for redrawing */
-                sendCommand(CMD_REDRAW);
-                if (!isDown() && getParent())
+                bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+                if (updateButtonState(pressed))
                 {
-                    sendCommand(CMD_CLOSE, BROADCAST_OBJECT, getParent());
+                    setChanged(VIEW_CHANGED_REDRAW);
+                    /* Now ask for redrawing */
+                    sendCommand(CMD_REDRAW);
+                    if (!isDown() && getParent())
+                    {
+                        sendCommand(CMD_CLOSE, BROADCAST_OBJECT, getParent());
+                    }
                 }
             }
             evt->clear();
@@ -133,8 +137,9 @@ void WindowIconClose::handleEvent(Event *evt)
         else if (isDown())
         {
             updateButtonState(false);
-            /* Now ask for drawing */
-            sendCommand(CMD_DRAW);
+            setChanged(VIEW_CHANGED_REDRAW);
+            /* Now ask for redrawing */
+            sendCommand(CMD_REDRAW);
         }
     }
 }
@@ -218,17 +223,20 @@ void WindowIconZoom::handleEvent(Event *evt)
             // Update the pressure state, if the new state is RELEASED, it means
             // the icon was pressed and then released, in this case the object
             // will generate an event and toggle isZoom.
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
-            if (updateButtonState(pressed))
+            if (!evt->testPositionalEventStatus(POS_EVT_LONG))
             {
-                setChanged(VIEW_CHANGED_REDRAW);
-                /* Now ask for redrawing */
-                sendCommand(CMD_REDRAW);
-                if (!isDown())
+                bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+                if (updateButtonState(pressed))
                 {
-                    if (getParent())
+                    setChanged(VIEW_CHANGED_REDRAW);
+                    /* Now ask for redrawing */
+                    sendCommand(CMD_REDRAW);
+                    if (!isDown())
                     {
-                        sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+                        if (getParent())
+                        {
+                            sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+                        }
                     }
                 }
             }
@@ -237,8 +245,9 @@ void WindowIconZoom::handleEvent(Event *evt)
         else if (isDown())
         {
             updateButtonState(false);
-            /* Now ask for drawing */
-            sendCommand(CMD_DRAW);
+            setChanged(VIEW_CHANGED_REDRAW);
+            /* Now ask for redrawing */
+            sendCommand(CMD_REDRAW);
         }
     }
 }

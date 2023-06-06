@@ -127,29 +127,37 @@ void Button::handleEvent(Event *evt)
     {
         if (isEventPositionInRange(evt))
         {
-            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_LONG);
+            // Update the pressure state, if the new state is RELEASED, it means
+            // the icon was pressed and then released, in this case the object
+            // will generate an event.
+            // Skip move-on-hold events.
+            // if (!evt->testPositionalEventStatus(POS_EVT_LONG))
+            //{
+            bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
             if (updateButtonState(pressed))
             {
-                // if (getParent()->getState(VIEW_STATE_SELECTED))
-                //{
-                setChanged(VIEW_CHANGED_REDRAW);
-                /* Now ask for redrawing */
-                sendCommand(CMD_REDRAW);
-                // sendCommand(CMD_DRAW);
-                //}
-                // else
-                //{
-                /* Now ask for drawing */
-                //    sendCommand(CMD_DRAW);
-                //}
+                if (getParent() && getParent()->getState(VIEW_STATE_FOCUSED))
+                {
+                    setChanged(VIEW_CHANGED_REDRAW);
+                    /* Now ask for redrawing */
+                    sendCommand(CMD_REDRAW);
+                    // sendCommand(CMD_DRAW);
+                }
+                else
+                {
+                    /* Now ask for drawing */
+                    sendCommand(CMD_DRAW);
+                }
             }
+            //}
             evt->clear();
         }
         else if (isDown())
         {
             updateButtonState(false);
-            /* Now ask for drawing */
-            sendCommand(CMD_DRAW);
+            setChanged(VIEW_CHANGED_REDRAW);
+            /* Now ask for redrawing */
+            sendCommand(CMD_REDRAW);
         }
     }
 }
