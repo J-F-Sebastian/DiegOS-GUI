@@ -21,6 +21,60 @@
 
 #include "event.h"
 
+static const char *cmdToString(int cmd)
+{
+    switch (cmd)
+    {
+    /* Quit the application */
+    case CMD_QUIT:
+        return "QUIT";
+    /* View will be closed and removed */
+    case CMD_CLOSE:
+        return "CLOSE";
+    /* View will be zoomed, i.e. will resize to the extents of the parent */
+    case CMD_MAXIMIZE:
+        return "MAXIMIZE";
+    /* View will be resized to the minimum extent */
+    case CMD_MINIMIZE:
+        return "MINIMIZE";
+    /* View will return to the original size */
+    case CMD_RESTORE:
+        return "RESTORE";
+    /* A view is signalling an input event, data are ready to be handled */
+    case CMD_INPUT:
+        return "INPUT";
+    /* A view is being moved around */
+    case CMD_DRAGGING:
+        return "DRAGGING";
+    /* A view is being resized */
+    case CMD_RESIZING:
+        return "RESIZING";
+    /* Move the view to the top of the list */
+    case CMD_FOREGROUND:
+        return "FOREGROUND";
+    /* Select a view */
+    case CMD_SELECT:
+        return "SELECT";
+    /* Request the focus */
+    case CMD_REQ_FOCUS:
+        return "REQUEST FOCUS";
+    /* Request to release the focus */
+    case CMD_REL_FOCUS:
+        return "RELEASE FOCUS";
+    /* Update the view with data found in the message */
+    case CMD_UPDATE:
+        return "UPDATE";
+    /* Redraw the view */
+    case CMD_REDRAW:
+        return "REDRAW";
+    /* Draw all views */
+    case CMD_DRAW:
+        return "DRAW";
+    default:
+        return "UNKNOWN";
+    }
+}
+
 Event::Event(const PositionalEvent &pos)
 {
     myEventData.what = EVT_POS;
@@ -128,7 +182,7 @@ void Event::print()
     {
     case EVT_POS:
     {
-        // std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
+        std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
         std::string temp("");
         if (myEventData.position.status & POS_EVT_PRESSED)
             temp += "pressed ";
@@ -138,7 +192,7 @@ void Event::print()
             temp += "long ";
         if (myEventData.position.status == 0)
             temp += "none ";
-        // std::cout << " STATUS " << temp;
+        std::cout << " STATUS " << temp;
         temp.clear();
         if (myEventData.position.buttons & POS_EVT_RIGHT)
             temp += "right";
@@ -148,19 +202,20 @@ void Event::print()
             temp += "left";
         if (myEventData.position.buttons & POS_EVT_TAP)
             temp += "tap";
-        // std::cout << " BUTTONS " << temp << std::endl;
+        std::cout << " BUTTONS " << temp << std::endl;
     }
     break;
     case EVT_KBD:
-        // std::cout << "KBD: KEYCODE " << std::hex << myEventData.keyDown.keyCode;
-        // std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
+        std::cout << "KBD: KEYCODE " << std::hex << myEventData.keyDown.keyCode;
+        std::cout << " MOD " << myEventData.keyDown.modifier << std::dec << std::endl;
         break;
     case EVT_CMD:
-        // std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand;
-        // std::cout << " SENDER: " << myEventData.message.senderObject;
-        // std::cout << " DEST: " << myEventData.message.destObject;
-        // std::cout << " TARGET: " << myEventData.message.targetObject;
-        // std::cout << std::dec << std::endl;
+        std::cout << "CMD: " << std::hex << myEventData.message.command << "," << myEventData.message.subCommand
+                  << " (" << cmdToString(myEventData.message.command) << ") ";
+        std::cout << " SENDER: " << myEventData.message.senderObject;
+        std::cout << " DEST: " << myEventData.message.destObject;
+        std::cout << " TARGET: " << myEventData.message.targetObject;
+        std::cout << std::dec << std::endl;
         break;
     case EVT_UNKNOWN:
     default:
