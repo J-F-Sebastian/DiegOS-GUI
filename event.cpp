@@ -183,13 +183,19 @@ void Event::print()
     case EVT_POS:
     {
         std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
-        std::string temp("");
+        std::string temp;
         if (myEventData.position.status & POS_EVT_PRESSED)
             temp += "pressed ";
+        if (myEventData.position.status & POS_EVT_RELEASED)
+            temp += "released ";
+        if (myEventData.position.status & POS_EVT_SINGLE)
+            temp += "1click ";
+        if (myEventData.position.status & POS_EVT_ONEHALF)
+            temp += "1.5click ";
         if (myEventData.position.status & POS_EVT_DOUBLE)
-            temp += "double ";
-        if (myEventData.position.status & POS_EVT_LONG)
-            temp += "long ";
+            temp += "2click ";
+        if (myEventData.position.status & POS_EVT_DRAG)
+            temp += "drag ";
         if (myEventData.position.status == 0)
             temp += "none ";
         std::cout << " STATUS " << temp;

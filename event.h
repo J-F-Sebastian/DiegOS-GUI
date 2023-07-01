@@ -47,32 +47,40 @@ enum
 
 enum
 {
-	// Single click
+	// Button position
 	POS_EVT_PRESSED = 1 << 0,
+	POS_EVT_RELEASED = 1 << 1,
+	// Single click
+	POS_EVT_SINGLE = 1 << 2,
+	// One click and a half (thanks Apple !)
+	POS_EVT_ONEHALF = 1 << 3,
 	// Double click
-	POS_EVT_DOUBLE = 1 << 1,
+	POS_EVT_DOUBLE = 1 << 4,
 	// Button pressed while moving
-	POS_EVT_LONG = 1 << 2
+	POS_EVT_DRAG = 1 << 5
 };
 
 struct PositionalEvent
 {
 	int x, y;
 	/*
-	 * Right --------
-	 * Middle ------ \
-	 * Left ------- \ \
-	 * Tap ------- \ \ \
-	 *            \ \ \ \
-	 *    7 6 5 4 3 2 1 0
+	 * Right --------------+
+	 * Middle ----------+   \
+	 * Left ---------+   \   \
+	 * Tap -------+   \   \   \
+	 *             \   \   \   \
+	 * 7  6  5  4   3   2   1   0
 	 */
 	uint8_t buttons;
 	/*
-	 * Pressed ---------------
-	 * Double Pressure ------ \
-	 * Long Pressure ------- \ \
-	 *                      \ \ \
-	 *            7 6 5 4 3 2 1 0
+	 * Pressed ---------------------------+
+	 * Released -----------------------+   \
+	 * Single click ----------------+   \   \
+	 * One&half click -----------+   \   \   \
+	 * Double click ----------+   \   \   \   \
+	 * Pressed & moving ---+   \   \   \   \   \
+	 *                      \   \   \   \   \   \
+	 *               7   6   5   4   3   2   1   0
 	 */
 	uint8_t status;
 };

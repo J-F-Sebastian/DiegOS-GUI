@@ -21,6 +21,13 @@
 #include "vieweventsdl.h"
 #include "SDL.h"
 
+/*
+ * Static caches for events, this is not truly required for keyboard events,
+ * it is definitively required for mouse events when using SDL.
+ */
+static struct KeybEvent kbd = {0, 0};
+static struct PositionalEvent mouse = {0, 0, 0, POS_EVT_RELEASED};
+
 ViewEventSDL::ViewEventSDL() : ViewEventManager()
 {
 	if (SDL_InitSubSystem(SDL_INIT_EVENTS))
@@ -79,7 +86,6 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 		{
 		case SDL_KEYDOWN:
 		{
-			KeybEvent kbd;
 			kbd.modifier = sdlevt.key.keysym.mod;
 			if (sdlevt.key.keysym.sym > SDLK_DELETE)
 				kbd.keyCode = (uint16_t)(sdlevt.key.keysym.sym - SDLK_CAPSLOCK + 1) + SDLK_DELETE;
@@ -93,20 +99,31 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 		/* FALLTHRU */
 		case SDL_MOUSEBUTTONUP:
 		{
-			PositionalEvent mouse = {0, 0, 0, 0};
+			uint8_t temp;
+			/*std::cout << std::hex << "x " << sdlevt.button.timestamp << " / " << (int)sdlevt.button.button << " / " << (int)sdlevt.button.state << " / " << (int)sdlevt.button.clicks << std::endl;*/
 			if (sdlevt.button.button == SDL_BUTTON_LEFT)
-				mouse.buttons = 1 << 2;
+				temp = 1 << 2;
 			if (sdlevt.button.button == SDL_BUTTON_MIDDLE)
-				mouse.buttons = 1 << 1;
+				temp = 1 << 1;
 			if (sdlevt.button.button == SDL_BUTTON_RIGHT)
-				mouse.buttons = 1 << 0;
+				temp = 1 << 0;
 
-			if (sdlevt.button.state == SDL_PRESSED)
+			mouse.status = (sdlevt.button.state == SDL_PRESSED) ? POS_EVT_PRESSED : POS_EVT_RELEASED;
+			/*
+			 * Pressing different buttons clears ckick state
+			 */
+			if (temp != mouse.buttons)
+			{
+				mouse.buttons = temp;
+			}
+			else
 			{
 				if (sdlevt.button.clicks == 1)
-					mouse.status = POS_EVT_PRESSED;
+					mouse.status |= (mouse.status & POS_EVT_RELEASED) ? POS_EVT_SINGLE : 0;
 				else if (sdlevt.button.clicks == 2)
-					mouse.status = POS_EVT_DOUBLE;
+					mouse.status |= (mouse.status & POS_EVT_RELEASED) ? POS_EVT_DOUBLE : POS_EVT_SINGLE;
+				else
+					mouse.status &= ~(POS_EVT_SINGLE | POS_EVT_ONEHALF | POS_EVT_DOUBLE);
 			}
 			mouse.x = sdlevt.button.x;
 			mouse.y = sdlevt.button.y;
@@ -117,7 +134,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 		// case SDL_MOUSEWHEEL:
 		case SDL_MOUSEMOTION:
 		{
-			PositionalEvent mouse = {0, 0, 0, 0};
+			/*std::cout << std::hex << "m " << sdlevt.button.timestamp << " / " << (int)sdlevt.button.state << " / " << (int)sdlevt.button.x << " / " << (int)sdlevt.button.y << std::endl;*/
 			if (sdlevt.motion.state & SDL_BUTTON_LMASK)
 				mouse.buttons = 1 << 2;
 			if (sdlevt.motion.state & SDL_BUTTON_MMASK)
@@ -126,8 +143,13 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 				mouse.buttons = 1 << 0;
 
 			if (sdlevt.motion.state & (SDL_BUTTON_LMASK | SDL_BUTTON_MMASK | SDL_BUTTON_RMASK))
-				mouse.status = POS_EVT_LONG;
+				mouse.status |= POS_EVT_PRESSED;
 
+			mouse.status |= POS_EVT_DRAG;
+			/*
+			 * Motion clears click status
+			 */
+			mouse.status &= ~(POS_EVT_SINGLE | POS_EVT_ONEHALF | POS_EVT_DOUBLE);
 			mouse.x = sdlevt.motion.x;
 			mouse.y = sdlevt.motion.y;
 			evt->setPositionalEvent(mouse);
