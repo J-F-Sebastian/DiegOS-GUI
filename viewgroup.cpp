@@ -98,26 +98,20 @@ void ViewGroup::reDraw()
 
 void ViewGroup::handleEvent(Event *evt)
 {
-	View::handleEvent(evt);
-
 	/* If the event is positional, look for a view including the event in its
 	 * boundaries; first view accepting the coordinates of the event will process the
 	 * event with handleEvent() method.
 	 */
-	if (isEventPositional(evt))
+	if (isEventPositionValid(evt))
 	{
 		VIEWLISTITFOR(it)
 		{
-			(*it)->handleEvent(evt);
-			if (evt->isEventUnknown())
-				return;
-		}
-		if (isEventPositionInRange(evt))
-		{
-			/*
-			 * Clear the event, it was in our range.
-			 */
-			evt->clear();
+			if ((*it)->isEventPositionInRange(evt))
+			{
+				// std::cout << "GOTCHA! " << std::hex << (intptr_t)(*it) << std::dec << std::endl;
+				(*it)->handleEvent(evt);
+				break;
+			}
 		}
 	}
 	/*
@@ -154,45 +148,119 @@ void ViewGroup::handleEvent(Event *evt)
 	 * The event will be propagated to children if the destination is the broadcast object
 	 * or is NOT this view.
 	 *
-	 * +---------------+----------+
-	 * |  destination  |  action  |
-	 * +---------------+----------+
-	 * |               |  execute |
-	 * |  this view    |    and   |
-	 * |               |   clear  |
-	 * +---------------+----------+
-	 * |               |  execute |
-	 * |  broadcast    |    and   |
-	 * |               |  forward |
-	 * +---------------+----------+
-	 * |               |          |
-	 * |  child view   |  forward |
-	 * |               |          |
-	 * +---------------+----------+
-	 * |               |          |
-	 * |  unknown view |  clear   |
-	 * |               |          |
-	 * +---------------+----------+
+	 * +---------------+--------------+
+	 * |  destination  |    action    |
+	 * +---------------+--------------+
+	 * |               |    execute   |
+	 * |  this view    |      and     |
+	 * |               |     clear    |
+	 * +---------------+--------------+
+	 * |               |    execute   |
+	 * |  broadcast    |      and     |
+	 * |               |    forward   |
+	 * |               |      to      |
+	 * |               |    children  |
+	 * +---------------+--------------+
+	 * |               |    forward   |
+	 * |  child view   |      to      |
+	 * |               |     child    |
+	 * +---------------+--------------+
+	 * |               |    forward   |
+	 * |  unknown view |      to      |
+	 * |               |    children  |
+	 * +---------------+--------------+
 	 *
-	 * The targetObject is part of the header message but is used to address the action
-	 * of the command, not the destination.
 	 * A broadcast destination will make a message be processed by all handleEvent methods
 	 * of all Views in the system.
 	 * A unicast destination will make a message be processed by handleEvent methods
 	 * until the destination view is reached; the message will be forwarded from root to leaves
 	 * until the destination leave (a View) is reached.
+	 *
+	 * The targetObject is part of the header message but is used to address the action
+	 * of the command, not the destination.
+	 * Due to this a valid target object can be either this view, a child view or the broadcast address.
+	 * Other values must be ignored.
+	 *
+	 * +---------------+--------------+
+	 * |    target     |    action    |
+	 * +---------------+--------------+
+	 * |               |    execute   |
+	 * |  this view    |      and     |
+	 * |               |     clear    |
+	 * +---------------+--------------+
+	 * |               |    execute   |
+	 * |  broadcast    |      for     |
+	 * |               |      all     |
+	 * |               |    children  |
+	 * +---------------+--------------+
+	 * |               |    execute   |
+	 * |  child view   |      for     |
+	 * |               |     child    |
+	 * |               |      and     |
+	 * |               |     clear    |
+	 * +---------------+--------------+
+	 * |               |              |
+	 * |  unknown view |     skip     |
+	 * |               |              |
+	 * +---------------+--------------+
 	 */
 	else if (evt->isEventCommand())
 	{
 		MessageEvent *msg = evt->getMessageEvent();
-		if (isEventCmdForMe(evt))
+		/*
+		 * This object as destination and target
+		 */
+		if (isCommandMe(msg))
 		{
 			switch (msg->command)
 			{
-			case CMD_QUIT:
-				// std::cout << "QUIT CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+			case CMD_FOREGROUND:
+				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				setForeground();
+				break;
+
+			case CMD_CLOSE:
+				std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
-				 * We are instructed to close all of our views, in fact the target is ignored.
+				 * We are instructed to close, so send an event to our owner
+				 */
+				sendCommand(CMD_CLOSE, getParent(), this);
+				break;
+
+			case CMD_MAXIMIZE:
+				std::cout << "MAXIMIZE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				maximize();
+				break;
+
+			case CMD_RESTORE:
+				std::cout << "RESTORE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				restore();
+				break;
+			}
+			/*
+			 * Cleanup anyway, the message was for THIS object.
+			 */
+			evt->clear();
+		}
+		/*
+		 * All objects as a destination
+		 */
+		else if (isCommandForAll(msg))
+		{
+			/*
+			 * Forward message to all children.
+			 */
+			VIEWLISTITFOR(it)
+			{
+				(*it)->handleEvent(evt);
+			}
+			switch (msg->command)
+			{
+			case CMD_QUIT:
+				std::cout << "QUIT CMD at " << reinterpret_cast<intptr_t>(this) << " for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				/*
+				 * We are instructed to close so we do close all of our views, in fact the target is ignored.
+				 * NOTE: CMD_QUIT is nonsense with a specific destination ...
 				 */
 				VIEWLISTITFOR(it)
 				{
@@ -201,31 +269,29 @@ void ViewGroup::handleEvent(Event *evt)
 				viewList.clear();
 				actual = nullptr;
 				break;
-
-			case CMD_FOREGROUND:
-				// std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				if (msg->targetObject == this)
-					setForeground();
-				break;
-
+			}
+			/*
+			 * No event cleanup !!!
+			 */
+		}
+		/*
+		 * This object as a destination
+		 */
+		else if (isCommandForMe(msg))
+		{
+			switch (msg->command)
+			{
 			case CMD_SELECT:
-				// std::cout << "Select CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
+				std::cout << "Select CMD for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				selectView(reinterpret_cast<View *>(msg->targetObject));
 				break;
 
 			case CMD_CLOSE:
-				// std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				/*
-				 * We are instructed to close, so send an event to our owner
-				 */
-				if (msg->targetObject == this)
-				{
-					sendCommand(CMD_CLOSE, getParent(), this);
-				}
+				std::cout << "CLOSE CMD for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
 				 * If the target is BROADCAST_OBJECT close all views
 				 */
-				else if (msg->targetObject == BROADCAST_OBJECT)
+				if (isCommandTargetAll(msg))
 				{
 					List<View *>::iterator it(viewList);
 					while (it != viewList.end())
@@ -252,60 +318,30 @@ void ViewGroup::handleEvent(Event *evt)
 							if (remove(target))
 							{
 								delete target;
-								/* Now ask for redrawing */
-								sendCommand(CMD_DRAW);
 							}
 						}
 					}
 				}
-				break;
-
-			case CMD_MAXIMIZE:
-				if (msg->targetObject == this)
-					maximize();
-				break;
-
-			case CMD_RESTORE:
-				if (msg->targetObject == this)
-					restore();
+				/* Now ask for redrawing */
+				sendCommand(CMD_DRAW);
 				break;
 
 			case CMD_DRAW:
 			{
-				if (isEventCmdTargetMe(evt))
-				{
-					evt->print();
-					draw();
-				}
-				else
-				{
-					View *target = static_cast<View *>(msg->targetObject);
-					if (thisViewIsMine(target))
-						target->draw();
-				}
+				View *target = static_cast<View *>(msg->targetObject);
+				if (thisViewIsMine(target))
+					target->draw();
 			}
 			break;
-
-			case CMD_REDRAW:
-				reDraw();
-				break;
-			}
-
-			if (msg->destObject == this)
-			{
-				evt->clear();
 			}
 			/*
-			 * Forward message to all children.
+			 * Cleanup anyway, the message was for THIS object.
 			 */
-			else
-			{
-				VIEWLISTITFOR(it)
-				{
-					(*it)->handleEvent(evt);
-				}
-			}
+			evt->clear();
 		}
+		/*
+		 * Destination unknown, forward message to all children.
+		 */
 		else
 		{
 			/*
@@ -330,7 +366,6 @@ void ViewGroup::handleEvent(Event *evt)
 	}
 	else if (evt->isEventUnknown())
 	{
-		std::cout << "UNKNOWN EVENT: ";
 		evt->print();
 	}
 }

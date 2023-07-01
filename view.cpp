@@ -278,12 +278,11 @@ void View::reDraw()
 
 void View::handleEvent(Event *evt)
 {
-	if (isEventPositionValid(evt))
+	if (isEventPositional(evt))
 	{
-		if (evt->testPositionalEventStatus(POS_EVT_PRESSED | POS_EVT_DOUBLE))
+		if (evt->testPositionalEventStatus(POS_EVT_PRESSED))
 		{
-			if (!executeCommand(CMD_REQ_FOCUS))
-				evt->clear();
+			executeCommand(CMD_REQ_FOCUS);
 		}
 	}
 }
