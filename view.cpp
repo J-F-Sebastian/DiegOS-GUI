@@ -388,42 +388,56 @@ bool View::isEventPositionInRange(Event *evt)
 	makeLocal(where);
 	getExtent(lims);
 
+	// lims.print();
+	// where.print();
 	/* if the event coordinates fall outside our limits then return false */
 	return lims.includes(where);
 }
 
-bool View::isEventCmdForMe(Event *evt)
+bool View::isCommandForMe(MessageEvent *evt)
 {
-	if (evt->isEventCommand())
-	{
-		MessageEvent *msg = evt->getMessageEvent();
-		if ((msg->destObject == this) || (msg->destObject == BROADCAST_OBJECT))
-			return true;
-	}
+	if (evt->destObject == this)
+		return true;
 
 	return false;
 }
 
-bool View::isEventCmdTargetMe(Event *evt)
+bool View::isCommandTargetMe(MessageEvent *evt)
 {
-	if (evt->isEventCommand())
-	{
-		MessageEvent *msg = evt->getMessageEvent();
-		if ((msg->targetObject == this) || (msg->targetObject == BROADCAST_OBJECT))
-			return true;
-	}
+	if (evt->targetObject == this)
+		return true;
 
 	return false;
 }
 
-bool View::isEventCmdMe(Event *evt)
+bool View::isCommandForAll(MessageEvent *evt)
 {
-	if (evt->isEventCommand())
-	{
-		MessageEvent *msg = evt->getMessageEvent();
-		if ((msg->destObject == this) && (msg->targetObject == this))
-			return true;
-	}
+	if (evt->destObject == BROADCAST_OBJECT)
+		return true;
+
+	return false;
+}
+
+bool View::isCommandTargetAll(MessageEvent *evt)
+{
+	if (evt->targetObject == BROADCAST_OBJECT)
+		return true;
+
+	return false;
+}
+
+bool View::isCommandMe(MessageEvent *evt)
+{
+	if ((evt->destObject == this) && (evt->targetObject == this))
+		return true;
+
+	return false;
+}
+
+bool View::isCommandAny(MessageEvent *evt)
+{
+	if ((evt->destObject == BROADCAST_OBJECT) && (evt->targetObject == BROADCAST_OBJECT))
+		return true;
 
 	return false;
 }

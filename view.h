@@ -366,6 +366,53 @@ public:
 	bool focus(void);
 	bool select(void);
 
+	/*
+	 * Verify the validity of the event (not nullptr) and check
+	 * if it is a positional event.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event to be validated
+	 *
+	 * RETURN
+	 * true if the event is a valid pointer and a positional event
+	 * false in any other case
+	 */
+	bool isEventPositional(Event *evt);
+
+	/*
+	 * Verify the validity of the event for this view and returns
+	 * a boolean according to the evaluation.
+	 * A positional event is valid if:
+	 * 	1) the pointer is not null
+	 * 	2) the event is positional
+	 * 	3) the event coordinates are in the view's range
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event to be validated
+	 *
+	 * RETURN
+	 * true if the event is valid for this view, i.e. the event has coordinates
+	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
+	 * false if the event is not valid for this view and should not be processed by
+	 *       handleEvent
+	 */
+	bool isEventPositionValid(Event *evt);
+
+	/*
+	 * Verify that coordinates of the positional event are in the view's range.
+	 * The method will not check for pointer validity OR positional validity.
+	 * Use as a speedup but with caution.
+	 *
+	 * PARAMETERS IN
+	 * Event *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is in range for this view, i.e. the event has coordinates
+	 *      falling inside the view limits
+	 * false if the event is outside this view's range
+	 */
+	virtual bool isEventPositionInRange(Event *evt);
+
 protected:
 	/*
 	 * View constructor.
@@ -450,90 +497,78 @@ protected:
 	void makeGlobal(Point &origin);
 
 	/*
-	 * Verify the validity of the event (not nullptr) and check
-	 * if it is a positional event.
-	 *
-	 * PARAMETERS IN
-	 * Event *evt - the event to be validated
-	 *
-	 * RETURN
-	 * true if the event is a valid pointer and a positional event
-	 * false in any other case
-	 */
-	bool isEventPositional(Event *evt);
-
-	/*
-	 * Verify the validity of the event for this view and returns
-	 * a boolean according to the evaluation.
-	 * A positional event is valid if:
-	 * 	1) the pointer is not null
-	 * 	2) the event is positional
-	 * 	3) the event coordinates are in the view's range
-	 *
-	 * PARAMETERS IN
-	 * Event *evt - the event to be validated
-	 *
-	 * RETURN
-	 * true if the event is valid for this view, i.e. the event has coordinates
-	 *      falling inside the view limits, and the event type is positional (mouse, touchscreen)
-	 * false if the event is not valid for this view and should not be processed by
-	 *       handleEvent
-	 */
-	virtual bool isEventPositionValid(Event *evt);
-
-	/*
-	 * Verify that coordinates of the positional event are in the view's range.
-	 * The method will not check for pointer validity OR positional validity.
-	 * Use as a speedup but with caution.
-	 *
-	 * PARAMETERS IN
-	 * Event *evt - the event
-	 *
-	 * RETURN
-	 * true if the event is in range for this view, i.e. the event has coordinates
-	 *      falling inside the view limits
-	 * false if the event is outside this view's range
-	 */
-	bool isEventPositionInRange(Event *evt);
-
-	/*
-	 * Verify that the event is a command and the destination object matches this
+	 * Verify that the event destination object matches this
 	 * instance.
 	 *
 	 * PARAMETERS IN
-	 * Event *evt - the event
+	 * MessageEvent *evt - the event
 	 *
 	 * RETURN
-	 * true if the event is a command with destObject set to this view or BROADCAST_OBJECT
+	 * true if the event is a command with destObject set to this view
 	 * false in any other case
 	 */
-	bool isEventCmdForMe(Event *evt);
+	bool isCommandForMe(MessageEvent *evt);
 
 	/*
-	 * Verify that the event is a command and the target object matches this
-	 * instance.
+	 * Verify that the event target object matches this instance.
 	 *
 	 * PARAMETERS IN
-	 * Event *evt - the event
+	 * MessageEvent *evt - the event
 	 *
 	 * RETURN
-	 * true if the event is a command with targetObject set to this view or BROADCAST_OBJECT
+	 * true if the event is a command with targetObject set to this view
 	 * false in any other case
 	 */
-	bool isEventCmdTargetMe(Event *evt);
+	bool isCommandTargetMe(MessageEvent *evt);
 
 	/*
-	 * Verify that the event is a command and the destination and target object match this
+	 * Verify that the event destination object matches the BROADCAST_OBJECT value.
+	 *
+	 * PARAMETERS IN
+	 * MessageEvent *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a command with destObject set to BROADCAST_OBJECT
+	 * false in any other case
+	 */
+	bool isCommandForAll(MessageEvent *evt);
+
+	/*
+	 * Verify that the event target object matches the BROADCAST_OBJECT value.
+	 *
+	 * PARAMETERS IN
+	 * MessageEvent *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a command with targetObject set to BROADCAST_OBJECT
+	 * false in any other case
+	 */
+	bool isCommandTargetAll(MessageEvent *evt);
+
+	/*
+	 * Verify that the event destination and target object match this
 	 * instance exactly (no broadcast involved).
 	 *
 	 * PARAMETERS IN
-	 * Event *evt - the event
+	 * MessageEvent *evt - the event
 	 *
 	 * RETURN
 	 * true if the event is a command with destObject and targetObject set to this view
 	 * false in any other case
 	 */
-	bool isEventCmdMe(Event *evt);
+	bool isCommandMe(MessageEvent *evt);
+
+	/*
+	 * Verify that the event destination and target object match the BROADCAST_OBJECT.
+	 *
+	 * PARAMETERS IN
+	 * MessageEvent *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a command with destObject and targetObject set to BROADCAST_OBJECT
+	 * false in any other case
+	 */
+	bool isCommandAny(MessageEvent *evt);
 
 	/*
 	 * Send an event to the view's owner.
