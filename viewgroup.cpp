@@ -467,11 +467,6 @@ bool ViewGroup::executeCommand(const uint16_t command)
 	return false;
 }
 
-bool ViewGroup::validateCommand(const uint16_t command)
-{
-	return true;
-}
-
 void ViewGroup::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);
