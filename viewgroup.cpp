@@ -637,7 +637,7 @@ void ViewGroup::toTheTop(View *target)
 		viewList.addHead(target);
 		viewList.getHead()->setForeground();
 		/* Now ask for redrawing */
-		// sendCommand(CMD_DRAW);
+		sendCommand(CMD_DRAW);
 	}
 }
 
