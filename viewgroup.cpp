@@ -90,10 +90,11 @@ void ViewGroup::reDraw()
 		// Draw children back-to-top, following the painter algorithm
 		VIEWLISTREVITFOR(it)
 		{
-			(*it)->reDraw();
+			if ((*it)->getState(VIEW_STATE_EXPOSED))
+				(*it)->reDraw();
 		}
+		clearChanged(VIEW_CHANGED_REDRAW);
 	}
-	clearChanged(VIEW_CHANGED_REDRAW);
 }
 
 void ViewGroup::handleEvent(Event *evt)
