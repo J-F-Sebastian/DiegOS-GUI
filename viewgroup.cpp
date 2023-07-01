@@ -490,19 +490,8 @@ void ViewGroup::insert(View *newView)
 	if (newView)
 	{
 		newView->setParent(this);
-		if (newView->getOptions(VIEW_OPT_TOPSELECT))
-		{
-			viewList.addHead(newView);
-			if (actual)
-			{
-				actual->setBackground();
-			}
-			focusView(newView);
-		}
-		else
-		{
-			viewList.addTail(newView);
-		}
+		newView->setBackground();
+		viewList.addHead(newView);
 	}
 }
 
