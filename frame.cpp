@@ -133,27 +133,30 @@ void Frame::handleEvent(Event *evt)
     }
 }
 
-bool Frame::isEventPositionValid(Event *evt)
+bool Frame::isEventPositionInRange(Event *evt)
 {
+    /*
+     * I am somewhat different ...
+     */
     Rectangle lims;
-
-    if (!evt)
-        return false;
-
-    /* If the event is not positional return false */
-    if (!evt->isEventPositional())
-        return false;
-
     Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
+
+    makeLocal(where);
     getExtent(lims);
-    globalize(lims);
-    /* if it falls outside our limits then return false */
-    bool inside = lims.includes(where);
-    if (inside)
+
+    // lims.print();
+    // where.print();
+    /*
+     * Our limits are different: where is in range if it falls inside the 2 rectangles
+     * defining the borders of the frame.
+     */
+    if (lims.includes(where))
     {
-        lims.zoom(-3, -3);
-        return !lims.includes(where);
+        lims.zoom(-(int)width, -(int)width);
+        if (!lims.includes(where))
+            return true;
     }
+
     return false;
 }
 

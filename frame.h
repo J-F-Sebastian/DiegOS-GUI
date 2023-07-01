@@ -37,7 +37,7 @@ public:
 
     virtual void handleEvent(Event *evt) override;
 
-    virtual bool isEventPositionValid(Event *evt) override;
+    virtual bool isEventPositionInRange(Event *evt) override;
 
     void computeExposure() override;
 
