@@ -126,11 +126,6 @@ void Frame::draw()
 void Frame::handleEvent(Event *evt)
 {
     View::handleEvent(evt);
-
-    if (isEventPositionValid(evt))
-    {
-        evt->clear();
-    }
 }
 
 bool Frame::isEventPositionInRange(Event *evt)
