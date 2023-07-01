@@ -56,8 +56,7 @@ void TitleBar::draw()
     r->textBox(title.c_str(), temp);
     temp.move(viewRect.ul.x, viewRect.ul.y);
     temp.center(viewRect);
-    p->getPalette(TITLEBAR_TEXT, color2);
-    r->text(temp, color, title.c_str());
+    r->text(temp, color2, title.c_str());
 }
 
 void TitleBar::handleEvent(Event *evt)
