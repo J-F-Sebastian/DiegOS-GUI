@@ -79,6 +79,8 @@ public:
 		return (*this);
 	}
 
+	void print(void);
+
 	int x, y;
 };
 
@@ -254,6 +256,8 @@ public:
 		lr = other.lr;
 		return (*this);
 	}
+
+	void print(void);
 
 	/* Upper left corner */
 	Point ul;

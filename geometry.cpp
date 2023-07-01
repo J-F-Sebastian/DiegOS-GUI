@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include "geometry.h"
 
 Point::Point() : x(0), y(0)
@@ -53,6 +55,11 @@ void Point::sub(Point &other)
 {
 	x -= other.x;
 	y -= other.y;
+}
+
+void Point::print()
+{
+	std::cout << "POINT " << std::hex << (intptr_t)this << " (" << std::dec << x << "," << y << ")" << std::endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -245,4 +252,14 @@ void Rectangle::height(int h)
 {
 	if (h > 0)
 		lr.y = ul.y + h;
+}
+
+void Rectangle::print()
+{
+	std::cout << "RECTANGLE " << std::hex << (intptr_t)this << std::dec << std::endl;
+	std::cout << "UL ";
+	ul.print();
+	std::cout << "LR ";
+	lr.print();
+	std::cout << "WIDTH " << width() << " HEIGHT " << height() << std::endl;
 }
