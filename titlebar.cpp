@@ -26,88 +26,88 @@
 
 TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title), lastPressure(0, 0)
 {
-    setOptions(VIEW_OPT_SELECTABLE);
-    setResizeMode(VIEW_RESIZE_LX);
+	setOptions(VIEW_OPT_SELECTABLE);
+	setResizeMode(VIEW_RESIZE_LX);
 }
 
 void TitleBar::draw()
 {
-    unsigned color, color2;
-    Rectangle viewRect;
-    ViewRender *r = GRenderer;
-    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
-    getExtent(viewRect);
-    globalize(viewRect);
+	unsigned color, color2;
+	Rectangle viewRect;
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
+	getExtent(viewRect);
+	globalize(viewRect);
 
-    if (getState(VIEW_STATE_FOREGROUND))
-    {
-        p->getPalette(TITLEBAR_BG, color);
-        p->getPalette(TITLEBAR_TEXT, color2);
-    }
-    else
-    {
-        p->getPalette(TITLEBAR_BG_DISABLED, color);
-        p->getPalette(TITLEBAR_TEXT_DISABLED, color2);
-    }
-    // The titlebar frame
-    r->filledRectangle(viewRect, color);
-    // The title
-    Rectangle temp;
-    r->textBox(title.c_str(), temp);
-    temp.move(viewRect.ul.x, viewRect.ul.y);
-    temp.center(viewRect);
-    r->text(temp, color2, title.c_str());
+	if (getState(VIEW_STATE_FOREGROUND))
+	{
+		p->getPalette(TITLEBAR_BG, color);
+		p->getPalette(TITLEBAR_TEXT, color2);
+	}
+	else
+	{
+		p->getPalette(TITLEBAR_BG_DISABLED, color);
+		p->getPalette(TITLEBAR_TEXT_DISABLED, color2);
+	}
+	// The titlebar frame
+	r->filledRectangle(viewRect, color);
+	// The title
+	Rectangle temp;
+	r->textBox(title.c_str(), temp);
+	temp.move(viewRect.ul.x, viewRect.ul.y);
+	temp.center(viewRect);
+	r->text(temp, color2, title.c_str());
 }
 
 static inline bool checkAll(uint8_t status, uint8_t test)
 {
-    return ((status & test) == test) ? true : false;
+	return ((status & test) == test) ? true : false;
 }
 
 void TitleBar::handleEvent(Event *evt)
 {
-    View::handleEvent(evt);
+	View::handleEvent(evt);
 
-    if (getParent() && isEventPositional(evt))
-    {
-        uint8_t status = evt->getPositionalEvent()->status;
-        if (checkAll(status, POS_EVT_DOUBLE | POS_EVT_RELEASED))
-        {
-            sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
-        }
-        else if (checkAll(status, POS_EVT_PRESSED | POS_EVT_DRAG))
-        {
-            Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-            Point deltaPressure(newPressure);
-            deltaPressure -= lastPressure;
-            if (!getParent()->getState(VIEW_STATE_DRAGGING))
-            {
-                lastPressure = newPressure;
-                getParent()->setState(VIEW_STATE_DRAGGING);
-            }
-            else if (lastPressure != newPressure)
-            {
-                lastPressure = newPressure;
-                // std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
+	if (getParent() && isEventPositional(evt))
+	{
+		uint8_t status = evt->getPositionalEvent()->status;
+		if (checkAll(status, POS_EVT_DOUBLE | POS_EVT_RELEASED))
+		{
+			sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+		}
+		else if (checkAll(status, POS_EVT_PRESSED | POS_EVT_DRAG))
+		{
+			Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
+			Point deltaPressure(newPressure);
+			deltaPressure -= lastPressure;
+			if (!getParent()->getState(VIEW_STATE_DRAGGING))
+			{
+				lastPressure = newPressure;
+				getParent()->setState(VIEW_STATE_DRAGGING);
+			}
+			else if (lastPressure != newPressure)
+			{
+				lastPressure = newPressure;
+				// std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
 
-                getParent()->moveLocation(deltaPressure);
-                /* Now ask for redrawing */
-                sendCommand(CMD_DRAW);
-            }
-        }
-        else if (getParent()->getState(VIEW_STATE_DRAGGING))
-        {
-            /* Reset dragging */
-            getParent()->clearState(VIEW_STATE_DRAGGING);
-        }
-        evt->clear();
-    }
+				getParent()->moveLocation(deltaPressure);
+				/* Now ask for redrawing */
+				sendCommand(CMD_DRAW);
+			}
+		}
+		else if (getParent()->getState(VIEW_STATE_DRAGGING))
+		{
+			/* Reset dragging */
+			getParent()->clearState(VIEW_STATE_DRAGGING);
+		}
+		evt->clear();
+	}
 }
 
 void TitleBar::setTitle(const char *ntitle)
 {
-    size_t len = strlen(ntitle) + 1;
-    if (len > 64)
-        len = 64;
-    this->title.assign(ntitle, len);
+	size_t len = strlen(ntitle) + 1;
+	if (len > 64)
+		len = 64;
+	this->title.assign(ntitle, len);
 }

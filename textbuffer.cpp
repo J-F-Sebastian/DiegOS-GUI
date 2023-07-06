@@ -21,55 +21,55 @@
 
 TextBuffer::TextBuffer(int xres, int yres) : xres(xres), yres(yres)
 {
-    bufferSize = xres * yres;
-    buffer = new uint16_t[bufferSize];
+	bufferSize = xres * yres;
+	buffer = new uint16_t[bufferSize];
 }
 
 TextBuffer::~TextBuffer()
 {
-    delete[] buffer;
+	delete[] buffer;
 }
 
 void TextBuffer::setBuffer(uint16_t value)
 {
-    int counter;
-    unsigned *destination = (unsigned *)(buffer);
-    unsigned temp = value;
-    temp |= (temp << 16);
+	int counter;
+	unsigned *destination = (unsigned *)(buffer);
+	unsigned temp = value;
+	temp |= (temp << 16);
 
-    for (counter = bufferSize; counter > 1; counter -= 2)
-        *destination++ = temp;
+	for (counter = bufferSize; counter > 1; counter -= 2)
+		*destination++ = temp;
 
-    if (counter)
-    {
-        buffer[bufferSize - 1] = value;
-    }
+	if (counter)
+	{
+		buffer[bufferSize - 1] = value;
+	}
 }
 
 void TextBuffer::setBufferXY(int x, int y, uint16_t value)
 {
-    int offset = y * xres + x;
+	int offset = y * xres + x;
 
-    if (offset < bufferSize)
-        buffer[offset] = value;
+	if (offset < bufferSize)
+		buffer[offset] = value;
 }
 
 void TextBuffer::setBufferXY(int x, int y, uint16_t *value, int len)
 {
-    int offset = y * xres + x;
+	int offset = y * xres + x;
 
-    while (len && (offset < bufferSize))
-    {
-        --len;
-        buffer[offset++] = *value++;
-    }
+	while (len && (offset < bufferSize))
+	{
+		--len;
+		buffer[offset++] = *value++;
+	}
 }
 
 uint16_t TextBuffer::getBufferXY(int x, int y)
 {
-    int offset = y * xres + x;
+	int offset = y * xres + x;
 
-    if (offset < bufferSize)
-        return (buffer[offset]);
-    return 0;
+	if (offset < bufferSize)
+		return (buffer[offset]);
+	return 0;
 }

@@ -27,17 +27,17 @@
 class TitleBar : public View
 {
 public:
-    TitleBar(Rectangle &rect, const char *title);
+	TitleBar(Rectangle &rect, const char *title);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 
-    void setTitle(const char *ntitle);
+	void setTitle(const char *ntitle);
 
 private:
-    std::string title;
-    Point lastPressure;
+	std::string title;
+	Point lastPressure;
 };
 
 #endif

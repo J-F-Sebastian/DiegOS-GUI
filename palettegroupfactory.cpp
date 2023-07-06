@@ -116,144 +116,144 @@ static const unsigned PALETTEDIEGOS[] = {WHITE, YELLOW, ORANGE, RED, MAGENTA, PU
 // Palette set for  PALETTE_WINOS2
 #define C(x) PALETTEWINOS2[x]
 
-static const unsigned framePaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(8), C(10)};       // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteWINOS2[] = {C(12), C(15), C(8), C(0)};                // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteWINOS2[] = {C(7), C(8), C(7)};                      // Background, disabled
+static const unsigned framePaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(8), C(10)};	   // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteWINOS2[] = {C(12), C(15), C(8), C(0)};		   // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteWINOS2[] = {C(7), C(8), C(7)};			   // Background, disabled
 static const unsigned progressbarPaletteWINOS2[] = {C(0), C(12), C(15), C(0), C(8), C(7)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteWINOS2[] = {C(10)};                                    // Desktop background
-static const unsigned buttonPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0), C(11)};      // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0)};            // Bright, Dark, main, pressed, released
-static const unsigned scrollbarPaletteWINOS2[] = {C(15), C(0), C(3), C(7), C(0)};          // Bright, Dark, Foreground, Background, disabled
+static const unsigned desktopPaletteWINOS2[] = {C(10)};					   // Desktop background
+static const unsigned buttonPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0), C(11)};	   // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(0)};		   // Bright, Dark, main, pressed, released
+static const unsigned scrollbarPaletteWINOS2[] = {C(15), C(0), C(3), C(7), C(0)};	   // Bright, Dark, Foreground, Background, disabled
 
 // Palette set for  PALETTE_DEBUG
-static const unsigned framePaletteDBG[] = {RED, GREEN, BLUE};                          // Bright, dark, main
-static const unsigned titlebarPaletteDBG[] = {YELLOW, WHITE};                          // Background, text
-static const unsigned backgroundPaletteDBG[] = {AQUA, BLUE, YELLOW};                   // Background, disabled, foreground
-static const unsigned progressbarPaletteDBG[] = {BLACK, BLUE, WHITE};                  // Background, Foreground, text
-static const unsigned desktopPaletteDBG[] = {BLACK};                                   // Desktop background
+static const unsigned framePaletteDBG[] = {RED, GREEN, BLUE};			       // Bright, dark, main
+static const unsigned titlebarPaletteDBG[] = {YELLOW, WHITE};			       // Background, text
+static const unsigned backgroundPaletteDBG[] = {AQUA, BLUE, YELLOW};		       // Background, disabled, foreground
+static const unsigned progressbarPaletteDBG[] = {BLACK, BLUE, WHITE};		       // Background, Foreground, text
+static const unsigned desktopPaletteDBG[] = {BLACK};				       // Desktop background
 static const unsigned buttonPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK, YELLOW}; // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK};        // Bright, Dark, main, pressed, released
+static const unsigned winiconPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK};	       // Bright, Dark, main, pressed, released
 static const unsigned scrollbarPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK};      // Bright, Dark, Foreground, Background, disabled
 
 // Palette set for  PALETTE_MACINTOSH
 #undef C
 #define C(x) PALETTEMAC[x]
 
-static const unsigned framePaletteMAC[] = {C(12), C(14), C(13), C(9), C(14), C(8)};        // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteMAC[] = {C(0), C(15), C(13), C(15)};                  // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteMAC[] = {C(12), C(13), C(0)};                       // Background, disabled, foreground
+static const unsigned framePaletteMAC[] = {C(12), C(14), C(13), C(9), C(14), C(8)};	   // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteMAC[] = {C(0), C(15), C(13), C(15)};		   // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteMAC[] = {C(12), C(13), C(0)};			   // Background, disabled, foreground
 static const unsigned progressbarPaletteMAC[] = {C(12), C(14), C(0), C(15), C(14), C(13)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteMAC[] = {C(12)};                                       // Desktop background
-static const unsigned buttonPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15), C(1)};        // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15)};             // Bright, Dark, main, pressed, released
-static const unsigned scrollbarPaletteMAC[] = {C(12), C(14), C(13), C(15), C(14)};         // Bright, Dark, Foreground, Background, disabled
+static const unsigned desktopPaletteMAC[] = {C(12)};					   // Desktop background
+static const unsigned buttonPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15), C(1)};	   // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteMAC[] = {C(0), C(15), C(12), C(3), C(15)};		   // Bright, Dark, main, pressed, released
+static const unsigned scrollbarPaletteMAC[] = {C(12), C(14), C(13), C(15), C(14)};	   // Bright, Dark, Foreground, Background, disabled
 
 // Palette set for  PALETTE_RISCOS
 #undef C
 #define C(x) PALETTERISCOS[x]
 
-static const unsigned framePaletteRISCOS[] = {C(4), C(7), C(1), C(9), C(6), C(4)};        // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteRISCOS[] = {C(12), C(7), C(5), C(7)};                // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteRISCOS[] = {C(2), C(12), C(6)};                    // Background, disabled, foreground
+static const unsigned framePaletteRISCOS[] = {C(4), C(7), C(1), C(9), C(6), C(4)};	  // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteRISCOS[] = {C(12), C(7), C(5), C(7)};		  // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteRISCOS[] = {C(2), C(12), C(6)};			  // Background, disabled, foreground
 static const unsigned progressbarPaletteRISCOS[] = {C(5), C(10), C(0), C(7), C(6), C(2)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteRISCOS[] = {C(3)};                                    // Desktop background
-static const unsigned buttonPaletteRISCOS[] = {C(4), C(7), C(1), C(7), C(6), C(14)};      // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteRISCOS[] = {C(12), C(6), C(12), C(7), C(15)};         // Bright, Dark, main, pressed, released
-static const unsigned scrollbarPaletteRISCOS[] = {C(4), C(7), C(1), C(5), C(6)};          // Bright, Dark, Foreground, Background, disabled
+static const unsigned desktopPaletteRISCOS[] = {C(3)};					  // Desktop background
+static const unsigned buttonPaletteRISCOS[] = {C(4), C(7), C(1), C(7), C(6), C(14)};	  // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteRISCOS[] = {C(12), C(6), C(12), C(7), C(15)};	  // Bright, Dark, main, pressed, released
+static const unsigned scrollbarPaletteRISCOS[] = {C(4), C(7), C(1), C(5), C(6)};	  // Bright, Dark, Foreground, Background, disabled
 
 // Palette set for  PALETTE_DIEGOS
 #undef C
 #define C(x) PALETTEDIEGOS[x]
 
-static const unsigned framePaletteDIEGOS[] = {C(12), C(14), C(13), C(11), C(15), C(0)};   // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteDIEGOS[] = {C(13), C(11), C(15), C(14)};             // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteDIEGOS[] = {C(10), C(14), C(7)};                   // Background, disabled, Foreground
+static const unsigned framePaletteDIEGOS[] = {C(12), C(14), C(13), C(11), C(15), C(0)};	  // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteDIEGOS[] = {C(13), C(11), C(15), C(14)};		  // Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteDIEGOS[] = {C(10), C(14), C(7)};			  // Background, disabled, Foreground
 static const unsigned progressbarPaletteDIEGOS[] = {C(14), C(9), C(0), C(7), C(6), C(2)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteDIEGOS[] = {C(2)};                                    // Desktop background
-static const unsigned buttonPaletteDIEGOS[] = {C(12), C(14), C(13), C(9), C(14), C(8)};   // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteDIEGOS[] = {C(12), C(14), C(13), C(3), C(15)};        // Bright, Dark, main, pressed, released
-static const unsigned scrollbarPaletteDIEGOS[] = {C(12), C(14), C(13), C(15), C(14)};     // Bright, Dark, Foreground, Background, disabled
+static const unsigned desktopPaletteDIEGOS[] = {C(2)};					  // Desktop background
+static const unsigned buttonPaletteDIEGOS[] = {C(12), C(14), C(13), C(9), C(14), C(8)};	  // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteDIEGOS[] = {C(12), C(14), C(13), C(3), C(15)};	  // Bright, Dark, main, pressed, released
+static const unsigned scrollbarPaletteDIEGOS[] = {C(12), C(14), C(13), C(15), C(14)};	  // Bright, Dark, Foreground, Background, disabled
 
 class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int bitdepth)
 {
-    /*
-     * Right now supports only 32 bit depth
-     */
-    if (bitdepth != 32)
-        return nullptr;
+	/*
+	 * Right now supports only 32 bit depth
+	 */
+	if (bitdepth != 32)
+		return nullptr;
 
-    Palette *pal[PaletteGroup::PAL_NUM];
-    memset(pal, 0, sizeof(pal));
+	Palette *pal[PaletteGroup::PAL_NUM];
+	memset(pal, 0, sizeof(pal));
 
-    pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(BACKGROUND_PAL_NUM);
-    pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(FRAME_PAL_NUM);
-    pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(TITLEBAR_PAL_NUM);
-    pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(PROGRESSBAR_PAL_NUM);
-    // FIXME: where is this one ?
-    pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
-    pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(BUTTON_PAL_NUM);
-    pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(WINICON_PAL_NUM);
-    pal[PaletteGroup::PAL_SCROLLBAR] = new PaletteTrueColor(SCROLLBAR_PAL_NUM);
+	pal[PaletteGroup::PAL_BACKGROUND] = new PaletteTrueColor(BACKGROUND_PAL_NUM);
+	pal[PaletteGroup::PAL_FRAME] = new PaletteTrueColor(FRAME_PAL_NUM);
+	pal[PaletteGroup::PAL_TITLEBAR] = new PaletteTrueColor(TITLEBAR_PAL_NUM);
+	pal[PaletteGroup::PAL_PROGRESSBAR] = new PaletteTrueColor(PROGRESSBAR_PAL_NUM);
+	// FIXME: where is this one ?
+	pal[PaletteGroup::PAL_DESKTOP] = new PaletteTrueColor(1);
+	pal[PaletteGroup::PAL_BUTTON] = new PaletteTrueColor(BUTTON_PAL_NUM);
+	pal[PaletteGroup::PAL_WINICON] = new PaletteTrueColor(WINICON_PAL_NUM);
+	pal[PaletteGroup::PAL_SCROLLBAR] = new PaletteTrueColor(SCROLLBAR_PAL_NUM);
 
-    switch (sel)
-    {
-    case PALETTE_WINOS2:
-        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteWINOS2);
-        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteWINOS2);
-        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteWINOS2);
-        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteWINOS2);
-        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteWINOS2);
-        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteWINOS2);
-        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteWINOS2);
-        pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteWINOS2);
-        break;
+	switch (sel)
+	{
+	case PALETTE_WINOS2:
+		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteWINOS2);
+		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteWINOS2);
+		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteWINOS2);
+		pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteWINOS2);
+		pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteWINOS2);
+		pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteWINOS2);
+		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteWINOS2);
+		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteWINOS2);
+		break;
 
-    case PALETTE_MACINTOSH:
-        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
-        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
-        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteMAC);
-        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteMAC);
-        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteMAC);
-        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteMAC);
-        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteMAC);
-        pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteMAC);
-        break;
+	case PALETTE_MACINTOSH:
+		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
+		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
+		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteMAC);
+		pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteMAC);
+		pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteMAC);
+		pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteMAC);
+		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteMAC);
+		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteMAC);
+		break;
 
-    case PALETTE_RISCOS:
-        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteRISCOS);
-        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteRISCOS);
-        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteRISCOS);
-        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteRISCOS);
-        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteRISCOS);
-        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteRISCOS);
-        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteRISCOS);
-        pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteRISCOS);
-        break;
+	case PALETTE_RISCOS:
+		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteRISCOS);
+		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteRISCOS);
+		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteRISCOS);
+		pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteRISCOS);
+		pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteRISCOS);
+		pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteRISCOS);
+		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteRISCOS);
+		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteRISCOS);
+		break;
 
-    case PALETTE_DIEGOS:
-        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDIEGOS);
-        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDIEGOS);
-        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDIEGOS);
-        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteDIEGOS);
-        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteDIEGOS);
-        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteDIEGOS);
-        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDIEGOS);
-        pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDIEGOS);
-        break;
+	case PALETTE_DIEGOS:
+		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDIEGOS);
+		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDIEGOS);
+		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDIEGOS);
+		pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteDIEGOS);
+		pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteDIEGOS);
+		pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteDIEGOS);
+		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDIEGOS);
+		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDIEGOS);
+		break;
 
-    case PALETTE_DEBUG:
-        pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDBG);
-        pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDBG);
-        pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDBG);
-        pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteDBG);
-        pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteDBG);
-        pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteDBG);
-        pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDBG);
-        pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDBG);
-        break;
-    }
+	case PALETTE_DEBUG:
+		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDBG);
+		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDBG);
+		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDBG);
+		pal[PaletteGroup::PAL_PROGRESSBAR]->loadPalette(progressbarPaletteDBG);
+		pal[PaletteGroup::PAL_DESKTOP]->loadPalette(desktopPaletteDBG);
+		pal[PaletteGroup::PAL_BUTTON]->loadPalette(buttonPaletteDBG);
+		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDBG);
+		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDBG);
+		break;
+	}
 
-    return new PaletteGroup(pal, PaletteGroup::PAL_NUM);
+	return new PaletteGroup(pal, PaletteGroup::PAL_NUM);
 }
 
 PaletteGroupFactory::PaletteGroupFactory()

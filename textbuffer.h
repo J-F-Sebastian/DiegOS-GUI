@@ -25,24 +25,24 @@
 class TextBuffer
 {
 public:
-  TextBuffer(int xres, int yres);
-  ~TextBuffer();
+	TextBuffer(int xres, int yres);
+	~TextBuffer();
 
-  uint16_t *getBuffer(void) const { return buffer; }
+	uint16_t *getBuffer(void) const { return buffer; }
 
-  void setBuffer(uint16_t value);
+	void setBuffer(uint16_t value);
 
-  void setBufferXY(int x, int y, uint16_t value);
-  void setBufferXY(int x, int y, uint16_t *value, int len);
+	void setBufferXY(int x, int y, uint16_t value);
+	void setBufferXY(int x, int y, uint16_t *value, int len);
 
-  uint16_t getBufferXY(int x, int y);
+	uint16_t getBufferXY(int x, int y);
 
-  virtual void blitBuffer(int srcx, int srcy, int dstx, int dsty, char *dest){};
+	virtual void blitBuffer(int srcx, int srcy, int dstx, int dsty, char *dest){};
 
 private:
-  uint16_t *buffer;
-  int bufferSize;
-  int xres, yres;
+	uint16_t *buffer;
+	int bufferSize;
+	int xres, yres;
 };
 
 #endif

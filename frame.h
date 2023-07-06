@@ -25,25 +25,25 @@
 class Frame : public View
 {
 public:
-    enum FrameStyle
-    {
-        FRAME_BEVELLED,
-        FRAME_FLAT,
-    };
+	enum FrameStyle
+	{
+		FRAME_BEVELLED,
+		FRAME_FLAT,
+	};
 
-    explicit Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
+	explicit Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 
-    virtual bool isEventPositionInRange(Event *evt) override;
+	virtual bool isEventPositionInRange(Event *evt) override;
 
-    void computeExposure() override;
+	void computeExposure() override;
 
 private:
-    enum FrameStyle style;
-    unsigned width;
+	enum FrameStyle style;
+	unsigned width;
 };
 
 #endif

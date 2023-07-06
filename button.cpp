@@ -25,142 +25,142 @@
 
 Button::Button(Rectangle &rect) : View(rect), buttonIsDown(false)
 {
-    setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
+	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
 }
 
 void Button::draw()
 {
-    Rectangle viewRect;
-    ViewRender *r = GRenderer;
-    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
-    getExtent(viewRect);
-    globalize(viewRect);
-    Rectangle temp(viewRect);
+	Rectangle viewRect;
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
+	getExtent(viewRect);
+	globalize(viewRect);
+	Rectangle temp(viewRect);
 
-    unsigned color, color2;
-    p->getPalette(BUTTON_BRIGHT, color);
-    p->getPalette(BUTTON_DARK, color2);
+	unsigned color, color2;
+	p->getPalette(BUTTON_BRIGHT, color);
+	p->getPalette(BUTTON_DARK, color2);
 
-    // Outer shadow
+	// Outer shadow
 
-    /*
-     *    BBBBBBBBB
-     *    B       D
-     *    B       D
-     *    B       D
-     *    DDDDDDDDD
-     */
-    Point ul(temp.ul);
-    r->hline(ul, temp.width(), color);
-    r->vline(ul, temp.height() - 1, color);
-    ul.move(temp.width(), 1);
-    r->vline(ul, temp.height() - 1, color2);
-    ul.move(-temp.width(), temp.height() - 1);
-    r->hline(ul, temp.width() - 1, color2);
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	Point ul(temp.ul);
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
+	ul.move(temp.width(), 1);
+	r->vline(ul, temp.height() - 1, color2);
+	ul.move(-temp.width(), temp.height() - 1);
+	r->hline(ul, temp.width() - 1, color2);
 
-    // Inner shadow
+	// Inner shadow
 
-    /*
-     *    DDDDDDDDD
-     *    D       B
-     *    D       B
-     *    D       B
-     *    BBBBBBBBB
-     */
-    temp.zoom(-1, -1);
-    ul = temp.ul;
-    r->hline(ul, temp.width(), color2);
-    r->vline(ul, temp.height() - 1, color2);
-    ul.move(temp.width(), 1);
-    r->vline(ul, temp.height() - 1, color);
-    ul.move(-temp.width(), temp.height() - 1);
-    r->hline(ul, temp.width() - 1, color);
+	/*
+	 *    DDDDDDDDD
+	 *    D       B
+	 *    D       B
+	 *    D       B
+	 *    BBBBBBBBB
+	 */
+	temp.zoom(-1, -1);
+	ul = temp.ul;
+	r->hline(ul, temp.width(), color2);
+	r->vline(ul, temp.height() - 1, color2);
+	ul.move(temp.width(), 1);
+	r->vline(ul, temp.height() - 1, color);
+	ul.move(-temp.width(), temp.height() - 1);
+	r->hline(ul, temp.width() - 1, color);
 
-    // Outer shadow
+	// Outer shadow
 
-    /*
-     *    BBBBBBBBB
-     *    B       D
-     *    B       D
-     *    B       D
-     *    DDDDDDDDD
-     */
-    temp.zoom(-1, -1);
-    ul = temp.ul;
-    r->hline(ul, temp.width(), color);
-    r->vline(ul, temp.height() - 1, color);
-    ul.move(temp.width(), 1);
-    r->vline(ul, temp.height() - 1, color2);
-    ul.move(-temp.width(), temp.height() - 1);
-    r->hline(ul, temp.width() - 1, color2);
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	temp.zoom(-1, -1);
+	ul = temp.ul;
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
+	ul.move(temp.width(), 1);
+	r->vline(ul, temp.height() - 1, color2);
+	ul.move(-temp.width(), temp.height() - 1);
+	r->hline(ul, temp.width() - 1, color2);
 
-    temp.zoom(-1, -1);
-    if (getState(VIEW_STATE_DISABLED))
-    {
-        p->getPalette(BUTTON_DISABLED, color);
-        r->filledRectangle(temp, color);
-    }
-    else if (getState(VIEW_STATE_SELECTED))
-    {
-        if (isDown())
-        {
-            p->getPalette(BUTTON_PRESSED, color);
-        }
-        else
-        {
-            p->getPalette(BUTTON_SELECTED, color);
-        }
-        r->filledRectangle(temp, color);
-    }
-    else
-    {
-        p->getPalette(BUTTON_MAIN, color);
-        r->filledRectangle(temp, color);
-    }
+	temp.zoom(-1, -1);
+	if (getState(VIEW_STATE_DISABLED))
+	{
+		p->getPalette(BUTTON_DISABLED, color);
+		r->filledRectangle(temp, color);
+	}
+	else if (getState(VIEW_STATE_SELECTED))
+	{
+		if (isDown())
+		{
+			p->getPalette(BUTTON_PRESSED, color);
+		}
+		else
+		{
+			p->getPalette(BUTTON_SELECTED, color);
+		}
+		r->filledRectangle(temp, color);
+	}
+	else
+	{
+		p->getPalette(BUTTON_MAIN, color);
+		r->filledRectangle(temp, color);
+	}
 }
 
 void Button::handleEvent(Event *evt)
 {
-    View::handleEvent(evt);
+	View::handleEvent(evt);
 
-    if (isEventPositional(evt))
-    {
-        // Update the pressure state, if the new state is RELEASED, it means
-        // the icon was pressed and then released, in this case the object
-        // will generate an event.
-        // Skip move-on-hold events.
-        if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
-        {
-            bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-            std::cout << pressed << std::endl;
-            if (updateButtonState(pressed))
-            {
-                std::cout << "updated" << std::endl;
-                if (getParent() && getParent()->getState(VIEW_STATE_FOCUSED))
-                {
-                    setChanged(VIEW_CHANGED_REDRAW);
-                    /* Now ask for redrawing */
-                    sendCommand(CMD_REDRAW);
-                }
-                else
-                {
-                    /* Now ask for drawing */
-                    sendCommand(CMD_DRAW);
-                }
-            }
-            evt->clear();
-        }
-    }
+	if (isEventPositional(evt))
+	{
+		// Update the pressure state, if the new state is RELEASED, it means
+		// the icon was pressed and then released, in this case the object
+		// will generate an event.
+		// Skip move-on-hold events.
+		if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
+		{
+			bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
+			std::cout << pressed << std::endl;
+			if (updateButtonState(pressed))
+			{
+				std::cout << "updated" << std::endl;
+				if (getParent() && getParent()->getState(VIEW_STATE_FOCUSED))
+				{
+					setChanged(VIEW_CHANGED_REDRAW);
+					/* Now ask for redrawing */
+					sendCommand(CMD_REDRAW);
+				}
+				else
+				{
+					/* Now ask for drawing */
+					sendCommand(CMD_DRAW);
+				}
+			}
+			evt->clear();
+		}
+	}
 }
 
 bool Button::updateButtonState(bool eventPressed)
 {
-    bool toBeUpdated = (buttonIsDown != eventPressed) ? true : false;
+	bool toBeUpdated = (buttonIsDown != eventPressed) ? true : false;
 
-    if (toBeUpdated)
-    {
-        buttonIsDown = !buttonIsDown;
-    }
+	if (toBeUpdated)
+	{
+		buttonIsDown = !buttonIsDown;
+	}
 
-    return toBeUpdated;
+	return toBeUpdated;
 }

@@ -25,9 +25,9 @@
 class Background : public View
 {
 public:
-    explicit Background(Rectangle &rect);
+	explicit Background(Rectangle &rect);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 };
 
 #endif

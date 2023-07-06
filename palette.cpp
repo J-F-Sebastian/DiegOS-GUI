@@ -23,54 +23,54 @@
 
 PaletteTrueColor::PaletteTrueColor(unsigned num) : Palette(num)
 {
-    palette = new uint32_t[num];
-    //FIXME throw exception?
+	palette = new uint32_t[num];
+	// FIXME throw exception?
 }
 
 PaletteTrueColor::~PaletteTrueColor()
 {
-    delete[] palette;
+	delete[] palette;
 }
 
 bool PaletteTrueColor::setPalette(unsigned index, unsigned color)
 {
-    if (index < colorsNum)
-    {
-        // ARGB
-        palette[index] = color & 0x00FFFFFF;
-        return true;
-    }
-    return false;
+	if (index < colorsNum)
+	{
+		// ARGB
+		palette[index] = color & 0x00FFFFFF;
+		return true;
+	}
+	return false;
 }
 
 bool PaletteTrueColor::getPalette(unsigned index, unsigned &color)
 {
-    if (index < colorsNum)
-    {
-        // ARGB
-        color = palette[index];
-        return true;
-    }
-    return false;
+	if (index < colorsNum)
+	{
+		// ARGB
+		color = palette[index];
+		return true;
+	}
+	return false;
 }
 
 bool PaletteTrueColor::loadPalette(const void *data)
 {
-    if (!data)
-        return false;
+	if (!data)
+		return false;
 
-    memcpy(palette, data, colorsNum * sizeof(uint32_t));
-    //ARGB
-    for (unsigned i = 0; i < colorsNum; i++)
-        palette[i] &= 0x00FFFFFF;
-    return true;
+	memcpy(palette, data, colorsNum * sizeof(uint32_t));
+	// ARGB
+	for (unsigned i = 0; i < colorsNum; i++)
+		palette[i] &= 0x00FFFFFF;
+	return true;
 }
 
 bool PaletteTrueColor::storePalette(void *data)
 {
-    if (!data)
-        return false;
+	if (!data)
+		return false;
 
-    memcpy(data, palette, colorsNum * sizeof(uint32_t));
-    return true;
+	memcpy(data, palette, colorsNum * sizeof(uint32_t));
+	return true;
 }

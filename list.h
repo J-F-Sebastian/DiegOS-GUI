@@ -31,61 +31,61 @@ template <class T>
 class ListNode
 {
 public:
-  ListNode() : next(nullptr), prev(nullptr), obj() {}
-  explicit ListNode(T object) : next(nullptr), prev(nullptr), obj(object) {}
+	ListNode() : next(nullptr), prev(nullptr), obj() {}
+	explicit ListNode(T object) : next(nullptr), prev(nullptr), obj(object) {}
 
-  ~ListNode()
-  {
-    unlink();
-  }
+	~ListNode()
+	{
+		unlink();
+	}
 
-  /*
-   * link this object next to the target, i.e. this object will be the object
-   * pointed to by next attribute of target.
-   */
-  void linkNext(ListNode *target)
-  {
-    if (!target)
-      return;
+	/*
+	 * link this object next to the target, i.e. this object will be the object
+	 * pointed to by next attribute of target.
+	 */
+	void linkNext(ListNode *target)
+	{
+		if (!target)
+			return;
 
-    prev = target;
-    next = target->next;
-    if (next)
-      next->prev = this;
-    target->next = this;
-  }
+		prev = target;
+		next = target->next;
+		if (next)
+			next->prev = this;
+		target->next = this;
+	}
 
-  /*
-   * link this object past the target, i.e. this object will be the object
-   * pointed to by prev attribute of target.
-   */
-  void linkPrev(ListNode *target)
-  {
-    if (!target)
-      return;
+	/*
+	 * link this object past the target, i.e. this object will be the object
+	 * pointed to by prev attribute of target.
+	 */
+	void linkPrev(ListNode *target)
+	{
+		if (!target)
+			return;
 
-    next = target;
-    prev = target->prev;
-    if (prev)
-      prev->next = this;
-    target->prev = this;
-  }
+		next = target;
+		prev = target->prev;
+		if (prev)
+			prev->next = this;
+		target->prev = this;
+	}
 
-  /*
-   * Cut this object off the list it belongs to. The object is not destroyed or deallocated,
-   * it is only isolated from other linked objects.
-   */
-  void unlink(void)
-  {
-    if (next)
-      next->prev = prev;
-    if (prev)
-      prev->next = next;
-    next = prev = nullptr;
-  }
+	/*
+	 * Cut this object off the list it belongs to. The object is not destroyed or deallocated,
+	 * it is only isolated from other linked objects.
+	 */
+	void unlink(void)
+	{
+		if (next)
+			next->prev = prev;
+		if (prev)
+			prev->next = next;
+		next = prev = nullptr;
+	}
 
-  ListNode *next, *prev;
-  T obj;
+	ListNode *next, *prev;
+	T obj;
 };
 
 /*
@@ -97,337 +97,337 @@ template <class T>
 class List
 {
 public:
-  class iterator
-  {
-  public:
-    explicit iterator() : cursor(nullptr), instance(nullptr)
-    {
-    }
+	class iterator
+	{
+	public:
+		explicit iterator() : cursor(nullptr), instance(nullptr)
+		{
+		}
 
-    explicit iterator(List &list, ListNode<T> *begin) : instance(&list)
-    {
-      if (begin && (begin != list.head))
-        cursor = begin;
-      else if (list.count())
-        cursor = list.head->prev;
-      else
-        cursor = list.tail;
-    }
+		explicit iterator(List &list, ListNode<T> *begin) : instance(&list)
+		{
+			if (begin && (begin != list.head))
+				cursor = begin;
+			else if (list.count())
+				cursor = list.head->prev;
+			else
+				cursor = list.tail;
+		}
 
-    explicit iterator(List &list, T *begin = nullptr) : instance(&list)
-    {
-      if (list.count())
-      {
-        cursor = list.head->prev;
-        if (begin)
-        {
-          ListNode<T> *find = cursor;
-          while ((find != list.tail) && (find->obj != *begin))
-            find = find->prev;
+		explicit iterator(List &list, T *begin = nullptr) : instance(&list)
+		{
+			if (list.count())
+			{
+				cursor = list.head->prev;
+				if (begin)
+				{
+					ListNode<T> *find = cursor;
+					while ((find != list.tail) && (find->obj != *begin))
+						find = find->prev;
 
-          cursor = find;
-        }
-      }
-      else
-      {
-        cursor = list.tail;
-      }
-    }
+					cursor = find;
+				}
+			}
+			else
+			{
+				cursor = list.tail;
+			}
+		}
 
-    iterator(const iterator &other) : cursor(other.cursor), instance(other.instance) {}
+		iterator(const iterator &other) : cursor(other.cursor), instance(other.instance) {}
 
-    ~iterator() {}
+		~iterator() {}
 
-    bool operator!=(iterator const &b) { return ((instance != b.instance) || (cursor != b.cursor)); }
-    bool operator==(iterator const &b) { return ((instance == b.instance) && (cursor == b.cursor)); }
-    // Postfix increment
-    iterator operator++(int)
-    {
-      iterator old(*this);
-      if (cursor != instance->tail)
-        cursor = cursor->prev;
-      return old;
-    }
-    // Prefix increment
-    iterator &operator++()
-    {
-      if (cursor != instance->tail)
-        cursor = cursor->prev;
-      return *this;
-    }
-    // Postfix decrement
-    iterator operator--(int)
-    {
-      iterator old(*this);
-      if (cursor != instance->head)
-        cursor = cursor->next;
-      return old;
-    }
-    // Prefix decrement
-    iterator &operator--()
-    {
-      if (cursor != instance->head)
-        cursor = cursor->next;
-      return *this;
-    }
+		bool operator!=(iterator const &b) { return ((instance != b.instance) || (cursor != b.cursor)); }
+		bool operator==(iterator const &b) { return ((instance == b.instance) && (cursor == b.cursor)); }
+		// Postfix increment
+		iterator operator++(int)
+		{
+			iterator old(*this);
+			if (cursor != instance->tail)
+				cursor = cursor->prev;
+			return old;
+		}
+		// Prefix increment
+		iterator &operator++()
+		{
+			if (cursor != instance->tail)
+				cursor = cursor->prev;
+			return *this;
+		}
+		// Postfix decrement
+		iterator operator--(int)
+		{
+			iterator old(*this);
+			if (cursor != instance->head)
+				cursor = cursor->next;
+			return old;
+		}
+		// Prefix decrement
+		iterator &operator--()
+		{
+			if (cursor != instance->head)
+				cursor = cursor->next;
+			return *this;
+		}
 
-    iterator &operator=(iterator const &b)
-    {
-      if (this != &b)
-      {
-        cursor = b.cursor;
-        instance = b.instance;
-      }
-      return *this;
-    }
+		iterator &operator=(iterator const &b)
+		{
+			if (this != &b)
+			{
+				cursor = b.cursor;
+				instance = b.instance;
+			}
+			return *this;
+		}
 
-    T &operator*() { return (cursor->obj); }
+		T &operator*() { return (cursor->obj); }
 
-    bool checkInstance(List<T> *tgt)
-    {
-      return (tgt == instance) ? true : false;
-    }
+		bool checkInstance(List<T> *tgt)
+		{
+			return (tgt == instance) ? true : false;
+		}
 
-  private:
-    ListNode<T> *cursor;
-    List<T> *instance;
-  };
+	private:
+		ListNode<T> *cursor;
+		List<T> *instance;
+	};
 
-  class riterator
-  {
-  public:
-    explicit riterator() : cursor(nullptr), instance(nullptr)
-    {
-    }
+	class riterator
+	{
+	public:
+		explicit riterator() : cursor(nullptr), instance(nullptr)
+		{
+		}
 
-    explicit riterator(List &list, ListNode<T> *begin) : instance(&list)
-    {
-      if (begin && (begin != list.tail))
-        cursor = begin;
-      else if (list.count())
-        cursor = list.tail->next;
-      else
-        cursor = list.head;
-    }
+		explicit riterator(List &list, ListNode<T> *begin) : instance(&list)
+		{
+			if (begin && (begin != list.tail))
+				cursor = begin;
+			else if (list.count())
+				cursor = list.tail->next;
+			else
+				cursor = list.head;
+		}
 
-    explicit riterator(List &list, T *begin = nullptr) : instance(&list)
-    {
-      if (list.count())
-      {
-        cursor = list.tail->next;
-        if (begin)
-        {
-          ListNode<T> *find = cursor;
-          while ((find != list.head) && (find->obj != *begin))
-            find = find->next;
+		explicit riterator(List &list, T *begin = nullptr) : instance(&list)
+		{
+			if (list.count())
+			{
+				cursor = list.tail->next;
+				if (begin)
+				{
+					ListNode<T> *find = cursor;
+					while ((find != list.head) && (find->obj != *begin))
+						find = find->next;
 
-          cursor = find;
-        }
-      }
-      else
-        cursor = list.head;
-    }
+					cursor = find;
+				}
+			}
+			else
+				cursor = list.head;
+		}
 
-    riterator(const riterator &other) : cursor(other.cursor), instance(other.instance) {}
-    ~riterator() {}
+		riterator(const riterator &other) : cursor(other.cursor), instance(other.instance) {}
+		~riterator() {}
 
-    bool operator!=(riterator const &b) { return ((instance != b.instance) || (cursor != b.cursor)); }
-    bool operator==(riterator const &b) { return ((instance == b.instance) && (cursor == b.cursor)); }
-    // Postfix increment
-    riterator operator++(int)
-    {
-      riterator old(*this);
-      if (cursor != instance->head)
-        cursor = cursor->next;
-      return old;
-    }
-    // Prefix increment
-    riterator &operator++()
-    {
-      if (cursor != instance->head)
-        cursor = cursor->next;
-      return *this;
-    }
-    // Postfix decrement
-    riterator operator--(int)
-    {
-      riterator old(*this);
-      if (cursor != instance->tail)
-        cursor = cursor->prev;
-      return old;
-    }
-    // Prefix decrement
-    riterator &operator--()
-    {
-      if (cursor != instance->tail)
-        cursor = cursor->prev;
-      return *this;
-    }
+		bool operator!=(riterator const &b) { return ((instance != b.instance) || (cursor != b.cursor)); }
+		bool operator==(riterator const &b) { return ((instance == b.instance) && (cursor == b.cursor)); }
+		// Postfix increment
+		riterator operator++(int)
+		{
+			riterator old(*this);
+			if (cursor != instance->head)
+				cursor = cursor->next;
+			return old;
+		}
+		// Prefix increment
+		riterator &operator++()
+		{
+			if (cursor != instance->head)
+				cursor = cursor->next;
+			return *this;
+		}
+		// Postfix decrement
+		riterator operator--(int)
+		{
+			riterator old(*this);
+			if (cursor != instance->tail)
+				cursor = cursor->prev;
+			return old;
+		}
+		// Prefix decrement
+		riterator &operator--()
+		{
+			if (cursor != instance->tail)
+				cursor = cursor->prev;
+			return *this;
+		}
 
-    riterator &operator=(riterator const &b)
-    {
-      if (this != &b)
-      {
-        cursor = b.cursor;
-        instance = b.instance;
-      }
-      return *this;
-    }
+		riterator &operator=(riterator const &b)
+		{
+			if (this != &b)
+			{
+				cursor = b.cursor;
+				instance = b.instance;
+			}
+			return *this;
+		}
 
-    T &operator*() { return (cursor->obj); }
+		T &operator*() { return (cursor->obj); }
 
-    bool checkInstance(List<T> *tgt)
-    {
-      return (tgt == instance) ? true : false;
-    }
+		bool checkInstance(List<T> *tgt)
+		{
+			return (tgt == instance) ? true : false;
+		}
 
-  private:
-    ListNode<T> *cursor;
-    List<T> *instance;
-  };
+	private:
+		ListNode<T> *cursor;
+		List<T> *instance;
+	};
 
-  List() : items(0)
-  {
-    head = new ListNode<T>();
-    tail = new ListNode<T>();
-    head->linkNext(tail);
-  }
+	List() : items(0)
+	{
+		head = new ListNode<T>();
+		tail = new ListNode<T>();
+		head->linkNext(tail);
+	}
 
-  ~List()
-  {
-    clear();
-    // Great we did not mess up
-    if (head && tail)
-    {
-      delete head;
-      delete tail;
-      head = tail = nullptr;
-    }
-  }
+	~List()
+	{
+		clear();
+		// Great we did not mess up
+		if (head && tail)
+		{
+			delete head;
+			delete tail;
+			head = tail = nullptr;
+		}
+	}
 
-  unsigned count(void) { return items; }
+	unsigned count(void) { return items; }
 
-  bool empty(void) { return (items == 0); }
+	bool empty(void) { return (items == 0); }
 
-  // Link the new item to the tail of head, so head is always first in line
-  void addHead(T newObject)
-  {
-    ListNode<T> *temp = new ListNode<T>(newObject);
-    temp->linkPrev(head);
-    items += 1;
-  }
+	// Link the new item to the tail of head, so head is always first in line
+	void addHead(T newObject)
+	{
+		ListNode<T> *temp = new ListNode<T>(newObject);
+		temp->linkPrev(head);
+		items += 1;
+	}
 
-  // Link the new item to the head of tail, so tail is always last in line
-  void addTail(T newObject)
-  {
-    ListNode<T> *temp = new ListNode<T>(newObject);
-    temp->linkNext(tail);
-    items += 1;
-  }
+	// Link the new item to the head of tail, so tail is always last in line
+	void addTail(T newObject)
+	{
+		ListNode<T> *temp = new ListNode<T>(newObject);
+		temp->linkNext(tail);
+		items += 1;
+	}
 
-  // Link the new item next to the target, so the new item is closer to the head
-  // than the target.
-  // If target is not part of the list return false, else return true.
-  bool insert(T newObject, T targetObject)
-  {
-    // Look for targetObject, if not found return
-    ListNode<T> *cursor = head->prev;
-    while (cursor != tail)
-    {
-      if (cursor->obj == targetObject)
-        break;
-      cursor = cursor->prev;
-    }
-    if (cursor == tail)
-      return false;
+	// Link the new item next to the target, so the new item is closer to the head
+	// than the target.
+	// If target is not part of the list return false, else return true.
+	bool insert(T newObject, T targetObject)
+	{
+		// Look for targetObject, if not found return
+		ListNode<T> *cursor = head->prev;
+		while (cursor != tail)
+		{
+			if (cursor->obj == targetObject)
+				break;
+			cursor = cursor->prev;
+		}
+		if (cursor == tail)
+			return false;
 
-    // Link in the new object
-    ListNode<T> *temp = new ListNode<T>(newObject);
-    temp->linkNext(cursor);
-    items += 1;
-    return true;
-  }
+		// Link in the new object
+		ListNode<T> *temp = new ListNode<T>(newObject);
+		temp->linkNext(cursor);
+		items += 1;
+		return true;
+	}
 
-  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
-  T popHead(void)
-  {
-    if (items)
-    {
-      ListNode<T> *temp = head->prev;
-      T copy = head->prev->obj;
-      delete temp;
-      items -= 1;
-      return copy;
-    }
-    return head->obj;
-  }
+	// CAREFUL !! SHOULD THROW AN EXCEPTION !!!
+	T popHead(void)
+	{
+		if (items)
+		{
+			ListNode<T> *temp = head->prev;
+			T copy = head->prev->obj;
+			delete temp;
+			items -= 1;
+			return copy;
+		}
+		return head->obj;
+	}
 
-  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
-  T popTail(void)
-  {
-    if (items)
-    {
-      ListNode<T> *temp = tail->next;
-      T copy = tail->next->obj;
-      delete temp;
-      items -= 1;
-      return copy;
-    }
-    return tail->obj;
-  }
+	// CAREFUL !! SHOULD THROW AN EXCEPTION !!!
+	T popTail(void)
+	{
+		if (items)
+		{
+			ListNode<T> *temp = tail->next;
+			T copy = tail->next->obj;
+			delete temp;
+			items -= 1;
+			return copy;
+		}
+		return tail->obj;
+	}
 
-  // CAREFUL !! SHOULD THROW AN EXCEPTION !!!
-  T &getHead(void) { return (items) ? (head->prev->obj) : (head->obj); }
-  T &getTail(void) { return (items) ? (tail->next->obj) : (tail->obj); }
+	// CAREFUL !! SHOULD THROW AN EXCEPTION !!!
+	T &getHead(void) { return (items) ? (head->prev->obj) : (head->obj); }
+	T &getTail(void) { return (items) ? (tail->next->obj) : (tail->obj); }
 
-  iterator begin(void) { return iterator(*this); }
-  iterator end(void) { return iterator(*this, tail); }
-  riterator rbegin(void) { return riterator(*this); }
-  riterator rend(void) { return riterator(*this, head); }
+	iterator begin(void) { return iterator(*this); }
+	iterator end(void) { return iterator(*this, tail); }
+	riterator rbegin(void) { return riterator(*this); }
+	riterator rend(void) { return riterator(*this, head); }
 
-  iterator erase(iterator target)
-  {
-    if (!target.checkInstance(this))
-      return end();
+	iterator erase(iterator target)
+	{
+		if (!target.checkInstance(this))
+			return end();
 
-    if (target == begin())
-    {
-      popHead();
-      return begin();
-    }
-    else if (target == end()--)
-    {
-      popTail();
-      return end();
-    }
-    else if (target != end())
-    {
-      ListNode<T> *find = head->prev;
-      while ((find != tail) && (find->obj != *target))
-        find = find->prev;
+		if (target == begin())
+		{
+			popHead();
+			return begin();
+		}
+		else if (target == end()--)
+		{
+			popTail();
+			return end();
+		}
+		else if (target != end())
+		{
+			ListNode<T> *find = head->prev;
+			while ((find != tail) && (find->obj != *target))
+				find = find->prev;
 
-      target++;
-      delete (find);
-      items -= 1;
-      return target;
-    }
-    return end();
-  }
+			target++;
+			delete (find);
+			items -= 1;
+			return target;
+		}
+		return end();
+	}
 
-  void clear(void)
-  {
-    ListNode<T> *temp;
-    while (items--)
-    {
-      temp = head->prev;
-      delete temp;
-    }
-    items = 0;
-  }
+	void clear(void)
+	{
+		ListNode<T> *temp;
+		while (items--)
+		{
+			temp = head->prev;
+			delete temp;
+		}
+		items = 0;
+	}
 
 private:
-  ListNode<T> *head, *tail;
-  unsigned items;
+	ListNode<T> *head, *tail;
+	unsigned items;
 };
 
 #endif

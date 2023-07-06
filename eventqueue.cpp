@@ -21,28 +21,28 @@
 
 EventQueue::~EventQueue()
 {
-    List<Event *>::iterator it(eventsList);
+	List<Event *>::iterator it(eventsList);
 
-    while (it != eventsList.end())
-    {
-        delete (*it++);
-    }
+	while (it != eventsList.end())
+	{
+		delete (*it++);
+	}
 }
 
 void EventQueue::enqueue(Event *newEvt)
 {
-    if (!newEvt)
-        return;
+	if (!newEvt)
+		return;
 
-    eventsList.addTail(newEvt);
+	eventsList.addTail(newEvt);
 }
 
 Event *EventQueue::dequeue()
 {
-    if (eventsList.count())
-    {
-        return eventsList.popHead();
-    }
+	if (eventsList.count())
+	{
+		return eventsList.popHead();
+	}
 
-    return nullptr;
+	return nullptr;
 }

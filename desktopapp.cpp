@@ -33,41 +33,41 @@ static const int SCREEN_HEIGHT = 720;
 
 DesktopApp::DesktopApp()
 {
-    SDL_Init(0);
+	SDL_Init(0);
 
-    Rectangle master(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
-    ViewRenderInstance::instance()->configure(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
-    ViewZBuffer::instance()->configure(master);
-    he = ViewEventFactory::create(EST_SDL);
-    PaletteGroupInstance::instance()->configure(PALETTE_WINOS2, 32);
+	Rectangle master(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
+	ViewRenderInstance::instance()->configure(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
+	ViewZBuffer::instance()->configure(master);
+	he = ViewEventFactory::create(EST_SDL);
+	PaletteGroupInstance::instance()->configure(PALETTE_DIEGOS, 32);
 
-    app = new ViewApplication(master, he);
-    app->initDesktop();
+	app = new ViewApplication(master, he);
+	app->initDesktop();
 }
 
 Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
 {
-    /* Relative to Window origin */
-    Rectangle buttonLimits(25, 50, 125, 100);
+	/* Relative to Window origin */
+	Rectangle buttonLimits(25, 50, 125, 100);
 
-    Window *newWindow = new Window(viewLimits, title, app);
-    Button *newButton = new Button(buttonLimits);
-    newWindow->insert(newButton);
-    buttonLimits.move(25, 25);
-    ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
-    newWindow->insert(newProgBar);
-    app->insert(newWindow);
-    return newWindow;
+	Window *newWindow = new Window(viewLimits, title, app);
+	Button *newButton = new Button(buttonLimits);
+	newWindow->insert(newButton);
+	buttonLimits.move(25, 25);
+	ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
+	newWindow->insert(newProgBar);
+	app->insert(newWindow);
+	return newWindow;
 }
 
 void DesktopApp::run()
 {
-    app->run();
+	app->run();
 }
 
 DesktopApp::~DesktopApp()
 {
-    delete app;
-    delete he;
-    SDL_Quit();
+	delete app;
+	delete he;
+	SDL_Quit();
 }

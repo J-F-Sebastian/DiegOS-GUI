@@ -23,59 +23,59 @@
 
 PaletteGroup::PaletteGroup(Palette *items[], unsigned numOfPalettes) : palettesNum(numOfPalettes)
 {
-    group = new Palette *[palettesNum];
+	group = new Palette *[palettesNum];
 
-    memcpy(group, items, palettesNum * sizeof(Palette *));
+	memcpy(group, items, palettesNum * sizeof(Palette *));
 }
 
 PaletteGroup::~PaletteGroup()
 {
-    delete[] group;
+	delete[] group;
 }
 
 Palette *PaletteGroup::getPalette(unsigned index)
 {
-    if (index < palettesNum)
-        return group[index];
+	if (index < palettesNum)
+		return group[index];
 
-    return nullptr;
+	return nullptr;
 }
 
 bool PaletteGroup::setPalette(unsigned index, Palette *palette)
 {
-    if (palette && (index < palettesNum))
-    {
-        group[index] = palette;
-        return true;
-    }
+	if (palette && (index < palettesNum))
+	{
+		group[index] = palette;
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 bool PaletteGroup::loadPalette(Palette *items[])
 {
-    if (items == nullptr)
-        return false;
+	if (items == nullptr)
+		return false;
 
-    for (unsigned i = 0; i < palettesNum; i++)
-    {
-        if (items[i] == nullptr)
-            return false;
-    }
+	for (unsigned i = 0; i < palettesNum; i++)
+	{
+		if (items[i] == nullptr)
+			return false;
+	}
 
-    if (group)
-        delete[] group;
+	if (group)
+		delete[] group;
 
-    group = new Palette *[palettesNum];
+	group = new Palette *[palettesNum];
 
-    memcpy(group, items, palettesNum * sizeof(Palette *));
-    return true;
+	memcpy(group, items, palettesNum * sizeof(Palette *));
+	return true;
 }
 
 bool PaletteGroup::storePalette(Palette *items[])
 {
-    if (items == nullptr)
-        return false;
-    memcpy(items, group, palettesNum * sizeof(Palette *));
-    return true;
+	if (items == nullptr)
+		return false;
+	memcpy(items, group, palettesNum * sizeof(Palette *));
+	return true;
 }

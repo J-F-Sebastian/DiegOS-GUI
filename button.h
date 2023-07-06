@@ -25,32 +25,32 @@
 class Button : public View
 {
 public:
-    explicit Button(Rectangle &rect);
+	explicit Button(Rectangle &rect);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 
-    bool isDown(void) { return buttonIsDown; }
+	bool isDown(void) { return buttonIsDown; }
 
 protected:
-    /*
-     * Returns the update status of buttonIsDown, applying the
-     * pressure state found in eventPressed.
-     * Returned value is true if buttonIsDown value has changed.
-     *
-     * PARAMETERS IN
-     * bool eventPressed - the pressure event, up or down
-     *
-     * RETURNS
-     * true if the buttonIsDown value has changed, so the button switched
-     * from down to up, or reverse
-     * false in any other case
-     */
-    bool updateButtonState(bool eventPressed);
+	/*
+	 * Returns the update status of buttonIsDown, applying the
+	 * pressure state found in eventPressed.
+	 * Returned value is true if buttonIsDown value has changed.
+	 *
+	 * PARAMETERS IN
+	 * bool eventPressed - the pressure event, up or down
+	 *
+	 * RETURNS
+	 * true if the buttonIsDown value has changed, so the button switched
+	 * from down to up, or reverse
+	 * false in any other case
+	 */
+	bool updateButtonState(bool eventPressed);
 
 private:
-    bool buttonIsDown;
+	bool buttonIsDown;
 };
 
 #endif

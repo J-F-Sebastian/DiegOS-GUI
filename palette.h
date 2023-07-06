@@ -25,34 +25,34 @@
 class Palette
 {
 public:
-    Palette() : colorsNum(0) {}
-    explicit Palette(unsigned num) : colorsNum(num) {}
-    virtual ~Palette() {}
+	Palette() : colorsNum(0) {}
+	explicit Palette(unsigned num) : colorsNum(num) {}
+	virtual ~Palette() {}
 
-    virtual bool setPalette(unsigned index, unsigned color) = 0;
-    virtual bool getPalette(unsigned index, unsigned &color) = 0;
-    virtual bool loadPalette(const void *data) = 0;
-    virtual bool storePalette(void *data) = 0;
+	virtual bool setPalette(unsigned index, unsigned color) = 0;
+	virtual bool getPalette(unsigned index, unsigned &color) = 0;
+	virtual bool loadPalette(const void *data) = 0;
+	virtual bool storePalette(void *data) = 0;
 
-    unsigned size(void) { return colorsNum; }
+	unsigned size(void) { return colorsNum; }
 
 protected:
-    unsigned colorsNum;
+	unsigned colorsNum;
 };
 
 class PaletteTrueColor : public Palette
 {
 public:
-    explicit PaletteTrueColor(unsigned num);
-    virtual ~PaletteTrueColor();
+	explicit PaletteTrueColor(unsigned num);
+	virtual ~PaletteTrueColor();
 
-    virtual bool setPalette(unsigned index, unsigned color) override;
-    virtual bool getPalette(unsigned index, unsigned &color) override;
-    virtual bool loadPalette(const void *data) override;
-    virtual bool storePalette(void *data) override;
+	virtual bool setPalette(unsigned index, unsigned color) override;
+	virtual bool getPalette(unsigned index, unsigned &color) override;
+	virtual bool loadPalette(const void *data) override;
+	virtual bool storePalette(void *data) override;
 
 private:
-    uint32_t *palette;
+	uint32_t *palette;
 };
 
 #endif

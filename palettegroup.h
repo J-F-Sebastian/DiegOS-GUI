@@ -25,35 +25,35 @@
 class PaletteGroup
 {
 public:
-    enum
-    {
-        PAL_FRAME,
-        PAL_TITLEBAR,
-        PAL_PROGRESSBAR,
-        PAL_BACKGROUND,
-        PAL_ICONS,
-        PAL_MENU,
-        PAL_POPUP,
-        PAL_BUTTON,
-        PAL_LIST,
-        PAL_DESKTOP,
-        PAL_WINICON,
-        PAL_SCROLLBAR,
-        PAL_NUM
-    };
+	enum
+	{
+		PAL_FRAME,
+		PAL_TITLEBAR,
+		PAL_PROGRESSBAR,
+		PAL_BACKGROUND,
+		PAL_ICONS,
+		PAL_MENU,
+		PAL_POPUP,
+		PAL_BUTTON,
+		PAL_LIST,
+		PAL_DESKTOP,
+		PAL_WINICON,
+		PAL_SCROLLBAR,
+		PAL_NUM
+	};
 
-    PaletteGroup() : group(nullptr), palettesNum(0) {}
-    explicit PaletteGroup(Palette *items[], unsigned numOfPalettes);
-    virtual ~PaletteGroup();
+	PaletteGroup() : group(nullptr), palettesNum(0) {}
+	explicit PaletteGroup(Palette *items[], unsigned numOfPalettes);
+	virtual ~PaletteGroup();
 
-    Palette *getPalette(unsigned index);
-    bool setPalette(unsigned index, Palette *palette);
-    bool loadPalette(Palette *items[]);
-    bool storePalette(Palette *items[]);
+	Palette *getPalette(unsigned index);
+	bool setPalette(unsigned index, Palette *palette);
+	bool loadPalette(Palette *items[]);
+	bool storePalette(Palette *items[]);
 
 private:
-    Palette **group;
-    unsigned palettesNum;
+	Palette **group;
+	unsigned palettesNum;
 };
 
 #endif

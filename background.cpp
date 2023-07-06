@@ -24,24 +24,24 @@
 
 Background::Background(Rectangle &rect) : View(rect)
 {
-    setResizeMode(VIEW_RESIZEABLE);
+	setResizeMode(VIEW_RESIZEABLE);
 }
 
 void Background::draw()
 {
-    Rectangle viewRect;
-    ViewRender *r = GRenderer;
-    Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
-    getExtent(viewRect);
-    globalize(viewRect);
-    unsigned color;
+	Rectangle viewRect;
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
+	getExtent(viewRect);
+	globalize(viewRect);
+	unsigned color;
 
-    if (getState(VIEW_STATE_DISABLED))
-        p->getPalette(BACKGROUND_BG_DISABLED, color);
-    else if (getState(VIEW_STATE_FOREGROUND))
-        p->getPalette(BACKGROUND_FG, color);
-    else
-        p->getPalette(BACKGROUND_BG, color);
+	if (getState(VIEW_STATE_DISABLED))
+		p->getPalette(BACKGROUND_BG_DISABLED, color);
+	else if (getState(VIEW_STATE_FOREGROUND))
+		p->getPalette(BACKGROUND_FG, color);
+	else
+		p->getPalette(BACKGROUND_BG, color);
 
-    r->filledRectangle(viewRect, color);
+	r->filledRectangle(viewRect, color);
 }

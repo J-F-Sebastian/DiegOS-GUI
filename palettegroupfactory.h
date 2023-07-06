@@ -24,20 +24,20 @@
 
 enum PaletteGroupType
 {
-    PALETTE_WINOS2,
-    PALETTE_MACINTOSH,
-    PALETTE_RISCOS,
-    PALETTE_DIEGOS,
-    PALETTE_DEBUG
+	PALETTE_WINOS2,
+	PALETTE_MACINTOSH,
+	PALETTE_RISCOS,
+	PALETTE_DIEGOS,
+	PALETTE_DEBUG
 };
 
 class PaletteGroupFactory
 {
 public:
-    static class PaletteGroup *create(enum PaletteGroupType sel, int bitdepth);
+	static class PaletteGroup *create(enum PaletteGroupType sel, int bitdepth);
 
 private:
-    PaletteGroupFactory();
+	PaletteGroupFactory();
 };
 
 #endif
