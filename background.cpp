@@ -38,6 +38,8 @@ void Background::draw()
 
     if (getState(VIEW_STATE_DISABLED))
         p->getPalette(BACKGROUND_BG_DISABLED, color);
+    else if (getState(VIEW_STATE_FOREGROUND))
+        p->getPalette(BACKGROUND_FG, color);
     else
         p->getPalette(BACKGROUND_BG, color);
 
