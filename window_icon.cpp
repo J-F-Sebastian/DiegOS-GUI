@@ -112,35 +112,25 @@ void WindowIconClose::handleEvent(Event *evt)
 
     if (isEventPositional(evt))
     {
-        if (isEventPositionInRange(evt))
+        // Update the pressure state, if the new state is RELEASED, it means
+        // the icon was pressed and then released, in this case the object
+        // will generate an event.
+        // Skip move-on-hold events.
+        if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
         {
-            // Update the pressure state, if the new state is RELEASED, it means
-            // the icon was pressed and then released, in this case the object
-            // will generate an event.
-            // Skip move-on-hold events.
-            if (!evt->testPositionalEventStatus(POS_EVT_LONG))
+            bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
+            if (updateButtonState(pressed))
             {
-                bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
-                if (updateButtonState(pressed))
+                setChanged(VIEW_CHANGED_REDRAW);
+                /* Now ask for redrawing */
+                sendCommand(CMD_REDRAW);
+                if (!isDown() && getParent())
                 {
-                    setChanged(VIEW_CHANGED_REDRAW);
-                    /* Now ask for redrawing */
-                    sendCommand(CMD_REDRAW);
-                    if (!isDown() && getParent())
-                    {
-                        sendCommand(CMD_CLOSE, BROADCAST_OBJECT, getParent());
-                    }
+                    sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
                 }
             }
-            evt->clear();
         }
-        else if (isDown())
-        {
-            updateButtonState(false);
-            setChanged(VIEW_CHANGED_REDRAW);
-            /* Now ask for redrawing */
-            sendCommand(CMD_REDRAW);
-        }
+        evt->clear();
     }
 }
 
@@ -223,9 +213,9 @@ void WindowIconZoom::handleEvent(Event *evt)
             // Update the pressure state, if the new state is RELEASED, it means
             // the icon was pressed and then released, in this case the object
             // will generate an event and toggle isZoom.
-            if (!evt->testPositionalEventStatus(POS_EVT_LONG))
+            if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
             {
-                bool pressed = evt->testPositionalEventStatus(POS_EVT_PRESSED);
+                bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
                 if (updateButtonState(pressed))
                 {
                     setChanged(VIEW_CHANGED_REDRAW);
