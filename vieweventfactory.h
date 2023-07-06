@@ -24,16 +24,16 @@
 
 enum EventSystemType
 {
-  EST_SDL
+	EST_SDL
 };
 
 class ViewEventFactory
 {
 public:
-  static ViewEventManager *create(enum EventSystemType type);
+	static ViewEventManager *create(enum EventSystemType type);
 
 private:
-  ViewEventFactory();
+	ViewEventFactory();
 };
 
 #endif

@@ -26,21 +26,21 @@
 class ViewExec : public ViewGroup
 {
 public:
-    // TBD
-    void executeDialog(void){};
+	// TBD
+	void executeDialog(void){};
 
-    virtual void run(void);
+	virtual void run(void);
 
-    virtual void draw(void) override;
-    virtual void reDraw(void) override;
-    virtual void sendEvent(Event *evt) override;
+	virtual void draw(void) override;
+	virtual void reDraw(void) override;
+	virtual void sendEvent(Event *evt) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 
-    ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent = nullptr);
+	ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent = nullptr);
 
 protected:
-    ViewEventManager *evtM;
+	ViewEventManager *evtM;
 };
 
 #endif

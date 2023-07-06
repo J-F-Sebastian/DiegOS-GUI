@@ -25,14 +25,14 @@
 class ViewEventSDL : public ViewEventManager
 {
 public:
-    ViewEventSDL();
-    virtual ~ViewEventSDL();
-    virtual bool wait(Event *evt, int timeoutms)  override;
-    virtual bool poll(void) override;
-    virtual bool put(Event *evt) override;
+	ViewEventSDL();
+	virtual ~ViewEventSDL();
+	virtual bool wait(Event *evt, int timeoutms) override;
+	virtual bool poll(void) override;
+	virtual bool put(Event *evt) override;
 
 private:
-    uint32_t myEventType;
+	uint32_t myEventType;
 };
 
 #endif

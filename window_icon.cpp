@@ -25,219 +25,219 @@
 
 WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
 {
-    clearOptions(VIEW_OPT_VALIDATE);
+	clearOptions(VIEW_OPT_VALIDATE);
 }
 
 void WindowIconClose::draw()
 {
-    Rectangle viewRect;
-    ViewRender *renderer = GRenderer;
-    Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-    getExtent(viewRect);
-    globalize(viewRect);
+	Rectangle viewRect;
+	ViewRender *renderer = GRenderer;
+	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
+	getExtent(viewRect);
+	globalize(viewRect);
 
-    unsigned color, color2;
-    palette->getPalette(WINICON_BRIGHT, color);
-    palette->getPalette(WINICON_DARK, color2);
+	unsigned color, color2;
+	palette->getPalette(WINICON_BRIGHT, color);
+	palette->getPalette(WINICON_DARK, color2);
 
-    // Outer shadow
+	// Outer shadow
 
-    /*
-     *    BBBBBBBBB
-     *    B       D
-     *    B       D
-     *    B       D
-     *    DDDDDDDDD
-     */
-    Point ul(viewRect.ul);
-    renderer->hline(ul, viewRect.width(), color);
-    renderer->vline(ul, viewRect.height() - 1, color);
-    ul.move(viewRect.width(), 1);
-    renderer->vline(ul, viewRect.height() - 1, color2);
-    ul.move(-viewRect.width(), viewRect.height() - 1);
-    renderer->hline(ul, viewRect.width() - 1, color2);
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	Point ul(viewRect.ul);
+	renderer->hline(ul, viewRect.width(), color);
+	renderer->vline(ul, viewRect.height() - 1, color);
+	ul.move(viewRect.width(), 1);
+	renderer->vline(ul, viewRect.height() - 1, color2);
+	ul.move(-viewRect.width(), viewRect.height() - 1);
+	renderer->hline(ul, viewRect.width() - 1, color2);
 
-    // The button frame
-    palette->getPalette(WINICON_MAIN, color);
-    viewRect.zoom(-1, -1);
-    renderer->filledRectangle(viewRect, color);
+	// The button frame
+	palette->getPalette(WINICON_MAIN, color);
+	viewRect.zoom(-1, -1);
+	renderer->filledRectangle(viewRect, color);
 
-    if (isDown())
-    {
-        palette->getPalette(WINICON_PRESSED, color);
-    }
-    else
-    {
-        palette->getPalette(WINICON_RELEASED, color);
-    }
+	if (isDown())
+	{
+		palette->getPalette(WINICON_PRESSED, color);
+	}
+	else
+	{
+		palette->getPalette(WINICON_RELEASED, color);
+	}
 
-    viewRect.zoom(-2, -2);
-    Point s(viewRect.ul), e(viewRect.lr);
-    renderer->line(s, e, color);
-    s.move(1, 0);
-    e.move(0, -1);
-    renderer->line(s, e, color);
-    s.move(1, 0);
-    e.move(0, -1);
-    renderer->line(s, e, color);
-    s.move(-2, 1);
-    e.move(-1, 2);
-    renderer->line(s, e, color);
-    s.move(0, 1);
-    e.move(-1, 0);
-    renderer->line(s, e, color);
+	viewRect.zoom(-2, -2);
+	Point s(viewRect.ul), e(viewRect.lr);
+	renderer->line(s, e, color);
+	s.move(1, 0);
+	e.move(0, -1);
+	renderer->line(s, e, color);
+	s.move(1, 0);
+	e.move(0, -1);
+	renderer->line(s, e, color);
+	s.move(-2, 1);
+	e.move(-1, 2);
+	renderer->line(s, e, color);
+	s.move(0, 1);
+	e.move(-1, 0);
+	renderer->line(s, e, color);
 
-    s.x = viewRect.lr.x;
-    s.y = viewRect.ul.y;
-    e.x = viewRect.ul.x;
-    e.y = viewRect.lr.y;
-    renderer->line(s, e, color);
-    s.move(-1, 0);
-    e.move(0, -1);
-    renderer->line(s, e, color);
-    s.move(-1, 0);
-    e.move(0, -1);
-    renderer->line(s, e, color);
-    s.move(2, 1);
-    e.move(1, 2);
-    renderer->line(s, e, color);
-    s.move(0, 1);
-    e.move(1, 0);
-    renderer->line(s, e, color);
+	s.x = viewRect.lr.x;
+	s.y = viewRect.ul.y;
+	e.x = viewRect.ul.x;
+	e.y = viewRect.lr.y;
+	renderer->line(s, e, color);
+	s.move(-1, 0);
+	e.move(0, -1);
+	renderer->line(s, e, color);
+	s.move(-1, 0);
+	e.move(0, -1);
+	renderer->line(s, e, color);
+	s.move(2, 1);
+	e.move(1, 2);
+	renderer->line(s, e, color);
+	s.move(0, 1);
+	e.move(1, 0);
+	renderer->line(s, e, color);
 }
 
 void WindowIconClose::handleEvent(Event *evt)
 {
-    View::handleEvent(evt);
+	View::handleEvent(evt);
 
-    if (isEventPositional(evt))
-    {
-        // Update the pressure state, if the new state is RELEASED, it means
-        // the icon was pressed and then released, in this case the object
-        // will generate an event.
-        // Skip move-on-hold events.
-        if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
-        {
-            bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-            if (updateButtonState(pressed))
-            {
-                setChanged(VIEW_CHANGED_REDRAW);
-                /* Now ask for redrawing */
-                sendCommand(CMD_REDRAW);
-                if (!isDown() && getParent())
-                {
-                    sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
-                }
-            }
-        }
-        evt->clear();
-    }
+	if (isEventPositional(evt))
+	{
+		// Update the pressure state, if the new state is RELEASED, it means
+		// the icon was pressed and then released, in this case the object
+		// will generate an event.
+		// Skip move-on-hold events.
+		if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
+		{
+			bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
+			if (updateButtonState(pressed))
+			{
+				setChanged(VIEW_CHANGED_REDRAW);
+				/* Now ask for redrawing */
+				sendCommand(CMD_REDRAW);
+				if (!isDown() && getParent())
+				{
+					sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
+				}
+			}
+		}
+		evt->clear();
+	}
 }
 
 WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect)
 {
-    clearOptions(VIEW_OPT_VALIDATE);
-    setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
+	clearOptions(VIEW_OPT_VALIDATE);
+	setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
 }
 
 void WindowIconZoom::draw()
 {
-    Rectangle viewRect;
-    ViewRender *renderer = GRenderer;
-    Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-    getExtent(viewRect);
-    globalize(viewRect);
+	Rectangle viewRect;
+	ViewRender *renderer = GRenderer;
+	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
+	getExtent(viewRect);
+	globalize(viewRect);
 
-    unsigned color, color2;
-    palette->getPalette(WINICON_BRIGHT, color);
-    palette->getPalette(WINICON_DARK, color2);
+	unsigned color, color2;
+	palette->getPalette(WINICON_BRIGHT, color);
+	palette->getPalette(WINICON_DARK, color2);
 
-    // Outer shadow
+	// Outer shadow
 
-    /*
-     *    BBBBBBBBB
-     *    B       D
-     *    B       D
-     *    B       D
-     *    DDDDDDDDD
-     */
-    Point ul(viewRect.ul);
-    renderer->hline(ul, viewRect.width(), color);
-    renderer->vline(ul, viewRect.height() - 1, color);
-    ul.move(viewRect.width(), 1);
-    renderer->vline(ul, viewRect.height() - 1, color2);
-    ul.move(-viewRect.width(), viewRect.height() - 1);
-    renderer->hline(ul, viewRect.width() - 1, color2);
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	Point ul(viewRect.ul);
+	renderer->hline(ul, viewRect.width(), color);
+	renderer->vline(ul, viewRect.height() - 1, color);
+	ul.move(viewRect.width(), 1);
+	renderer->vline(ul, viewRect.height() - 1, color2);
+	ul.move(-viewRect.width(), viewRect.height() - 1);
+	renderer->hline(ul, viewRect.width() - 1, color2);
 
-    // The button frame
-    palette->getPalette(WINICON_MAIN, color);
-    viewRect.zoom(-1, -1);
-    renderer->filledRectangle(viewRect, color);
+	// The button frame
+	palette->getPalette(WINICON_MAIN, color);
+	viewRect.zoom(-1, -1);
+	renderer->filledRectangle(viewRect, color);
 
-    if (isDown())
-    {
-        palette->getPalette(WINICON_PRESSED, color);
-    }
-    else
-    {
-        palette->getPalette(WINICON_RELEASED, color);
-    }
+	if (isDown())
+	{
+		palette->getPalette(WINICON_PRESSED, color);
+	}
+	else
+	{
+		palette->getPalette(WINICON_RELEASED, color);
+	}
 
-    if (getParent() && !getParent()->getResizeMode(VIEW_ZOOMED))
-    {
-        viewRect.zoom(-3, -3);
-        renderer->rectangle(viewRect, color);
-        viewRect.zoom(-1, -1);
-        renderer->rectangle(viewRect, color);
-        viewRect.zoom(-1, -1);
-        renderer->hline(viewRect.ul, viewRect.width(), color);
-    }
-    else
-    {
-        viewRect.zoom(-6, -6);
-        viewRect.move(-1, 1);
-        renderer->rectangle(viewRect, color);
-        viewRect.zoom(-1, -1);
-        renderer->hline(viewRect.ul, viewRect.width(), color);
-    }
+	if (getParent() && !getParent()->getResizeMode(VIEW_ZOOMED))
+	{
+		viewRect.zoom(-3, -3);
+		renderer->rectangle(viewRect, color);
+		viewRect.zoom(-1, -1);
+		renderer->rectangle(viewRect, color);
+		viewRect.zoom(-1, -1);
+		renderer->hline(viewRect.ul, viewRect.width(), color);
+	}
+	else
+	{
+		viewRect.zoom(-6, -6);
+		viewRect.move(-1, 1);
+		renderer->rectangle(viewRect, color);
+		viewRect.zoom(-1, -1);
+		renderer->hline(viewRect.ul, viewRect.width(), color);
+	}
 }
 
 void WindowIconZoom::handleEvent(Event *evt)
 {
-    View::handleEvent(evt);
+	View::handleEvent(evt);
 
-    if (isEventPositional(evt))
-    {
-        if (isEventPositionInRange(evt))
-        {
-            // Update the pressure state, if the new state is RELEASED, it means
-            // the icon was pressed and then released, in this case the object
-            // will generate an event and toggle isZoom.
-            if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
-            {
-                bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-                if (updateButtonState(pressed))
-                {
-                    setChanged(VIEW_CHANGED_REDRAW);
-                    /* Now ask for redrawing */
-                    sendCommand(CMD_REDRAW);
-                    if (!isDown())
-                    {
-                        if (getParent())
-                        {
-                            sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
-                        }
-                    }
-                }
-            }
-            evt->clear();
-        }
-        else if (isDown())
-        {
-            updateButtonState(false);
-            setChanged(VIEW_CHANGED_REDRAW);
-            /* Now ask for redrawing */
-            sendCommand(CMD_REDRAW);
-        }
-    }
+	if (isEventPositional(evt))
+	{
+		if (isEventPositionInRange(evt))
+		{
+			// Update the pressure state, if the new state is RELEASED, it means
+			// the icon was pressed and then released, in this case the object
+			// will generate an event and toggle isZoom.
+			if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
+			{
+				bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
+				if (updateButtonState(pressed))
+				{
+					setChanged(VIEW_CHANGED_REDRAW);
+					/* Now ask for redrawing */
+					sendCommand(CMD_REDRAW);
+					if (!isDown())
+					{
+						if (getParent())
+						{
+							sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+						}
+					}
+				}
+			}
+			evt->clear();
+		}
+		else if (isDown())
+		{
+			updateButtonState(false);
+			setChanged(VIEW_CHANGED_REDRAW);
+			/* Now ask for redrawing */
+			sendCommand(CMD_REDRAW);
+		}
+	}
 }

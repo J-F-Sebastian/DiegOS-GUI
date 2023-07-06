@@ -23,16 +23,16 @@
 
 ViewEventManager *ViewEventFactory::create(enum EventSystemType type)
 {
-    switch (type)
-    {
-    case EST_SDL:
-        return new ViewEventSDL();
+	switch (type)
+	{
+	case EST_SDL:
+		return new ViewEventSDL();
 
-    default:
-        break;
-    }
+	default:
+		break;
+	}
 
-    return nullptr;
+	return nullptr;
 }
 
 ViewEventFactory::ViewEventFactory()

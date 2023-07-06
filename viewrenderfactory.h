@@ -24,18 +24,18 @@
 
 enum ViewRenderType
 {
-  VRENDER_VGA,
-  VRENDER_VESA,
-  VRENDER_HW
+	VRENDER_VGA,
+	VRENDER_VESA,
+	VRENDER_HW
 };
 
 class ViewRenderFactory
 {
 public:
-  static class ViewRender *create(enum ViewRenderType sel, int xres, int yres, int bitdepth);
+	static class ViewRender *create(enum ViewRenderType sel, int xres, int yres, int bitdepth);
 
 private:
-  ViewRenderFactory();
+	ViewRenderFactory();
 };
 
 #endif

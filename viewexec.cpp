@@ -24,75 +24,75 @@
 
 ViewExec::ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewGroup(limits, parent), evtM(evt)
 {
-    clearOptions(VIEW_OPT_ALL);
-    setState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
+	clearOptions(VIEW_OPT_ALL);
+	setState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
 }
 
 void ViewExec::run()
 {
-    Event event;
+	Event event;
 
-    setState(VIEW_STATE_EVLOOP);
-    sendCommand(CMD_DRAW);
+	setState(VIEW_STATE_EVLOOP);
+	sendCommand(CMD_DRAW);
 
-    while (getState(VIEW_STATE_EVLOOP))
-    {
-        while (evtM->wait(&event, 1000))
-            handleEvent(&event);
-    }
+	while (getState(VIEW_STATE_EVLOOP))
+	{
+		while (evtM->wait(&event, 1000))
+			handleEvent(&event);
+	}
 }
 
 void ViewExec::draw()
 {
-    if (getState(VIEW_STATE_EVLOOP))
-    {
-        GRenderer->clear(0);
-        GZBuffer->clear();
-        computeExposure();
-        ViewGroup::draw();
-        GRenderer->show();
-    }
+	if (getState(VIEW_STATE_EVLOOP))
+	{
+		GRenderer->clear(0);
+		GZBuffer->clear();
+		computeExposure();
+		ViewGroup::draw();
+		GRenderer->show();
+	}
 }
 
 void ViewExec::reDraw()
 {
-    if (getState(VIEW_STATE_EVLOOP))
-    {
-        GZBuffer->clear();
-        computeExposure();
-        ViewGroup::reDraw();
-        GRenderer->show();
-    }
+	if (getState(VIEW_STATE_EVLOOP))
+	{
+		GZBuffer->clear();
+		computeExposure();
+		ViewGroup::reDraw();
+		GRenderer->show();
+	}
 }
 
 void ViewExec::sendEvent(Event *evt)
 {
-    if (getState(VIEW_STATE_EVLOOP))
-    {
-        evtM->put(evt);
-    }
-    else
-        View::sendEvent(evt);
+	if (getState(VIEW_STATE_EVLOOP))
+	{
+		evtM->put(evt);
+	}
+	else
+		View::sendEvent(evt);
 }
 
 void ViewExec::handleEvent(Event *evt)
 {
-    if (evt->isEventKey())
-    {
-        KeybEvent *key = evt->getKeyDownEvent();
-        switch (key->keyCode)
-        {
-        case KBD_CODE_F4:
-            if (key->modifier & KBD_MOD_ALT)
-            {
-                // ViewGroup will take care of this
-                sendCommand(CMD_CLOSE, this, actual);
-                evt->clear();
-                return;
-            }
-            break;
-        }
-    }
+	if (evt->isEventKey())
+	{
+		KeybEvent *key = evt->getKeyDownEvent();
+		switch (key->keyCode)
+		{
+		case KBD_CODE_F4:
+			if (key->modifier & KBD_MOD_ALT)
+			{
+				// ViewGroup will take care of this
+				sendCommand(CMD_CLOSE, this, actual);
+				evt->clear();
+				return;
+			}
+			break;
+		}
+	}
 
-    ViewGroup::handleEvent(evt);
+	ViewGroup::handleEvent(evt);
 }

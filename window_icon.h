@@ -25,21 +25,21 @@
 class WindowIconClose : public Button
 {
 public:
-    explicit WindowIconClose(Rectangle &rect);
+	explicit WindowIconClose(Rectangle &rect);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 };
 
 class WindowIconZoom : public Button
 {
 public:
-    explicit WindowIconZoom(Rectangle &rect);
+	explicit WindowIconZoom(Rectangle &rect);
 
-    virtual void draw(void) override;
+	virtual void draw(void) override;
 
-    virtual void handleEvent(Event *evt) override;
+	virtual void handleEvent(Event *evt) override;
 };
 
 #endif

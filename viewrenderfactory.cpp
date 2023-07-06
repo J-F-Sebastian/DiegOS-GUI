@@ -22,18 +22,18 @@
 
 class ViewRender *ViewRenderFactory::create(enum ViewRenderType sel, int xres, int yres, int bitdepth)
 {
-    switch (sel)
-    {
-    case VRENDER_VGA:
-    case VRENDER_VESA:
-        break;
-    case VRENDER_HW:
-        return new ViewRenderHW(xres, yres, bitdepth);
-    default:
-        break;
-    }
+	switch (sel)
+	{
+	case VRENDER_VGA:
+	case VRENDER_VESA:
+		break;
+	case VRENDER_HW:
+		return new ViewRenderHW(xres, yres, bitdepth);
+	default:
+		break;
+	}
 
-    return nullptr;
+	return nullptr;
 }
 
 ViewRenderFactory::ViewRenderFactory()

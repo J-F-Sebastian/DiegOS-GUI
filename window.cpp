@@ -28,41 +28,41 @@
 
 Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent), wFlags(ctrlflags), isZoomed(false)
 {
-    setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
-    setResizeMode(VIEW_RESIZEABLE);
+	setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
+	setResizeMode(VIEW_RESIZEABLE);
 
-    View *tmpView = nullptr;
-    Rectangle ext;
+	View *tmpView = nullptr;
+	Rectangle ext;
 
-    getExtent(ext);
-    ext.zoom(-4, -4);
-    ext.lr.y = 28;
+	getExtent(ext);
+	ext.zoom(-4, -4);
+	ext.lr.y = 28;
 
-    if (wFlags & WINDOW_CLOSE)
-    {
-        Rectangle temp(4, 4, 28, 28);
-        tmpView = new WindowIconClose(temp);
-        insert(tmpView);
-        ext.ul.move(25, 0);
-    }
-    if (wFlags & WINDOW_ZOOM)
-    {
-        Rectangle temp(4, 4, 28, 28);
-        temp.move(ext.width(), 0);
-        tmpView = new WindowIconZoom(temp);
-        insert(tmpView);
-        ext.lr.move(-25, 0);
-    }
+	if (wFlags & WINDOW_CLOSE)
+	{
+		Rectangle temp(4, 4, 28, 28);
+		tmpView = new WindowIconClose(temp);
+		insert(tmpView);
+		ext.ul.move(25, 0);
+	}
+	if (wFlags & WINDOW_ZOOM)
+	{
+		Rectangle temp(4, 4, 28, 28);
+		temp.move(ext.width(), 0);
+		tmpView = new WindowIconZoom(temp);
+		insert(tmpView);
+		ext.lr.move(-25, 0);
+	}
 
-    tmpView = new TitleBar(ext, title);
-    insert(tmpView);
+	tmpView = new TitleBar(ext, title);
+	insert(tmpView);
 
-    getExtent(ext);
-    tmpView = new Frame(ext);
-    insert(tmpView);
+	getExtent(ext);
+	tmpView = new Frame(ext);
+	insert(tmpView);
 
-    ext.zoom(-4, -4);
-    ext.ul.move(0, 25);
-    tmpView = new Background(ext);
-    insert(tmpView);
+	ext.zoom(-4, -4);
+	ext.ul.move(0, 25);
+	tmpView = new Background(ext);
+	insert(tmpView);
 }

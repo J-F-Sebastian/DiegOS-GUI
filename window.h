@@ -32,27 +32,27 @@
  */
 enum
 {
-    WINDOW_MOVE = (1 << 0),
-    WINDOW_GROW = (1 << 1),
-    WINDOW_CLOSE = (1 << 2),
-    WINDOW_ZOOM = (1 << 3),
-    WINDOW_DEFAULT = (WINDOW_MOVE | WINDOW_GROW | WINDOW_CLOSE | WINDOW_ZOOM)
+	WINDOW_MOVE = (1 << 0),
+	WINDOW_GROW = (1 << 1),
+	WINDOW_CLOSE = (1 << 2),
+	WINDOW_ZOOM = (1 << 3),
+	WINDOW_DEFAULT = (WINDOW_MOVE | WINDOW_GROW | WINDOW_CLOSE | WINDOW_ZOOM)
 };
 
 class Window : public ViewGroup
 {
 public:
-    Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags = WINDOW_DEFAULT);
+	Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags = WINDOW_DEFAULT);
 
 protected:
-    bool canMove() { return (wFlags & WINDOW_MOVE) ? true : false; }
-    bool canGrow() { return (wFlags & WINDOW_GROW) ? true : false; }
-    bool canClose() { return (wFlags & WINDOW_CLOSE) ? true : false; }
-    bool canZoom() { return (wFlags & WINDOW_ZOOM) ? true : false; }
+	bool canMove() { return (wFlags & WINDOW_MOVE) ? true : false; }
+	bool canGrow() { return (wFlags & WINDOW_GROW) ? true : false; }
+	bool canClose() { return (wFlags & WINDOW_CLOSE) ? true : false; }
+	bool canZoom() { return (wFlags & WINDOW_ZOOM) ? true : false; }
 
 private:
-    unsigned char wFlags;
-    bool isZoomed;
+	unsigned char wFlags;
+	bool isZoomed;
 };
 
 #endif

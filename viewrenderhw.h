@@ -25,22 +25,22 @@
 class ViewRenderHW : public ViewRender
 {
 public:
-  ViewRenderHW(int xres, int yres, int bitdepth);
-  virtual ~ViewRenderHW();
-  virtual void line(const Point &a, const Point &b, uint32_t color) override;
-  virtual void hline(const Point &a, int len, uint32_t color) override;
-  virtual void vline(const Point &a, int len, uint32_t color) override;
-  virtual void rectangle(const Rectangle &rect, uint32_t color) override;
-  virtual void filledRectangle(const Rectangle &rect, uint32_t color) override;
-  virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) override;
-  virtual void textBox(const char *text, Rectangle &out) override;
-  virtual void text(const Rectangle &rect, uint32_t color, const char *text) override;
-  virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) override;
-  virtual void *loadBMP(const char *name) override;
-  virtual bool unloadBMP(void *bmp) override;
-  virtual void drawBMP(void *bmp, const Rectangle &rect) override;
-  virtual void show(void) override;
-  virtual void clear(uint32_t color) override;
+	ViewRenderHW(int xres, int yres, int bitdepth);
+	virtual ~ViewRenderHW();
+	virtual void line(const Point &a, const Point &b, uint32_t color) override;
+	virtual void hline(const Point &a, int len, uint32_t color) override;
+	virtual void vline(const Point &a, int len, uint32_t color) override;
+	virtual void rectangle(const Rectangle &rect, uint32_t color) override;
+	virtual void filledRectangle(const Rectangle &rect, uint32_t color) override;
+	virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) override;
+	virtual void textBox(const char *text, Rectangle &out) override;
+	virtual void text(const Rectangle &rect, uint32_t color, const char *text) override;
+	virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) override;
+	virtual void *loadBMP(const char *name) override;
+	virtual bool unloadBMP(void *bmp) override;
+	virtual void drawBMP(void *bmp, const Rectangle &rect) override;
+	virtual void show(void) override;
+	virtual void clear(uint32_t color) override;
 };
 
 #endif
