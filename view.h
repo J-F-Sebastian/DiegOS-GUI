@@ -338,7 +338,7 @@ public:
 	 * true if the command was executed successfully
 	 * false in any other case
 	 */
-	virtual bool executeCommand(const uint16_t command);
+	virtual bool executeCommand(MessageEvent *cmd);
 
 	/*
 	 * Validate the command specified as parameter.
