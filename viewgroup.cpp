@@ -225,7 +225,7 @@ void ViewGroup::handleEvent(Event *evt)
 				/*
 				 * We are instructed to close, so send an event to our owner
 				 */
-				sendCommand(CMD_CLOSE, getParent(), this);
+				sendCommandToParent(CMD_CLOSE);
 				break;
 
 			case CMD_MAXIMIZE:
@@ -334,6 +334,9 @@ void ViewGroup::handleEvent(Event *evt)
 					target->draw();
 			}
 			break;
+			case CMD_REQ_FOCUS:
+
+				break;
 			}
 			/*
 			 * Cleanup anyway, the message was for THIS object.
@@ -367,67 +370,88 @@ void ViewGroup::handleEvent(Event *evt)
 	}
 	else if (evt->isEventUnknown())
 	{
-		evt->print();
+		// evt->print();
 	}
 }
 
-bool ViewGroup::executeCommand(const uint16_t command)
+bool ViewGroup::executeCommand(MessageEvent *cmd)
 {
-	switch (command)
+	if (!cmd)
+		return false;
+
+	if (validateCommand(cmd->command) && (isCommandForMe(cmd) || isCommandForAll(cmd)))
 	{
-	case CMD_DRAW:
-		draw();
-		return true;
+		switch (cmd->command)
+		{
+		case CMD_DRAW:
+			draw();
+			return true;
 
-	case CMD_REDRAW:
-		reDraw();
-		return true;
+		case CMD_REDRAW:
+			reDraw();
+			return true;
 
-	case CMD_REQ_FOCUS:
-		if (validateCommand(command))
+		case CMD_REQ_FOCUS:
 		{
 			/*
-			 * If we are the root node or we are running the
-			 * event loop (could it be different ?!?) return true
-			 * as we cannot grab or release the focus.
+			 * The target must be a child
 			 */
-			if (!getParent() || getState(VIEW_STATE_EVLOOP))
-				return true;
+			View *target = reinterpret_cast<View *>(cmd->targetObject);
+			if (!thisViewIsMine(target))
+				return false;
 
-			/*
-			 * A cast resulting in nullptr would mean a View was set as
-			 * a parent of a group .... does it make sense ?
-			 */
-			ViewGroup *parent = dynamic_cast<ViewGroup *>(getParent());
-			if (parent)
+			if (actual)
 			{
-				if (this != parent->actualView())
+				/*
+				 * Actual view is not the target, and we are the branching
+				 * container to the focused object's tree.
+				 * If actual view is the target, just return true, no action to be taken.
+				 */
+				if (target != actual)
 				{
-					if (parent->actualView()->executeCommand(CMD_REL_FOCUS))
-					{
-						return parent->focusView(this);
-					}
+					/*
+					 * Try to make the focused objects release the focus.
+					 * If this operation is denied, return false.
+					 */
+					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
+					if (actual->executeCommand(&cmd2))
+						return focusView(target);
+					else
+						return false;
 				}
-				return true;
+				else
+					return true;
 			}
+
+			if (getParent() && !getState(VIEW_STATE_EVLOOP))
+			{
+				MessageEvent cmd2 = {CMD_REQ_FOCUS, 0, this, getParent(), this, {0, 0, 0, 0}};
+				if (getParent()->executeCommand(&cmd2))
+					return focusView(target);
+			}
+			return focusView(target);
 		}
 		break;
 
-	case CMD_REL_FOCUS:
-		if (validateCommand(command))
+		case CMD_REL_FOCUS:
 		{
 			/*
-			 * If we are the root node or we are running the
-			 * event loop (could it be different ?!?) return true
-			 * as we cannot grab or release the focus.
+			 * The target must be me
 			 */
-			if (!getParent() || getState(VIEW_STATE_EVLOOP))
-				return true;
+			if (!isCommandTargetMe(cmd))
+				return false;
 
 			bool retval = true;
 
 			if (actual)
-				retval = actual->executeCommand(command);
+			{
+				/*
+				 * Try to make the focused objects release the focus.
+				 * If this operation is denied, return false.
+				 */
+				MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
+				retval = actual->executeCommand(&cmd2);
+			}
 
 			if (retval)
 			{
@@ -438,33 +462,42 @@ bool ViewGroup::executeCommand(const uint16_t command)
 		}
 		break;
 
-	case CMD_MAXIMIZE:
-		maximize();
-		return true;
+		case CMD_MAXIMIZE:
+			maximize();
+			return true;
 
-	case CMD_RESTORE:
-		restore();
-		return true;
+		case CMD_RESTORE:
+			restore();
+			return true;
 
-	case CMD_CLOSE:
-		sendCommand(CMD_CLOSE, getParent(), this);
-		return true;
+		case CMD_CLOSE:
+			sendCommandToParent(CMD_CLOSE);
+			return true;
 
-	case CMD_FOREGROUND:
-		setForeground();
-		break;
+		case CMD_FOREGROUND:
+			setForeground();
+			break;
 
-	case CMD_QUIT:
-		VIEWLISTITFOR(it)
-		{
-			delete (*it);
+		case CMD_QUIT:
+			forEachExecuteCommand(cmd);
+			VIEWLISTITFOR(it)
+			{
+				delete (*it);
+			}
+			viewList.clear();
+			actual = nullptr;
+			return true;
 		}
-		viewList.clear();
-		actual = nullptr;
-		break;
 	}
-
 	return false;
+}
+
+void ViewGroup::forEachExecuteCommand(MessageEvent *cmd)
+{
+	VIEWLISTITFOR(it)
+	{
+		(*it)->executeCommand(cmd);
+	}
 }
 
 void ViewGroup::setForeground()

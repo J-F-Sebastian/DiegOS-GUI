@@ -46,7 +46,9 @@ public:
 	virtual void reDraw(void) override;
 
 	virtual void handleEvent(Event *evt) override;
-	virtual bool executeCommand(const uint16_t command) override;
+	virtual bool executeCommand(MessageEvent *cmd) override;
+
+	void forEachExecuteCommand(MessageEvent *cmd);
 
 	virtual void setForeground(void) override;
 	virtual void setBackground(void) override;
@@ -76,7 +78,6 @@ protected:
 	Rectangle lastLimits;
 	View *actual;
 
-private:
 	/*
 	 * List of views owned by this group; the list is Z-ordered from foreground to background,
 	 * is populated by calling insert or insertBefore, and can be reordered when the selected object
