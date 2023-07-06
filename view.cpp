@@ -369,10 +369,10 @@ void View::sendCommand(const uint16_t command, void *destination, void *target)
 	}
 }
 
-void View::sendCommand(const uint16_t command)
+void View::sendCommandToParent(const uint16_t command)
 {
 	Event evt;
-	MessageEvent cmd = {command, 0, this, BROADCAST_OBJECT, BROADCAST_OBJECT, {0, 0, 0, 0}};
+	MessageEvent cmd = {command, 0, this, getParent(), this, {0, 0, 0, 0}};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
 }

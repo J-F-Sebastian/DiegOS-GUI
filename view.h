@@ -592,19 +592,19 @@ protected:
 	 * void *destination - the receiver of the message
 	 * void *target - the view the command applies to
 	 */
-	virtual void sendCommand(const uint16_t command, void *destination, void *target);
+	void sendCommand(const uint16_t command, void *destination = BROADCAST_OBJECT, void *target = BROADCAST_OBJECT);
 
 	/*
-	 * This is a wrap around for sendCommand(cons uint16_t, void *, void*).
-	 * Messages are sent to BROADCAST_OBJECT with target set to the sender object;
-	 * so it is just like calling sendCommand(command, BROADCAST_OBJECT, this)
+	 * Create an event and send it up to the root parent.
+	 * This is a wrap around for sendEvent().
+	 * The message will be passed down the children hierarchy
+	 * to the destination object (the parent).
+	 * The target object is this object.
 	 *
 	 * PARAMETERS IN
 	 * uint16_t command - the command code
-	 * void *destination - the receipient of the message
-	 * void *target - the view the command applies to
 	 */
-	void sendCommand(const uint16_t command);
+	void sendCommandToParent(const uint16_t command);
 
 	inline View *getParent(void) { return parentView; }
 
