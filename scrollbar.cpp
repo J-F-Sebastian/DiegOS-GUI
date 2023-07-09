@@ -78,22 +78,19 @@ void ScrollBar::handleEvent(Event *evt)
 
 	if (isEventPositional(evt))
 	{
-		if (isEventPositionInRange(evt))
-		{
-			uint8_t status = evt->getPositionalEvent()->status;
+		uint8_t status = evt->getPositionalEvent()->status;
 
-			if (status & POS_EVT_PRESSED)
+		if (status & POS_EVT_PRESSED)
+		{
+			Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
+			Point deltaPressure(newPressure);
+			if (lastPressure != newPressure)
 			{
-				Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-				Point deltaPressure(newPressure);
-				if (lastPressure != newPressure)
-				{
-					updateActivePad(newPressure);
-					computeAttributes();
-					lastPressure = newPressure;
-					/* Now ask for redrawing of the parent */
-					sendCommand(CMD_DRAW, getParent(), this);
-				}
+				updateActivePad(newPressure);
+				computeAttributes();
+				lastPressure = newPressure;
+				/* Now ask for redrawing of the parent */
+				sendCommand(CMD_DRAW, getParent(), this);
 			}
 			evt->clear();
 		}
