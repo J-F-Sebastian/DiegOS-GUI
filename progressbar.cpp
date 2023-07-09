@@ -25,52 +25,51 @@
 
 ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPercent(showpercent), percent(36)
 {
-  setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_VALIDATE);
 }
 
 void ProgressBar::draw()
 {
-  unsigned color;
-  int pxcent;
-  ViewRender *r = GRenderer;
-  Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
-  Rectangle viewRect;
-  getExtent(viewRect);
-  globalize(viewRect);
+	unsigned color;
+	int pxcent;
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
+	Rectangle viewRect;
+	getExtent(viewRect);
+	globalize(viewRect);
 
-  p->getPalette(PROGRESSBAR_BG, color);
-  r->filledRectangle(viewRect, color);
-  viewRect.zoom(-2, -2);
-  pxcent = viewRect.width() * percent / 100;
-  viewRect.width(pxcent);
-  p->getPalette(PROGRESSBAR_FG, color);
-  r->filledRectangle(viewRect, color);
-  if (showPercent)
-  {
-    char buffer[5];
-    snprintf(buffer, sizeof(buffer), "%3d%%", percent);
-    p->getPalette(PROGRESSBAR_TEXT, color);
-    r->text(viewRect, color, buffer);
-  }
+	p->getPalette(PROGRESSBAR_BG, color);
+	r->filledRectangle(viewRect, color);
+	viewRect.zoom(-2, -2);
+	pxcent = viewRect.width() * percent / 100;
+	viewRect.width(pxcent);
+	p->getPalette(PROGRESSBAR_FG, color);
+	r->filledRectangle(viewRect, color);
+	if (showPercent)
+	{
+		char buffer[5];
+		snprintf(buffer, sizeof(buffer), "%3d%%", percent);
+		p->getPalette(PROGRESSBAR_TEXT, color);
+		r->text(viewRect, color, buffer);
+	}
 }
 
 void ProgressBar::handleEvent(Event *evt)
 {
-  View::handleEvent(evt);
+	View::handleEvent(evt);
 
-  if (evt->isEventCommand())
-  {
-    MessageEvent *msg = evt->getMessageEvent();
-    if (isCommandForMe(msg))
-    {
-      if (msg->command == CMD_UPDATE)
-      {
-        percent = (msg->subCommand > 100) ? 100 : msg->subCommand;
-        setChanged(VIEW_CHANGED_REDRAW);
-        /* Now ask for redrawing */
-        sendCommand(CMD_REDRAW);
-        evt->clear();
-      }
-    }
-  }
+	if (evt->isEventCommand())
+	{
+		MessageEvent *msg = evt->getMessageEvent();
+		if (isCommandForMe(msg))
+		{
+			if (msg->command == CMD_UPDATE)
+			{
+				percent = (msg->subCommand > 100) ? 100 : msg->subCommand;
+				setChanged(VIEW_CHANGED_REDRAW);
+				/* Now ask for redrawing */
+				sendCommand(CMD_REDRAW);
+				evt->clear();
+			}
+		}
+	}
 }
