@@ -1,5 +1,16 @@
+#Help
+!message Building DiegOS-GUI project
+!message ---------------------------------------------
+!message TARGETS
+!message         compileonly -> target compiles but does not link
+!message         all         -> compile and link
+!message         clean       -> removes all derived objects
+!message DEFINES
+!message         DEBUG       -> will build for debug
+!message ---------------------------------------------
+
 #Global section
-MYLIBSDIR = E:\sviluppo\
+MYLIBSDIR = D:\sviluppo\
 
 #Release or debug section
 !ifdef DEBUG
