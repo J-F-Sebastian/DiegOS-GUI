@@ -20,37 +20,17 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#include "view.h"
+#include "abstract_button.h"
 
-class Button : public View
+class Button : public AbstractButton
 {
 public:
 	explicit Button(Rectangle &rect);
 
 	virtual void draw(void) override;
 
-	virtual void handleEvent(Event *evt) override;
-
-	bool isDown(void) { return buttonIsDown; }
-
 protected:
-	/*
-	 * Returns the update status of buttonIsDown, applying the
-	 * pressure state found in eventPressed.
-	 * Returned value is true if buttonIsDown value has changed.
-	 *
-	 * PARAMETERS IN
-	 * bool eventPressed - the pressure event, up or down
-	 *
-	 * RETURNS
-	 * true if the buttonIsDown value has changed, so the button switched
-	 * from down to up, or reverse
-	 * false in any other case
-	 */
-	bool updateButtonState(bool eventPressed);
-
-private:
-	bool buttonIsDown;
+	virtual void doAction(void);
 };
 
 #endif

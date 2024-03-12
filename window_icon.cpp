@@ -23,7 +23,7 @@
 #include "window_icon.h"
 #include "window_icon_palette.h"
 
-WindowIconClose::WindowIconClose(Rectangle &rect) : Button(rect)
+WindowIconClose::WindowIconClose(Rectangle &rect) : AbstractButton(rect)
 {
 	clearOptions(VIEW_OPT_VALIDATE);
 }
@@ -106,35 +106,15 @@ void WindowIconClose::draw()
 	renderer->line(s, e, color);
 }
 
-void WindowIconClose::handleEvent(Event *evt)
+void WindowIconClose::doAction()
 {
-	View::handleEvent(evt);
-
-	if (isEventPositional(evt))
+	if (getParent())
 	{
-		// Update the pressure state, if the new state is RELEASED, it means
-		// the icon was pressed and then released, in this case the object
-		// will generate an event.
-		// Skip move-on-hold events.
-		if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
-		{
-			bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-			if (updateButtonState(pressed))
-			{
-				setChanged(VIEW_CHANGED_REDRAW);
-				/* Now ask for redrawing */
-				sendCommand(CMD_REDRAW);
-				if (!isDown() && getParent())
-				{
-					sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
-				}
-			}
-		}
-		evt->clear();
+		sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
 	}
 }
 
-WindowIconZoom::WindowIconZoom(Rectangle &rect) : Button(rect)
+WindowIconZoom::WindowIconZoom(Rectangle &rect) : AbstractButton(rect)
 {
 	clearOptions(VIEW_OPT_VALIDATE);
 	setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
@@ -202,42 +182,10 @@ void WindowIconZoom::draw()
 	}
 }
 
-void WindowIconZoom::handleEvent(Event *evt)
+void WindowIconZoom::doAction()
 {
-	View::handleEvent(evt);
-
-	if (isEventPositional(evt))
+	if (getParent())
 	{
-		if (isEventPositionInRange(evt))
-		{
-			// Update the pressure state, if the new state is RELEASED, it means
-			// the icon was pressed and then released, in this case the object
-			// will generate an event and toggle isZoom.
-			if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
-			{
-				bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-				if (updateButtonState(pressed))
-				{
-					setChanged(VIEW_CHANGED_REDRAW);
-					/* Now ask for redrawing */
-					sendCommand(CMD_REDRAW);
-					if (!isDown())
-					{
-						if (getParent())
-						{
-							sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
-						}
-					}
-				}
-			}
-			evt->clear();
-		}
-		else if (isDown())
-		{
-			updateButtonState(false);
-			setChanged(VIEW_CHANGED_REDRAW);
-			/* Now ask for redrawing */
-			sendCommand(CMD_REDRAW);
-		}
+		sendCommand(getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
 	}
 }

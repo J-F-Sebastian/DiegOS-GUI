@@ -20,26 +20,28 @@
 #ifndef _WINDOW_ICON_H_
 #define _WINDOW_ICON_H_
 
-#include "button.h"
+#include "abstract_button.h"
 
-class WindowIconClose : public Button
+class WindowIconClose : public AbstractButton
 {
 public:
 	explicit WindowIconClose(Rectangle &rect);
 
 	virtual void draw(void) override;
 
-	virtual void handleEvent(Event *evt) override;
+protected:
+	virtual void doAction(void) override;
 };
 
-class WindowIconZoom : public Button
+class WindowIconZoom : public AbstractButton
 {
 public:
 	explicit WindowIconZoom(Rectangle &rect);
 
 	virtual void draw(void) override;
 
-	virtual void handleEvent(Event *evt) override;
+protected:
+	virtual void doAction(void) override;
 };
 
 #endif
