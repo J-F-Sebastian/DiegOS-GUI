@@ -47,6 +47,7 @@ public:
 
 	virtual void handleEvent(Event *evt) override;
 	virtual bool executeCommand(MessageEvent *cmd) override;
+	virtual bool validateCommand(const uint16_t command) override;
 
 	void forEachExecuteCommand(MessageEvent *cmd);
 

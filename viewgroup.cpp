@@ -492,6 +492,35 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 	return false;
 }
 
+bool ViewGroup::validateCommand(const uint16_t command)
+{
+	switch (command)
+	{
+	case CMD_DRAW:
+	/* FALLTHRU */
+	case CMD_REDRAW:
+	/* FALLTHRU */
+	case CMD_REL_FOCUS:
+	/* FALLTHRU */
+	case CMD_REQ_FOCUS:
+	/* FALLTHRU */
+	case CMD_SELECT:
+	/* FALLTHRU */
+	case CMD_MAXIMIZE:
+	/* FALLTHRU */
+	case CMD_RESTORE:
+	/* FALLTHRU */
+	case CMD_CLOSE:
+	/* FALLTHRU */
+	case CMD_FOREGROUND:
+	/* FALLTHRU */
+	case CMD_QUIT:
+		return true;
+	}
+
+	return false;
+}
+
 void ViewGroup::forEachExecuteCommand(MessageEvent *cmd)
 {
 	VIEWLISTITFOR(it)
