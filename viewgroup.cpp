@@ -99,28 +99,34 @@ void ViewGroup::reDraw()
 
 void ViewGroup::handleEvent(Event *evt)
 {
+	std::cout << "ViewGroup::handleEvent " << std::hex << this << std::dec << std::endl;
+
+	View::handleEvent(evt);
+
 	/* If the event is positional, look for a view including the event in its
 	 * boundaries; first view accepting the coordinates of the event will process the
 	 * event with handleEvent() method.
 	 */
 	if (isEventPositionValid(evt))
 	{
+		View *handler = nullptr;
 		VIEWLISTITFOR(it)
 		{
 			if ((*it)->isEventPositionInRange(evt))
 			{
-				// std::cout << "GOTCHA! " << std::hex << (intptr_t)(*it) << std::dec << std::endl;
-				(*it)->handleEvent(evt);
+				handler = (*it);
 				break;
 			}
 		}
+		if (handler)
+			handler->handleEvent(evt);
 	}
 	/*
 	 * If the event is a key press, process the event only if we are selected and focused.
 	 */
 	else if (evt->isEventKey())
 	{
-		if (getStateAll(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED))
+		if (getState(VIEW_STATE_FOCUSED))
 		{
 			KeybEvent *key = evt->getKeyDownEvent();
 			if (key->modifier == KBD_MOD_NONE)
@@ -376,12 +382,11 @@ void ViewGroup::handleEvent(Event *evt)
 
 bool ViewGroup::executeCommand(MessageEvent *cmd)
 {
-	if (!cmd)
-		return false;
+	uint16_t com = cmd->command;
 
-	if (validateCommand(cmd->command) && (isCommandForMe(cmd) || isCommandForAll(cmd)))
+	if (validateCommand(com))
 	{
-		switch (cmd->command)
+		switch (com)
 		{
 		case CMD_DRAW:
 			draw();
@@ -393,74 +398,51 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 
 		case CMD_REQ_FOCUS:
 		{
-			/*
-			 * The target must be a child
-			 */
-			View *target = reinterpret_cast<View *>(cmd->targetObject);
-			if (!thisViewIsMine(target))
-				return false;
+			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS " << std::hex << this << std::dec << std::endl;
+			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS " << std::hex << actualView() << std::dec << std::endl;
 
-			if (actual)
+			/*
+			 * The focused object has the focus !!!
+			 */
+			if (actual == cmd->senderObject)
 			{
-				/*
-				 * Actual view is not the target, and we are the branching
-				 * container to the focused object's tree.
-				 * If actual view is the target, just return true, no action to be taken.
-				 */
-				if (target != actual)
+				std::cout << "AAA" << std::endl;
+				return true;
+			}
+
+			bool retval = true;
+
+			if (getState(VIEW_STATE_FOCUSED))
+			{
+				if (actual)
 				{
 					/*
 					 * Try to make the focused objects release the focus.
 					 * If this operation is denied, return false.
 					 */
 					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
-					if (actual->executeCommand(&cmd2))
-						return focusView(target);
-					else
-						return false;
+					retval = actual->executeCommand(&cmd2);
+					if (retval)
+						actual = nullptr;
 				}
-				else
-					return true;
 			}
-
-			if (getParent() && !getState(VIEW_STATE_EVLOOP))
+			else if (getParent())
 			{
 				MessageEvent cmd2 = {CMD_REQ_FOCUS, 0, this, getParent(), this, {0, 0, 0, 0}};
-				if (getParent()->executeCommand(&cmd2))
-					return focusView(target);
+				retval = getParent()->executeCommand(&cmd2);
 			}
-			return focusView(target);
-		}
-		break;
 
-		case CMD_REL_FOCUS:
-		{
+			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS retval " << retval << std::endl;
 			/*
-			 * The target must be me
+			 * The focused view released the focus OR there is no focused view
+			 * to ask.
 			 */
-			if (!isCommandTargetMe(cmd))
-				return false;
-
-			bool retval = true;
-
-			if (actual)
-			{
-				/*
-				 * Try to make the focused objects release the focus.
-				 * If this operation is denied, return false.
-				 */
-				MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
-				retval = actual->executeCommand(&cmd2);
-			}
-
-			if (retval)
-			{
-				clearState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
-				actual = nullptr;
-				return true;
-			}
+			return retval;
 		}
 		break;
+
+		case CMD_SELECT:
+			return selectView(reinterpret_cast<View *>(cmd->senderObject));
 
 		case CMD_MAXIMIZE:
 			maximize();
@@ -479,7 +461,7 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 			break;
 
 		case CMD_QUIT:
-			forEachExecuteCommand(cmd);
+			// forEachExecuteCommand(cmd);
 			VIEWLISTITFOR(it)
 			{
 				delete (*it);
@@ -656,6 +638,7 @@ void ViewGroup::selectNext(bool forward)
 
 bool ViewGroup::focusView(View *target)
 {
+	std::cout << std::hex << "PTR " << target << std::endl;
 	if (!target)
 		return false;
 
@@ -668,21 +651,20 @@ bool ViewGroup::focusView(View *target)
 	return false;
 }
 
-void ViewGroup::selectView(View *target)
+bool ViewGroup::selectView(View *target)
 {
 	if (!target || viewList.empty())
-		return;
+		return false;
 
 	if (thisViewIsMine(target))
 	{
-		if (actual)
-		{
-			actual->clearState(VIEW_STATE_SELECTED | VIEW_STATE_FOCUSED);
-		}
 		actual = target;
 		if (actual->getOptions(VIEW_OPT_TOPSELECT))
 			toTheTop(actual);
+		return true;
 	}
+
+	return false;
 }
 
 void ViewGroup::toTheTop(View *target)

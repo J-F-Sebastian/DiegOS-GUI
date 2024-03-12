@@ -68,7 +68,7 @@ protected:
 	void selectNext(bool forward);
 
 	bool focusView(View *target);
-	void selectView(View *target);
+	bool selectView(View *target);
 	void setForeground(View *target);
 	void toTheTop(View *target);
 
@@ -77,7 +77,16 @@ protected:
 	virtual void computeExposure(void) override;
 
 	Rectangle lastLimits;
+
+	/*
+	 * The selected child view
+	 */
 	View *actual;
+
+	/*
+	 * Top view, first to be drawn
+	 */
+	View *topView;
 
 	/*
 	 * List of views owned by this group; the list is Z-ordered from foreground to background,
