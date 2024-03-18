@@ -760,22 +760,46 @@ bool ViewGroup::selectView(View *target)
 	return false;
 }
 
-void ViewGroup::toTheTop(View *target)
+void ViewGroup::toForeground(View *target)
 {
-	if (viewList.empty())
-		return;
+	target->setForeground();
 
-	List<View *>::iterator it(viewList, &target);
-
-	if (it != viewList.end())
+	if (listHead != target)
 	{
-		viewList.getHead()->setBackground();
-		it = viewList.erase(it);
-		viewList.addHead(target);
-		viewList.getHead()->setForeground();
-		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW);
+		/*
+		 * Update Foreground/Background status
+		 */
+		listHead->setBackground();
+		/*
+		 * temp points to target's father
+		 */
+		View *temp = forEachViewUntilTrue([target](View *v) -> bool
+						  { return (v->getNext() == target) ? true : false; });
+
+		/*
+		 * Unlink target setting its father "next" points to target's "next".
+		 */
+		temp->setNext(target->getNext());
+		/*
+		 * Promote target to the top of the list
+		 */
+		target->setNext(listHead);
+		listHead = target;
 	}
+
+	/* Now ask for redrawing */
+	sendCommand(CMD_DRAW);
+}
+
+void ViewGroup::toBackground(View *target)
+{
+	/*
+	 * Update Foreground/Background status
+	 */
+	target->setBackground();
+
+	/* Now ask for redrawing */
+	sendCommand(CMD_DRAW);
 }
 
 void ViewGroup::maximize()
