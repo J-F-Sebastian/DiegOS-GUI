@@ -74,7 +74,7 @@ enum
  */
 enum
 {
-	/* View can be selected or can get the focus */
+	/* View can be selected and can get the focus */
 	VIEW_OPT_SELECTABLE = (1 << 0),
 	/* View will be moved to foreground when selected */
 	VIEW_OPT_TOPSELECT = (1 << 1),
@@ -108,7 +108,7 @@ enum
 {
 	/* View need to be redrawn */
 	VIEW_CHANGED_REDRAW = (1 << 0),
-	/* View carries updated data */
+	/* View has updated data */
 	VIEW_CHANGED_DATA = (1 << 1)
 };
 
@@ -119,6 +119,10 @@ enum
 class View
 {
 public:
+	/*
+	 * Default destructor.
+	 * Will set parentView to nullptr.
+	 */
 	virtual ~View();
 
 	/*
@@ -239,6 +243,14 @@ public:
 	 * View *par - pointer to a View instance
 	 */
 	void setParent(View *par);
+
+	/*
+	 * Set the sibling view (another view in a collection or a group).
+	 *
+	 * PARAMETERS IN
+	 * View *par - pointer to a View instance
+	 */
+	void setNext(View *par);
 
 	/*
 	 * Set state to foreground, this view is visible and on top
@@ -412,6 +424,8 @@ public:
 	 * false if the event is outside this view's range
 	 */
 	virtual bool isEventPositionInRange(Event *evt);
+
+	inline View *getNext(void) { return nextView; }
 
 protected:
 	/*
@@ -608,11 +622,19 @@ protected:
 
 	inline View *getParent(void) { return parentView; }
 
+	View *topView(void);
+
 private:
 	/*
 	 * The parent or Owner of this view, can be nullptr
 	 */
 	View *parentView;
+	/*
+	 * The sibling of this view, can be nullptr.
+	 * This field can be used to link views in a collection
+	 * (a group).
+	 */
+	View *nextView;
 	/*
 	 * borders is expressed in owner's coordinates
 	 */

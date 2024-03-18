@@ -21,23 +21,22 @@
 #include "viewgroup.h"
 #include "viewzbuffer.h"
 
-#define VIEWLISTITFOR(x) for (List<View *>::iterator x = viewList.begin(); x != viewList.end(); x++)
-#define VIEWLISTREVITFOR(x) for (List<View *>::riterator x = viewList.rbegin(); x != viewList.rend(); x++)
-
-ViewGroup::ViewGroup(Rectangle &limits, View *parent) : View(limits, parent), lastLimits(limits), actual(nullptr), viewList()
+ViewGroup::ViewGroup(Rectangle &limits, View *parent) : View(limits, parent), lastLimits(limits), actual(nullptr), listHead(nullptr), listSize(0), lastrflags(0)
 {
 	setOptions(VIEW_OPT_SELECTABLE);
 }
 
 ViewGroup::~ViewGroup()
 {
-	List<View *>::iterator it = viewList.begin();
-	while (it != viewList.end())
+	while (listHead)
 	{
-		delete (*it);
-		it++;
+		View *next = listHead->getNext();
+		delete listHead;
+		listHead = next;
 	}
-	viewList.clear();
+
+	actual = nullptr;
+	listSize = 0;
 }
 
 bool ViewGroup::setLocation(const Rectangle &loc)
@@ -61,11 +60,10 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	delta.y = loc.height() - update.height();
 	setBorders(loc);
 
-	VIEWLISTITFOR(it)
-	{
-		(*it)->calcLimits(delta, update);
-		(*it)->setLocation(update);
-	}
+	forEachView([&delta, &update](View *head)
+		    {
+			head->calcLimits(delta, update);
+			head->setLocation(update); });
 
 	return true;
 }
@@ -75,10 +73,34 @@ void ViewGroup::draw()
 	if (getState(VIEW_STATE_EXPOSED))
 	{
 		//  Draw children back-to-top, following the painter algorithm
-		VIEWLISTREVITFOR(it)
+		if (listSize)
 		{
-			if ((*it)->getState(VIEW_STATE_EXPOSED))
-				(*it)->draw();
+			View **storage = new View *[listSize];
+			unsigned i = 0;
+
+			/*
+			 * Accumulate the exposed views, NOT including the foreground view.
+			 */
+			forEachView([this, &i, storage](View *head)
+				    {
+					if ((head != listHead) && head->getState(VIEW_STATE_EXPOSED))
+						storage[i++] = head; });
+
+			/*
+			 * Draw the accumulated views in reverse order
+			 */
+			while (i--)
+			{
+				storage[i]->draw();
+			}
+
+			/*
+			 * Draw the foreground view LAST
+			 */
+			if (listHead && listHead->getState(VIEW_STATE_EXPOSED))
+				listHead->draw();
+
+			delete[] storage;
 		}
 	}
 }
@@ -88,10 +110,33 @@ void ViewGroup::reDraw()
 	if (getState(VIEW_STATE_EXPOSED) && getChanged(VIEW_CHANGED_REDRAW))
 	{
 		// Draw children back-to-top, following the painter algorithm
-		VIEWLISTREVITFOR(it)
+		if (listSize)
 		{
-			if ((*it)->getState(VIEW_STATE_EXPOSED))
-				(*it)->reDraw();
+			View **storage = new View *[listSize];
+			unsigned i = 0;
+
+			/*
+			 * Accumulate the exposed views, NOT including the foreground view.
+			 */
+			forEachView([this, &i, storage](View *head)
+				    {
+					if ((head != listHead) && head->getState(VIEW_STATE_EXPOSED))
+						storage[i++] = head; });
+			/*
+			 * Redraw the accumulated views in reverse order
+			 */
+			while (i--)
+			{
+				storage[i]->reDraw();
+			}
+
+			/*
+			 * Redraw the foreground view LAST
+			 */
+			if (listHead && listHead->getState(VIEW_STATE_EXPOSED))
+				listHead->reDraw();
+
+			delete[] storage;
 		}
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
@@ -109,20 +154,18 @@ void ViewGroup::handleEvent(Event *evt)
 	 */
 	if (isEventPositionValid(evt))
 	{
-		View *handler = nullptr;
-		VIEWLISTITFOR(it)
-		{
-			if ((*it)->isEventPositionInRange(evt))
-			{
-				handler = (*it);
-				break;
-			}
-		}
-		if (handler)
-			handler->handleEvent(evt);
+		View *toHandle = forEachViewUntilTrue([evt](View *head) -> bool
+						      { return head->isEventPositionInRange(evt); });
+
+		if (toHandle)
+			toHandle->handleEvent(evt);
+		/*
+		 * Cleanup anyway, the message was for THIS object.
+		 */
+		evt->clear();
 	}
 	/*
-	 * If the event is a key press, process the event only if we are selected and focused.
+	 * If the event is a key press, process the event only if we are focused.
 	 */
 	else if (evt->isEventKey())
 	{
@@ -257,10 +300,9 @@ void ViewGroup::handleEvent(Event *evt)
 			/*
 			 * Forward message to all children.
 			 */
-			VIEWLISTITFOR(it)
-			{
-				(*it)->handleEvent(evt);
-			}
+			forEachView([evt](View *head)
+				    { head->handleEvent(evt); });
+
 			switch (msg->command)
 			{
 			case CMD_QUIT:
@@ -269,12 +311,15 @@ void ViewGroup::handleEvent(Event *evt)
 				 * We are instructed to close so we do close all of our views, in fact the target is ignored.
 				 * NOTE: CMD_QUIT is nonsense with a specific destination ...
 				 */
-				VIEWLISTITFOR(it)
+				while (listHead)
 				{
-					delete (*it);
+					View *next = listHead->getNext();
+					delete listHead;
+					listHead = next;
 				}
-				viewList.clear();
+
 				actual = nullptr;
+				listSize = 0;
 				break;
 			}
 			/*
@@ -300,16 +345,18 @@ void ViewGroup::handleEvent(Event *evt)
 				 */
 				if (isCommandTargetAll(msg))
 				{
-					List<View *>::iterator it(viewList);
-					while (it != viewList.end())
+					while (listHead)
 					{
-						if ((*it)->getState(VIEW_STATE_FOCUSED))
+						View *next = listHead->getNext();
+						if (listHead->getState(VIEW_STATE_FOCUSED))
 							focusNext(true);
-						if ((*it)->getState(VIEW_STATE_SELECTED))
+						else if (listHead->getState(VIEW_STATE_SELECTED))
 							selectNext(true);
-						delete (*it);
-						it = viewList.erase(it);
+						delete listHead;
+						listHead = next;
 					}
+					actual = nullptr;
+					listSize = 0;
 				}
 				/*
 				 * Check if we are instructed to close one of our views
@@ -317,20 +364,14 @@ void ViewGroup::handleEvent(Event *evt)
 				else
 				{
 					View *target = reinterpret_cast<View *>(msg->targetObject);
-					if (target)
+					if (remove(target))
 					{
-						List<View *>::iterator it(viewList, &target);
-						if (it != viewList.end())
-						{
-							if (remove(target))
-							{
-								delete target;
-							}
-						}
+						delete target;
 					}
 				}
 				/* Now ask for redrawing */
 				sendCommand(CMD_DRAW);
+
 				break;
 
 			case CMD_DRAW:
@@ -359,18 +400,20 @@ void ViewGroup::handleEvent(Event *evt)
 			 * If the destination is unknown, go broadcast.
 			 */
 			View *target = reinterpret_cast<View *>(msg->targetObject);
-			List<View *>::iterator lkup(viewList, &target);
+			if (target)
+			{
+				bool status = forEachViewUntilTrue([target, evt](View *head) -> bool
+								   {
+									if (target == head)
+									{
+										target->handleEvent(evt);
+										return true;
+									}
+									return false; });
 
-			if (lkup != viewList.end())
-			{
-				(*lkup)->handleEvent(evt);
-			}
-			else
-			{
-				VIEWLISTITFOR(it)
-				{
-					(*it)->handleEvent(evt);
-				}
+				if (!status)
+					forEachView([evt](View *head)
+						    { head->handleEvent(evt); });
 			}
 		}
 	}
@@ -422,8 +465,6 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 					 */
 					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
 					retval = actual->executeCommand(&cmd2);
-					if (retval)
-						actual = nullptr;
 				}
 			}
 			else if (getParent())
@@ -437,6 +478,47 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 			 * The focused view released the focus OR there is no focused view
 			 * to ask.
 			 */
+			if (retval)
+			{
+				actual = reinterpret_cast<View *>(cmd->senderObject);
+			}
+
+			return retval;
+		}
+		break;
+
+		case CMD_REL_FOCUS:
+		{
+			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS " << std::hex << this << std::dec << std::endl;
+			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS " << std::hex << actualView() << std::dec << std::endl;
+
+			bool retval = true;
+
+			if (getState(VIEW_STATE_FOCUSED))
+			{
+				if (actual)
+				{
+					/*
+					 * Try to make the focused objects release the focus.
+					 * If this operation is denied, return false.
+					 */
+					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
+					retval = actual->executeCommand(&cmd2);
+				}
+			}
+
+			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS retval " << retval << std::endl;
+
+			/*
+			 * The focused view released the focus OR there is no focused view
+			 * to ask.
+			 */
+			if (retval)
+			{
+				clearState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
+				actual = nullptr;
+			}
+
 			return retval;
 		}
 		break;
@@ -462,12 +544,14 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 
 		case CMD_QUIT:
 			// forEachExecuteCommand(cmd);
-			VIEWLISTITFOR(it)
+			while (listHead)
 			{
-				delete (*it);
+				View *next = listHead->getNext();
+				delete listHead;
+				listHead = next;
 			}
-			viewList.clear();
 			actual = nullptr;
+			listSize = 0;
 			return true;
 		}
 	}
@@ -505,28 +589,22 @@ bool ViewGroup::validateCommand(const uint16_t command)
 
 void ViewGroup::forEachExecuteCommand(MessageEvent *cmd)
 {
-	VIEWLISTITFOR(it)
-	{
-		(*it)->executeCommand(cmd);
-	}
+	forEachView([cmd](View *head)
+		    { head->executeCommand(cmd); });
 }
 
 void ViewGroup::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);
-	VIEWLISTITFOR(it)
-	{
-		(*it)->setForeground();
-	}
+	forEachView([](View *head)
+		    { head->setForeground(); });
 }
 
 void ViewGroup::setBackground()
 {
 	clearState(VIEW_STATE_FOREGROUND);
-	VIEWLISTITFOR(it)
-	{
-		(*it)->setBackground();
-	}
+	forEachView([](View *head)
+		    { head->setBackground(); });
 }
 
 void ViewGroup::insert(View *newView)
@@ -535,38 +613,58 @@ void ViewGroup::insert(View *newView)
 	{
 		newView->setParent(this);
 		newView->setBackground();
-		viewList.addHead(newView);
-	}
-}
-
-void ViewGroup::insertBefore(View *newView, View *target)
-{
-	if (newView && target)
-	{
-		if (viewList.insert(newView, target))
+		/*
+		 * Insert to the front
+		 */
+		if (listHead)
 		{
-			newView->setParent(this);
+			newView->setNext(listHead);
+			listHead = newView;
 		}
+		else
+		{
+			listHead = newView;
+			listHead->setNext(nullptr);
+		}
+		listSize++;
 	}
 }
 
 bool ViewGroup::remove(View *target)
 {
-	if (!target)
+	if (!target || !listSize)
 		return false;
 
 	if (target == actual)
 	{
+		/*
+		 * We are removing the view, so if this view has the focus,
+		 * and it is not possible to focus another view, the actual
+		 * pointer must be null.
+		 */
 		if (!focusNext(true))
 		{
 			actual = nullptr;
 		}
 	}
-	List<View *>::iterator it(viewList, &target);
-	if (it != viewList.end())
+
+	View *head = listHead;
+	if (head == target)
 	{
-		it = viewList.erase(it);
+		listHead = listHead->getNext();
+		listSize--;
 		return true;
+	}
+
+	while (head->getNext())
+	{
+		if (head->getNext() == target)
+		{
+			head->setNext(target->getNext());
+			listSize--;
+			return true;
+		}
+		head = head->getNext();
 	}
 
 	return false;
@@ -581,27 +679,24 @@ bool ViewGroup::focusNext(bool forward)
 {
 	View *temp = nullptr;
 
-	if (viewList.count() < 1)
+	if (listSize < 1)
 		return false;
 
-	// FIXME missing check if focus can be handed off
-	if (forward)
+	if (actual == nullptr)
 	{
-		List<View *>::iterator it(viewList, &actual);
-
-		if (++it != viewList.end())
-			temp = (*it);
-		else
-			temp = viewList.getHead();
+		temp = listHead;
 	}
 	else
 	{
-		List<View *>::riterator it(viewList, &actual);
-
-		if (++it != viewList.rend())
-			temp = (*it);
+		if (forward)
+		{
+			temp = actual->getNext();
+			if (temp == nullptr)
+				temp = listHead;
+		}
 		else
-			temp = viewList.getTail();
+		{
+		}
 	}
 
 	return focusView(temp);
@@ -611,26 +706,24 @@ void ViewGroup::selectNext(bool forward)
 {
 	View *temp = nullptr;
 
-	if (viewList.count() < 1)
+	if (listSize < 1)
 		return;
 
-	if (forward)
+	if (actual == nullptr)
 	{
-		List<View *>::iterator it(viewList, &actual);
-
-		if (++it != viewList.end())
-			temp = (*it);
-		else
-			temp = viewList.getHead();
+		temp = listHead;
 	}
 	else
 	{
-		List<View *>::riterator it(viewList, &actual);
-
-		if (++it != viewList.rend())
-			temp = (*it);
+		if (forward)
+		{
+			temp = actual->getNext();
+			if (temp == nullptr)
+				temp = listHead;
+		}
 		else
-			temp = viewList.getTail();
+		{
+		}
 	}
 
 	selectView(temp);
@@ -653,14 +746,14 @@ bool ViewGroup::focusView(View *target)
 
 bool ViewGroup::selectView(View *target)
 {
-	if (!target || viewList.empty())
+	if (!target || !listSize)
 		return false;
 
 	if (thisViewIsMine(target))
 	{
 		actual = target;
 		if (actual->getOptions(VIEW_OPT_TOPSELECT))
-			toTheTop(actual);
+			toForeground(actual);
 		return true;
 	}
 
@@ -728,20 +821,14 @@ void ViewGroup::restore()
 
 bool ViewGroup::thisViewIsMine(View *who)
 {
-	List<View *>::iterator it(viewList, &who);
-
-	return (it != viewList.end()) ? true : false;
+	return forEachViewUntilTrue([who](View *head) -> bool
+				    { return (head == who) ? true : false; });
 }
 
 void ViewGroup::setExposed(bool exposed)
 {
-	exposed = false;
-
-	VIEWLISTITFOR(it)
-	{
-		if ((*it)->getState(VIEW_STATE_EXPOSED))
-			exposed = true;
-	}
+	exposed = forEachViewUntilTrue([](View *head) -> bool
+				       { return (head->getState(VIEW_STATE_EXPOSED)) ? true : false; });
 
 	View::setExposed(exposed);
 }
@@ -751,10 +838,8 @@ void ViewGroup::computeExposure()
 	/*
 	 * Set in the Z buffer the layer depth of each view
 	 */
-	VIEWLISTITFOR(it)
-	{
-		(*it)->computeExposure();
-	}
+	forEachView([](View *head)
+		    { head->computeExposure(); });
 
 	/*
 	 * true or false does not matter, the value is
