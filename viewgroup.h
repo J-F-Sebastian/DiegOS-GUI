@@ -119,8 +119,8 @@ protected:
 
 	bool focusView(View *target);
 	bool selectView(View *target);
-	void setForeground(View *target);
-	void toTheTop(View *target);
+	void toForeground(View *target);
+	void toBackground(View *target);
 
 	bool thisViewIsMine(View *who);
 
