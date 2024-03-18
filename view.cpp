@@ -20,14 +20,22 @@
 
 #include "view.h"
 #include "viewinstances.h"
+View::View(Rectangle &limits, View *parent) : parentView(parent),
 
-View::View(Rectangle &limits, View *parent) : parentView(parent), borders(limits), extent(0, 0, limits.width() - 1, limits.height() - 1), rflags(0), sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED), oflags(0), cflags(VIEW_CHANGED_REDRAW)
+					      nextView(nullptr),
+					      borders(limits),
+					      extent(0, 0, limits.width() - 1, limits.height() - 1),
+					      rflags(0),
+					      sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
+					      oflags(0),
+					      cflags(VIEW_CHANGED_REDRAW)
 {
 }
 
 View::~View()
 {
 	parentView = nullptr;
+	nextView = nullptr;
 }
 
 void View::sizeLimits(Point &min, Point &max)
@@ -111,10 +119,12 @@ void View::globalize(Rectangle &rect)
 
 void View::setParent(View *par)
 {
-	if (!parentView && par)
-	{
-		parentView = par;
-	}
+	parentView = par;
+}
+
+void View::setNext(View *par)
+{
+	nextView = par;
 }
 
 static const unsigned char RVALIDATE = (VIEW_BOUNDED | VIEW_ZOOMED);
@@ -390,8 +400,10 @@ void View::computeExposure()
 
 void View::sendEvent(Event *evt)
 {
-	if (getParent())
-		getParent()->sendEvent(evt);
+	if (isCommandForMe(evt->getMessageEvent()))
+		handleEvent(evt);
+	else if (topView())
+		topView()->sendEvent(evt);
 }
 
 bool View::isEventPositional(Event *evt)
@@ -566,4 +578,18 @@ void View::setForeground()
 void View::setBackground()
 {
 	clearState(VIEW_STATE_FOREGROUND);
+}
+
+View *View::topView()
+{
+	if (parentView == nullptr)
+		return this;
+
+	View *top = parentView;
+	while (top->parentView && !top->getState(VIEW_STATE_EVLOOP))
+	{
+		top = top->parentView;
+	}
+
+	return top;
 }

@@ -21,7 +21,6 @@
 #define _VIEWGROUP_H_
 
 #include "view.h"
-#include "list.h"
 
 class ViewGroup : public View
 {
@@ -59,9 +58,60 @@ public:
 	void restore(void);
 
 	void insert(View *newView);
-	void insertBefore(View *newView, View *target);
 	bool remove(View *target);
 	View *actualView(void);
+
+	/*
+	 * Call function f passing every child view as parameter.
+	 * This way the effect of f() are applied to all views.
+	 *
+	 * PARAMETERS IN
+	 * void f(View *) - a function call, either a pointer or a lambda function
+	 */
+	template <typename FV>
+	void forEachView(FV &&f)
+	{
+		View *head = listHead;
+		while (head)
+		{
+			f(head);
+			head = head->getNext();
+		}
+	}
+
+	/*
+	 * Call function f passing every child view as parameter.
+	 * This way the effect of f() are applied to all views.
+	 * The function f is expected to return false if other views need to be
+	 * processed, and is expected to return true if the view passed as parameter
+	 * is the one required for processing.
+	 * Whenever f() returns true, forEachViewUntilTrue breaks and returns a pointer
+	 * to the current view, i.e. the view which made f() return true.
+	 * If the loop inside forEachViewUntilTrue never breaks the function returns nullptr.
+	 *
+	 * PARAMETERS IN
+	 * bool f(View *) - a function call, either a pointer or a lambda function.
+	 *                  The function is expected to return true or false, false if further views
+	 *                  need to be processed, true if processing is complete.
+	 *
+	 * RETURNS
+	 * A valid pointer to a view if f() returned true for this specific View object.
+	 * nullptr if f() never returned true.
+	 */
+	template <typename FB>
+	View *forEachViewUntilTrue(FB &&f)
+	{
+		View *head = listHead;
+		while (head)
+		{
+			if (f(head))
+				break;
+
+			head = head->getNext();
+		}
+
+		return head;
+	}
 
 protected:
 	bool focusNext(bool forward);
@@ -82,19 +132,15 @@ protected:
 	 * The selected child view
 	 */
 	View *actual;
-
 	/*
-	 * Top view, first to be drawn
+	 * siblings list, views collection of this group.
+	 * listHead points to the foreground view.
 	 */
-	View *topView;
-
+	View *listHead;
 	/*
-	 * List of views owned by this group; the list is Z-ordered from foreground to background,
-	 * is populated by calling insert or insertBefore, and can be reordered when the selected object
-	 * has the VIEW_OPT_TOPSELECT option set.
+	 * Number of siblings in the views collection
 	 */
-	List<View *> viewList;
-
+	unsigned listSize;
 	/*
 	 * Store the previously used resize flags to restore them later.
 	 * This is useful for resizing/zooming operations.
