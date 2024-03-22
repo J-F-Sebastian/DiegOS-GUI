@@ -423,13 +423,11 @@ void ViewGroup::handleEvent(Event *evt)
 	}
 }
 
-bool ViewGroup::executeCommand(MessageEvent *cmd)
+bool ViewGroup::executeCommand(const uint16_t command, View *caller)
 {
-	uint16_t com = cmd->command;
-
-	if (validateCommand(com))
+	if (validateCommand(command))
 	{
-		switch (com)
+		switch (command)
 		{
 		case CMD_DRAW:
 			draw();
@@ -441,15 +439,11 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 
 		case CMD_REQ_FOCUS:
 		{
-			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS " << std::hex << this << std::dec << std::endl;
-			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS " << std::hex << actualView() << std::dec << std::endl;
-
 			/*
 			 * The focused object has the focus !!!
 			 */
-			if (actual == cmd->senderObject)
+			if (caller && (actual == caller))
 			{
-				std::cout << "AAA" << std::endl;
 				return true;
 			}
 
@@ -463,24 +457,21 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 					 * Try to make the focused objects release the focus.
 					 * If this operation is denied, return false.
 					 */
-					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
-					retval = actual->executeCommand(&cmd2);
+					retval = actual->executeCommand(CMD_REL_FOCUS);
 				}
 			}
 			else if (getParent())
 			{
-				MessageEvent cmd2 = {CMD_REQ_FOCUS, 0, this, getParent(), this, {0, 0, 0, 0}};
-				retval = getParent()->executeCommand(&cmd2);
+				retval = getParent()->executeCommand(CMD_REQ_FOCUS, this);
 			}
 
-			std::cout << "ViewGroup::executeCommand CMD_REQ_FOCUS retval " << retval << std::endl;
 			/*
 			 * The focused view released the focus OR there is no focused view
 			 * to ask.
 			 */
-			if (retval)
+			if (retval && caller)
 			{
-				actual = reinterpret_cast<View *>(cmd->senderObject);
+				actual = caller;
 			}
 
 			return retval;
@@ -489,9 +480,6 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 
 		case CMD_REL_FOCUS:
 		{
-			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS " << std::hex << this << std::dec << std::endl;
-			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS " << std::hex << actualView() << std::dec << std::endl;
-
 			bool retval = true;
 
 			if (getState(VIEW_STATE_FOCUSED))
@@ -502,12 +490,9 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 					 * Try to make the focused objects release the focus.
 					 * If this operation is denied, return false.
 					 */
-					MessageEvent cmd2 = {CMD_REL_FOCUS, 0, this, actual, actual, {0, 0, 0, 0}};
-					retval = actual->executeCommand(&cmd2);
+					retval = actual->executeCommand(CMD_REL_FOCUS);
 				}
 			}
-
-			std::cout << "ViewGroup::executeCommand CMD_REL_FOCUS retval " << retval << std::endl;
 
 			/*
 			 * The focused view released the focus OR there is no focused view
@@ -524,7 +509,7 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 		break;
 
 		case CMD_SELECT:
-			return selectView(reinterpret_cast<View *>(cmd->senderObject));
+			return selectView(caller);
 
 		case CMD_MAXIMIZE:
 			maximize();
@@ -533,6 +518,18 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 		case CMD_RESTORE:
 			restore();
 			return true;
+
+		case CMD_ZOOM:
+			if (getResizeMode(VIEW_RESIZEABLE))
+			{
+				if (getResizeMode(VIEW_ZOOMED))
+					restore();
+				else
+					maximize();
+
+				return true;
+			}
+			break;
 
 		case CMD_CLOSE:
 			sendCommandToParent(CMD_CLOSE);
@@ -543,7 +540,6 @@ bool ViewGroup::executeCommand(MessageEvent *cmd)
 			break;
 
 		case CMD_QUIT:
-			// forEachExecuteCommand(cmd);
 			while (listHead)
 			{
 				View *next = listHead->getNext();

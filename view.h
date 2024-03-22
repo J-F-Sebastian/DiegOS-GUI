@@ -341,7 +341,6 @@ public:
 	/*
 	 * Execute the command specified as parameter.
 	 * Success or failure are reported.
-	 * Different classes can support different sets of commands.
 	 *
 	 * PARAMETERS IN
 	 * const uint16_t command - a command as found in event.h, enum CMD_*
@@ -350,7 +349,7 @@ public:
 	 * true if the command was executed successfully
 	 * false in any other case
 	 */
-	virtual bool executeCommand(MessageEvent *cmd);
+	virtual bool executeCommand(const uint16_t command, View *caller = nullptr);
 
 	/*
 	 * Validate the command specified as parameter.
