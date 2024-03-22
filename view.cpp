@@ -305,14 +305,11 @@ void View::handleEvent(Event *evt)
 	}
 }
 
-bool View::executeCommand(MessageEvent *cmd)
+bool View::executeCommand(const uint16_t command, View *caller)
 {
-	if (!cmd)
-		return false;
-
-	if (validateCommand(cmd->command) && (isCommandForMe(cmd) || isCommandForAll(cmd)))
+	if (validateCommand(command))
 	{
-		switch (cmd->command)
+		switch (command)
 		{
 		case CMD_DRAW:
 			draw();
@@ -322,21 +319,7 @@ bool View::executeCommand(MessageEvent *cmd)
 			reDraw();
 			return true;
 
-		case CMD_REQ_FOCUS:
-			if (getParent())
-			{
-				MessageEvent cmd2 = {CMD_REQ_FOCUS, 0, this, getParent(), this, {0, 0, 0, 0}};
-				return getParent()->executeCommand(&cmd2);
-			}
-			return focus();
-
 		case CMD_REL_FOCUS:
-			/*
-			 * The target must be me
-			 */
-			if (!isCommandTargetMe(cmd))
-				return false;
-
 			clearState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
 			return true;
 
