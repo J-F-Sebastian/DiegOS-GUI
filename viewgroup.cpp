@@ -188,10 +188,11 @@ void ViewGroup::handleEvent(Event *evt)
 	 * |               |     clear    |
 	 * +---------------+--------------+
 	 * |               |    execute   |
-	 * |  broadcast    |      and     |
 	 * |               |    forward   |
-	 * |               |      to      |
+	 * |  broadcast    |      to      |
 	 * |               |    children  |
+	 * |               |      and     |
+	 * |               |     clear    |
 	 * +---------------+--------------+
 	 * |               |    forward   |
 	 * |  child view   |      to      |
@@ -212,6 +213,7 @@ void ViewGroup::handleEvent(Event *evt)
 	 * of the command, not the destination.
 	 * Due to this a valid target object can be either this view, a child view or the broadcast address.
 	 * Other values must be ignored.
+	 * The message MUST have this view or the broadcast object as destination .
 	 *
 	 * +---------------+--------------+
 	 * |    target     |    action    |
