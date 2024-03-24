@@ -242,93 +242,35 @@ void ViewGroup::handleEvent(Event *evt)
 	{
 		MessageEvent *msg = evt->getMessageEvent();
 		/*
-		 * This object as destination and target
+		 * This object as destination
 		 */
-		if (isCommandMe(msg))
+		if (isCommandForMe(msg))
 		{
+			View *caller = reinterpret_cast<View *>(msg->senderObject);
+			View *target = reinterpret_cast<View *>(msg->targetObject);
+
+			// evt->print();
 			switch (msg->command)
 			{
-			case CMD_FOREGROUND:
-				std::cout << "Foreground CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				setForeground();
-				break;
-
 			case CMD_CLOSE:
-				std::cout << "CLOSE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
 				/*
-				 * We are instructed to close, so send an event to our owner
+				 * Check if we are instructed to close one of our views
 				 */
-				sendCommandToParent(CMD_CLOSE);
-				break;
-
-			case CMD_MAXIMIZE:
-				std::cout << "MAXIMIZE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				maximize();
-				break;
-
-			case CMD_RESTORE:
-				std::cout << "RESTORE CMD " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				restore();
-				break;
-			}
-			/*
-			 * Cleanup anyway, the message was for THIS object.
-			 */
-			evt->clear();
-		}
-		/*
-		 * All objects as a destination
-		 */
-		else if (isCommandForAll(msg))
-		{
-			/*
-			 * Forward message to all children.
-			 */
-			forEachView([evt](View *head)
-				    { head->handleEvent(evt); });
-
-			switch (msg->command)
-			{
-			case CMD_QUIT:
-				std::cout << "QUIT CMD at " << reinterpret_cast<intptr_t>(this) << " for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				/*
-				 * We are instructed to close so we do close all of our views, in fact the target is ignored.
-				 * NOTE: CMD_QUIT is nonsense with a specific destination ...
-				 */
-				while (listHead)
+				if (thisViewIsMine(target))
 				{
-					View *next = listHead->getNext();
-					delete listHead;
-					listHead = next;
+					if (remove(target))
+					{
+						delete target;
+						/* Now ask for redrawing */
+						sendCommand(CMD_DRAW);
+					}
+					evt->clear();
 				}
-
-				actual = nullptr;
-				listSize = 0;
-				break;
-			}
-			/*
-			 * No event cleanup !!!
-			 */
-		}
-		/*
-		 * This object as a destination
-		 */
-		else if (isCommandForMe(msg))
-		{
-			switch (msg->command)
-			{
-			case CMD_SELECT:
-				std::cout << "Select CMD for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				selectView(reinterpret_cast<View *>(msg->targetObject));
-				break;
-
-			case CMD_CLOSE:
-				std::cout << "CLOSE CMD for " << reinterpret_cast<intptr_t>(msg->targetObject) << std::endl;
-				/*
-				 * If the target is BROADCAST_OBJECT close all views
-				 */
-				if (isCommandTargetAll(msg))
+				else if (target == BROADCAST_OBJECT)
 				{
+					/*
+					 * If the target is BROADCAST_OBJECT close all views
+					 */
 					while (listHead)
 					{
 						View *next = listHead->getNext();
@@ -341,69 +283,56 @@ void ViewGroup::handleEvent(Event *evt)
 					}
 					actual = nullptr;
 					listSize = 0;
+					evt->clear();
 				}
-				/*
-				 * Check if we are instructed to close one of our views
-				 */
-				else
-				{
-					View *target = reinterpret_cast<View *>(msg->targetObject);
-					if (remove(target))
-					{
-						delete target;
-					}
-				}
-				/* Now ask for redrawing */
-				sendCommand(CMD_DRAW);
-
 				break;
-
-			case CMD_DRAW:
-			{
-				View *target = static_cast<View *>(msg->targetObject);
-				if (thisViewIsMine(target))
-					target->draw();
 			}
-			break;
-			case CMD_REQ_FOCUS:
 
-				break;
+			if (!evt->isEventUnknown())
+			{
+				if (executeCommand(msg->command, caller))
+					evt->clear();
 			}
 			/*
-			 * Cleanup anyway, the message was for THIS object.
+			 * Unsupported messages will generate a trace in the main loop!
 			 */
-			evt->clear();
+		}
+		/*
+		 * All objects as a destination
+		 */
+		else if (isCommandForAll(msg))
+		{
+			executeCommand(msg->command, reinterpret_cast<View *>(msg->targetObject));
+
+			if (!evt->isEventUnknown())
+			{
+				/*
+				 * Forward message to all children.
+				 */
+				forEachView([evt](View *head)
+					    { head->handleEvent(evt); });
+
+				/*
+				 * No event cleanup unless we are the main loop
+				 */
+				if (getState(VIEW_STATE_EVLOOP))
+					evt->clear();
+			}
 		}
 		/*
 		 * Destination unknown, forward message to all children.
 		 */
 		else
 		{
-			/*
-			 * Forward message, if the destination is a child go unicast.
-			 * If the destination is unknown, go broadcast.
-			 */
 			View *target = reinterpret_cast<View *>(msg->targetObject);
 			if (target)
 			{
-				bool status = forEachViewUntilTrue([target, evt](View *head) -> bool
-								   {
-									if (target == head)
-									{
-										target->handleEvent(evt);
-										return true;
-									}
-									return false; });
-
-				if (!status)
-					forEachView([evt](View *head)
-						    { head->handleEvent(evt); });
+				forEachViewUntilTrue([target, evt](View *head) -> bool
+						     {
+							target->handleEvent(evt);
+							return (target == head) ? true : false; });
 			}
 		}
-	}
-	else if (evt->isEventUnknown())
-	{
-		// evt->print();
 	}
 }
 
@@ -414,10 +343,14 @@ bool ViewGroup::executeCommand(const uint16_t command, View *caller)
 		switch (command)
 		{
 		case CMD_DRAW:
-			draw();
+			if (thisViewIsMine(caller))
+				caller->draw();
+			else
+				draw();
 			return true;
 
 		case CMD_REDRAW:
+			draw();
 			reDraw();
 			return true;
 
@@ -516,12 +449,19 @@ bool ViewGroup::executeCommand(const uint16_t command, View *caller)
 			break;
 
 		case CMD_CLOSE:
-			sendCommandToParent(CMD_CLOSE);
-			return true;
+			if (thisViewIsMine(caller))
+			{
+				/*
+				 * We need to close, ask parent to do it
+				 */
+				sendCommandToParent(CMD_CLOSE);
+				return true;
+			}
+			break;
 
 		case CMD_FOREGROUND:
 			setForeground();
-			break;
+			return true;
 
 		case CMD_QUIT:
 			while (listHead)
@@ -556,6 +496,8 @@ bool ViewGroup::validateCommand(const uint16_t command)
 	/* FALLTHRU */
 	case CMD_RESTORE:
 	/* FALLTHRU */
+	case CMD_ZOOM:
+	/* FALLTHRU */
 	case CMD_CLOSE:
 	/* FALLTHRU */
 	case CMD_FOREGROUND:
@@ -570,7 +512,7 @@ bool ViewGroup::validateCommand(const uint16_t command)
 void ViewGroup::forEachExecuteCommand(MessageEvent *cmd)
 {
 	forEachView([cmd](View *head)
-		    { head->executeCommand(cmd); });
+		    { head->executeCommand(cmd->command); });
 }
 
 void ViewGroup::setForeground()
