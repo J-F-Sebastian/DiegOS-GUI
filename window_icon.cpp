@@ -110,7 +110,7 @@ void WindowIconClose::doAction()
 {
 	if (getParent())
 	{
-		sendCommand(CMD_CLOSE, getParent(), BROADCAST_OBJECT);
+		sendCommand(CMD_CLOSE, getParent(), getParent());
 	}
 }
 
