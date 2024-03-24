@@ -46,22 +46,13 @@ void AbstractButton::handleEvent(Event *evt)
 			if (updateButtonState(pressed))
 			{
 				std::cout << "updated" << std::endl;
-				if (topView())
-				{
-					setChanged(VIEW_CHANGED_REDRAW);
-					/* Now ask for redrawing */
-					sendCommand(CMD_REDRAW);
-				}
-				else
-				{
-					/* Now ask for drawing */
-					sendCommand(CMD_DRAW);
-				}
+				setChanged(VIEW_CHANGED_REDRAW);
+				/* Now ask for redrawing */
+				sendCommand(CMD_REDRAW);
 				if (!pressed)
 					doAction();
 			}
 		}
-		evt->clear();
 	}
 }
 
