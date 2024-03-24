@@ -46,45 +46,14 @@ void ViewApplication::initMenu()
 
 void ViewApplication::handleEvent(Event *evt)
 {
-	// evt->print();
+	static unsigned i = 0;
 
-	if (evt->isEventCommand())
-	{
-		MessageEvent *msg = evt->getMessageEvent();
-		/*
-		 * All objects in the tree
-		 */
-		if (isCommandAny(msg))
-		{
-			switch (msg->command)
-			{
-			case CMD_REDRAW:
-				std::cout << "REDRAW CMD all" << std::endl;
-				reDraw();
-				evt->clear();
-				break;
+	std::cout << " ++++" << std::endl;
+	std::cout << i << " ## ViewApplication::handleEvent " << std::hex << this << std::dec << std::endl;
+	evt->print();
+	++i;
 
-			case CMD_DRAW:
-				std::cout << "DRAW CMD all" << std::endl;
-				draw();
-				evt->clear();
-				break;
-
-			case CMD_QUIT:
-				std::cout << "QUIT CMD all" << std::endl;
-				forEachExecuteCommand(msg);
-				VIEWLISTITFOR(it)
-				{
-					delete (*it);
-				}
-				viewList.clear();
-				actual = nullptr;
-				evt->clear();
-				break;
-			}
-		}
-	}
-	else if (evt->isEventKey())
+	if (evt->isEventKey())
 	{
 		KeybEvent *key = evt->getKeyDownEvent();
 		switch (key->keyCode)
