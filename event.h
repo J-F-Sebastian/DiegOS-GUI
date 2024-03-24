@@ -100,14 +100,18 @@ enum
 	CMD_MINIMIZE,
 	/* View will return to the original size */
 	CMD_RESTORE,
+	/* Zoom the view, toggling in or out depending on the present view state (zoomed or not) */
+	CMD_ZOOM,
 	/* A view is signalling an input event, data are ready to be handled */
 	CMD_INPUT,
 	/* A view is being moved around */
 	CMD_DRAGGING,
 	/* A view is being resized */
 	CMD_RESIZING,
-	/* Move the view to the top of the list */
+	/* Set the view in foreground */
 	CMD_FOREGROUND,
+	/* Set the view in background */
+	CMD_BACKGROUND,
 	/* Select a view */
 	CMD_SELECT,
 	/* Request the focus */

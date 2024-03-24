@@ -40,6 +40,9 @@ static const char *cmdToString(int cmd)
 	/* View will return to the original size */
 	case CMD_RESTORE:
 		return "RESTORE";
+	/* Zoom the view, toggling in or out depending on the present view state (zoomed or not) */
+	case CMD_ZOOM:
+		return "ZOOM";
 	/* A view is signalling an input event, data are ready to be handled */
 	case CMD_INPUT:
 		return "INPUT";
@@ -52,6 +55,9 @@ static const char *cmdToString(int cmd)
 	/* Move the view to the top of the list */
 	case CMD_FOREGROUND:
 		return "FOREGROUND";
+		/* Move the view to the top of the list */
+	case CMD_BACKGROUND:
+		return "BACKGROUND";
 	/* Select a view */
 	case CMD_SELECT:
 		return "SELECT";
