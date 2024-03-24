@@ -79,11 +79,11 @@ void ViewGroup::draw()
 			unsigned i = 0;
 
 			/*
-			 * Accumulate the exposed views, NOT including the foreground view.
+			 * Accumulate the exposed views
 			 */
 			forEachView([this, &i, storage](View *head)
 				    {
-					if ((head != listHead) && head->getState(VIEW_STATE_EXPOSED))
+					if (head->getState(VIEW_STATE_EXPOSED))
 						storage[i++] = head; });
 
 			/*
@@ -93,12 +93,6 @@ void ViewGroup::draw()
 			{
 				storage[i]->draw();
 			}
-
-			/*
-			 * Draw the foreground view LAST
-			 */
-			if (listHead && listHead->getState(VIEW_STATE_EXPOSED))
-				listHead->draw();
 
 			delete[] storage;
 		}
@@ -116,11 +110,11 @@ void ViewGroup::reDraw()
 			unsigned i = 0;
 
 			/*
-			 * Accumulate the exposed views, NOT including the foreground view.
+			 * Accumulate the exposed views
 			 */
 			forEachView([this, &i, storage](View *head)
 				    {
-					if ((head != listHead) && head->getState(VIEW_STATE_EXPOSED))
+					if (head->getState(VIEW_STATE_EXPOSED))
 						storage[i++] = head; });
 			/*
 			 * Redraw the accumulated views in reverse order
@@ -129,12 +123,6 @@ void ViewGroup::reDraw()
 			{
 				storage[i]->reDraw();
 			}
-
-			/*
-			 * Redraw the foreground view LAST
-			 */
-			if (listHead && listHead->getState(VIEW_STATE_EXPOSED))
-				listHead->reDraw();
 
 			delete[] storage;
 		}
