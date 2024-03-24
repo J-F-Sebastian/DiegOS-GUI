@@ -160,19 +160,13 @@ void ViewGroup::handleEvent(Event *evt)
 		if (getState(VIEW_STATE_FOCUSED))
 		{
 			KeybEvent *key = evt->getKeyDownEvent();
-			if (key->modifier == KBD_MOD_NONE)
+			if ((key->modifier & (KBD_MOD_ALT | KBD_MOD_CTRL | KBD_MOD_SHIFT)) == 0)
 			{
 				switch (key->keyCode)
 				{
 				case KBD_CODE_F5:
-					if (getResizeMode(VIEW_RESIZEABLE))
-					{
-						if (getResizeMode(VIEW_ZOOMED))
-							restore();
-						else
-							maximize();
+					if (executeCommand(CMD_ZOOM))
 						evt->clear();
-					}
 					break;
 				}
 			}
