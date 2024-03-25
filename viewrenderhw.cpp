@@ -31,11 +31,15 @@
 static SDL_Window *window = NULL;
 // The renderer
 static SDL_Renderer *renderer = NULL;
+// The texture format
+static Uint32 textureFormat = 0;
 // The font
 static TTF_Font *font = NULL;
 
 ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, yres, bitdepth)
 {
+	SDL_RendererInfo info;
+
 	// Initialize SDL
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
 	{
@@ -44,11 +48,57 @@ ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, 
 	}
 
 	// Create window
-	if (SDL_CreateWindowAndRenderer(xres, yres, 0, &window, &renderer))
-	// if (SDL_CreateWindowAndRenderer(xres, yres, SDL_WINDOW_FULLSCREEN, &window, &renderer))
+	window = SDL_CreateWindow("GUI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, xres, yres, SDL_WINDOW_OPENGL);
+	if (window == NULL)
+	// if (SDL_CreateWindowAndRenderer(xres, yres, 0, &window, &renderer))
+	//  if (SDL_CreateWindowAndRenderer(xres, yres, SDL_WINDOW_FULLSCREEN, &window, &renderer))
 	{
 		std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
 		return;
+	}
+
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (renderer == NULL)
+	{
+		std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+		SDL_DestroyWindow(window);
+		return;
+	}
+
+	if (SDL_GetRendererInfo(renderer, &info))
+	{
+		std::cout << "Could not get Renderer info! SDL_Error: " << SDL_GetError() << std::endl;
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+		return;
+	}
+
+	if ((info.flags & SDL_RENDERER_TARGETTEXTURE) == 0)
+	{
+		std::cout << "Renderer cannot render to textures!" << std::endl;
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+		return;
+	}
+
+	std::cout << "RENDERER: " << info.name << std::endl;
+	std::cout << "TEXTURE FORMATS: " << info.num_texture_formats << std::endl;
+	for (unsigned i = 0; i < info.num_texture_formats; i++)
+	{
+		std::cout << '(' << i << ')' << ' ' << SDL_GetPixelFormatName(info.texture_formats[i])
+			  << " pixel type " << SDL_PIXELTYPE(info.texture_formats[i])
+			  << " bits per pixel " << SDL_BITSPERPIXEL(info.texture_formats[i]);
+
+		if (textureFormat == 0)
+		{
+			if (SDL_BITSPERPIXEL(info.texture_formats[i]) == (Uint32)bitDepth)
+			{
+				textureFormat = info.texture_formats[i];
+				std::cout << " <---";
+			}
+		}
+
+		std::cout << std::endl;
 	}
 
 	// Initialize Font
@@ -253,6 +303,50 @@ void ViewRenderHW::clear(uint32_t color)
 {
 	union ARGBColor c;
 	toARGBColor(color, &c);
-	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(renderer,
+			       c.colorARGB.r,
+			       c.colorARGB.g,
+			       c.colorARGB.b,
+			       SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(renderer);
+}
+
+void *ViewRenderHW::createBuffer(const Rectangle &rect)
+{
+	SDL_Texture *texture = SDL_CreateTexture(renderer,
+						 textureFormat,
+						 SDL_TEXTUREACCESS_TARGET,
+						 rect.width(),
+						 rect.height());
+
+	if (texture)
+	{
+		if (SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE))
+		{
+			std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+			SDL_DestroyTexture(texture);
+			return NULL;
+		}
+	}
+	return (void *)texture;
+}
+
+void ViewRenderHW::releaseBuffer(const void *buffer)
+{
+	if (buffer)
+		SDL_DestroyTexture((SDL_Texture *)buffer);
+}
+
+void ViewRenderHW::setBuffer(const void *buffer)
+{
+	if (SDL_SetRenderTarget(renderer, (SDL_Texture *)buffer))
+		std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+}
+
+void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect)
+{
+	A_RECT;
+
+	if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, NULL, &srect))
+		std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 }

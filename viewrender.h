@@ -134,6 +134,55 @@ public:
 	 *  uint32_t color - the color to be used (bit depth depends on the renderer),
 	 */
 	virtual void clear(uint32_t color) = 0;
+	/*
+	 * Creates a buffer for rendering.
+	 * Callers can create as much buffers as they need - provided that there
+	 * is enough free memory to allocate buffers.
+	 * The renderer will use one buffer at a time, it can be set by invoking setBuffer().
+	 *
+	 * PARAMETER IN
+	 * Rectangle &rect - reference to a rectangle describing the area of the buffer,
+	 *                   it should match the extent of the object to be drawn.
+	 *                   rect is expected in the form of ((0,0), (width, height)).
+	 *
+	 * RETURN
+	 * A pointer to a buffer or NULL in case of failure.
+	 */
+	virtual void *createBuffer(const Rectangle &rect) = 0;
+	/*
+	 * Releases a buffer used for rendering.
+	 * NOTE: be sure to remove the buffer from the renderer by calling
+	 * setBuffer() with a different buffer or passing NULL.
+	 *
+	 * PARAMETER IN
+	 * const void *buffer - the buffer to be released.
+	 */
+	virtual void releaseBuffer(const void *buffer) = 0;
+	/*
+	 * Set a buffer for rendering.
+	 * Once a buffer is set, all drawing functions will refer to the buffer
+	 * as a destination, considering coordinates and sizes.
+	 * If the function is invoked passing NULL as parameter, the internal reference to
+	 * the buffer will point to the screen memory.
+	 * In this case all drawing will refer to the video buffer,
+	 * considering coordinates and sizes.
+	 * setBuffer() can be called multiple time to alternate buffers,
+	 * in order to draw to multiple buffers.
+	 *
+	 * PARAMETER IN
+	 * const void *buffer - the buffer to be used as drawing output.
+	 */
+	virtual void setBuffer(const void *buffer) = 0;
+	/*
+	 * Copy a buffer to the video memory.
+	 * If you are rendering to several buffers you must be sure to call
+	 * writeBuffer() for all of them before calling show().
+	 *
+	 * PARAMETER IN
+	 * const void *buffer - the buffer to be used as input for writing to video memory.
+	 * Rectangle &rect - reference to a rectangle describing the area of the buffer.
+	 */
+	virtual void writeBuffer(const void *buffer, const Rectangle &rect) = 0;
 
 protected:
 	ViewRender(int xres, int yres, int bitdepth) : xres(xres), yres(yres), bitDepth(bitdepth) {}

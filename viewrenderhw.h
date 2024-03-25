@@ -41,6 +41,10 @@ public:
 	virtual void drawBMP(void *bmp, const Rectangle &rect) override;
 	virtual void show(void) override;
 	virtual void clear(uint32_t color) override;
+	virtual void *createBuffer(const Rectangle &rect);
+	virtual void releaseBuffer(const void *buffer);
+	virtual void setBuffer(const void *buffer);
+	virtual void writeBuffer(const void *buffer, const Rectangle &rect) override;
 };
 
 #endif
