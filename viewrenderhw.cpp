@@ -23,9 +23,13 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
-// Yes a MACRO to avoid repeated adjustments ...
-#define A_RECT \
-	SDL_Rect srect = {.x = rect.ul.x, .y = rect.ul.y, .w = rect.width() + 1, .h = rect.height() + 1}
+static inline void to_SDL_Rect(const Rectangle &rect, SDL_Rect &srect)
+{
+	srect.x = rect.ul.x;
+	srect.y = rect.ul.y;
+	srect.w = rect.width();
+	srect.h = rect.height();
+}
 
 // The window we'll be rendering to
 static SDL_Window *window = NULL;
@@ -162,31 +166,31 @@ void ViewRenderHW::vline(const Point &a, int len, uint32_t color)
 
 void ViewRenderHW::rectangle(const Rectangle &rect, uint32_t color)
 {
-	A_RECT;
-
 	union ARGBColor c;
 	toARGBColor(color, &c);
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
 	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawRect(renderer, &srect);
 }
 
 void ViewRenderHW::filledRectangle(const Rectangle &rect, uint32_t color)
 {
-	A_RECT;
-
 	union ARGBColor c;
 	toARGBColor(color, &c);
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
 	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(renderer, &srect);
 }
 
 void ViewRenderHW::filledRectangle2(const Rectangle &rect, uint32_t colors[2])
 {
-	A_RECT;
-
 	union ARGBColor c[2];
 	toARGBColor(colors[0], &c[0]);
 	toARGBColor(colors[1], &c[1]);
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
 	SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawRect(renderer, &srect);
 	srect.x++;
@@ -215,13 +219,13 @@ void ViewRenderHW::textBox(const char *text, Rectangle &out)
 
 void ViewRenderHW::text(const Rectangle &rect, uint32_t color, const char *text)
 {
-	A_RECT;
-
 	if (!text)
 		return;
 
 	union ARGBColor c;
 	toARGBColor(color, &c);
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
 	SDL_Color clor;
 	clor.a = c.colorARGB.a;
 	clor.b = c.colorARGB.b;
@@ -237,13 +241,13 @@ void ViewRenderHW::text(const Rectangle &rect, uint32_t color, const char *text)
 
 void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text)
 {
-	A_RECT;
-
 	if (!text)
 		return;
 
 	union ARGBColor c;
 	toARGBColor(color, &c);
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
 	SDL_Color clor;
 	clor.a = c.colorARGB.a;
 	clor.b = c.colorARGB.b;
@@ -288,7 +292,8 @@ void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 
 	if (mybmp)
 	{
-		A_RECT;
+		SDL_Rect srect;
+		to_SDL_Rect(rect, srect);
 		SDL_RenderCopy(renderer, mybmp, NULL, &srect);
 	}
 }
