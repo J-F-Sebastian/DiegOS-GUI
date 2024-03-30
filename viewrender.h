@@ -175,14 +175,15 @@ public:
 	virtual void setBuffer(const void *buffer) = 0;
 	/*
 	 * Copy a buffer to the video memory.
-	 * If you are rendering to several buffers you must be sure to call
+	 * If you are rendering from several buffers you must be sure to call
 	 * writeBuffer() for all of them before calling show().
 	 *
 	 * PARAMETER IN
 	 * const void *buffer - the buffer to be used as input for writing to video memory.
-	 * Rectangle &rect - reference to a rectangle describing the area of the buffer.
+	 * Rectangle &rect - reference to a rectangle describing the area to be copied (inside the buffer).
+	 * Rectangle &vidmem - reference to a rectangle describing the area to be copied (inside the video memory).
 	 */
-	virtual void writeBuffer(const void *buffer, const Rectangle &rect) = 0;
+	virtual void writeBuffer(const void *buffer, const Rectangle &rect, const Rectangle &vidmem) = 0;
 
 protected:
 	ViewRender(int xres, int yres, int bitdepth) : xres(xres), yres(yres), bitDepth(bitdepth) {}

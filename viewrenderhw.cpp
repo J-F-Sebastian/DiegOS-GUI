@@ -365,10 +365,19 @@ void ViewRenderHW::setBuffer(const void *buffer)
 		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 }
 
-void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect)
+void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect, const Rectangle &vidmem)
 {
-	A_RECT;
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
+	SDL_Rect vrect;
+	to_SDL_Rect(vidmem, vrect);
 
-	if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, NULL, &srect))
-		std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+	if (buffer)
+	{
+		if (SDL_SetRenderTarget(renderer, NULL))
+			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
+
+		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
+			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
+	}
 }

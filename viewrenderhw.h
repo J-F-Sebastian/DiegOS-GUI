@@ -44,7 +44,7 @@ public:
 	virtual void *createBuffer(const Rectangle &rect);
 	virtual void releaseBuffer(const void *buffer);
 	virtual void setBuffer(const void *buffer);
-	virtual void writeBuffer(const void *buffer, const Rectangle &rect) override;
+	virtual void writeBuffer(const void *buffer, const Rectangle &rect, const Rectangle &vidmem) override;
 };
 
 #endif
