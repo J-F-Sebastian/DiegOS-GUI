@@ -101,7 +101,7 @@ void ViewGroup::draw()
 
 void ViewGroup::reDraw()
 {
-	if (getState(VIEW_STATE_EXPOSED) && getChanged(VIEW_CHANGED_REDRAW))
+	if (getChanged(VIEW_CHANGED_REDRAW))
 	{
 		// Draw children back-to-top, following the painter algorithm
 		if (listSize)
@@ -128,6 +128,10 @@ void ViewGroup::reDraw()
 		}
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
+}
+
+void ViewGroup::drawView()
+{
 }
 
 void ViewGroup::handleEvent(Event *evt)
@@ -350,8 +354,10 @@ bool ViewGroup::executeCommand(const uint16_t command, View *caller)
 			return true;
 
 		case CMD_REDRAW:
-			draw();
-			reDraw();
+			if (thisViewIsMine(caller))
+				caller->reDraw();
+			else
+				reDraw();
 			return true;
 
 		case CMD_REQ_FOCUS:

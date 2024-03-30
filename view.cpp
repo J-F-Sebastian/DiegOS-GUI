@@ -277,10 +277,34 @@ void View::clearChanged(unsigned char flags)
 		cflags &= ~flags;
 }
 
+void View::draw()
+{
+	Rectangle area;
+	Rectangle dest;
+
+	if (getParent() == nullptr)
+	{
+		area = extent;
+		dest = extent;
+	}
+	else
+	{
+		area = borders;
+		dest = borders;
+		makeGlobal(dest.ul);
+		makeGlobal(dest.lr);
+	}
+
+	GRenderer->writeBuffer(renderBuffer, area, dest);
+}
+
 void View::reDraw()
 {
 	if (getChanged(VIEW_CHANGED_REDRAW))
 	{
+		GRenderer->setBuffer(renderBuffer);
+		std::cout << std::hex << this << "  " << __FUNCSIG__ << std::endl;
+		drawView();
 		draw();
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}

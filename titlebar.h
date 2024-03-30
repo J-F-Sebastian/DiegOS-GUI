@@ -29,7 +29,7 @@ class TitleBar : public View
 public:
 	TitleBar(Rectangle &rect, const char *title);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 	virtual void handleEvent(Event *evt) override;
 

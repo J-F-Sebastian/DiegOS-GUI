@@ -34,11 +34,10 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
-void Frame::draw()
+void Frame::drawView()
 {
 	Rectangle viewRect;
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
@@ -139,8 +138,6 @@ bool Frame::isEventPositionInRange(Event *evt)
 	makeLocal(where);
 	getExtent(lims);
 
-	// lims.print();
-	// where.print();
 	/*
 	 * Our limits are different: where is in range if it falls inside the 2 rectangles
 	 * defining the borders of the frame.
@@ -155,7 +152,7 @@ bool Frame::isEventPositionInRange(Event *evt)
 	return false;
 }
 
-void Frame ::computeExposure()
+void Frame::computeExposure()
 {
 	Rectangle ext;
 	bool areaSet = true;

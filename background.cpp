@@ -27,13 +27,12 @@ Background::Background(Rectangle &rect) : View(rect)
 	setResizeMode(VIEW_RESIZEABLE);
 }
 
-void Background::draw()
+void Background::drawView()
 {
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 	unsigned color;
 
 	if (getState(VIEW_STATE_DISABLED))

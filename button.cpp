@@ -28,13 +28,12 @@ Button::Button(Rectangle &rect) : AbstractButton(rect)
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
-void Button::draw()
+void Button::drawView()
 {
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 	Rectangle temp(viewRect);
 
 	unsigned color, color2;

@@ -27,15 +27,14 @@ ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPe
 {
 }
 
-void ProgressBar::draw()
+void ProgressBar::drawView()
 {
 	unsigned color;
 	int pxcent;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
 	Rectangle viewRect;
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 
 	p->getPalette(PROGRESSBAR_BG, color);
 	r->filledRectangle(viewRect, color);

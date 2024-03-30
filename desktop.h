@@ -27,7 +27,7 @@ class Desktop : public View
 public:
 	explicit Desktop(Rectangle &rect);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 };
 
 #endif

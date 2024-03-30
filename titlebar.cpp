@@ -30,14 +30,13 @@ TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title
 	setResizeMode(VIEW_RESIZE_LX);
 }
 
-void TitleBar::draw()
+void TitleBar::drawView()
 {
 	unsigned color, color2;
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 
 	if (getState(VIEW_STATE_FOREGROUND))
 	{

@@ -27,7 +27,7 @@ class Button : public AbstractButton
 public:
 	explicit Button(Rectangle &rect);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 protected:
 	virtual void doAction(void);

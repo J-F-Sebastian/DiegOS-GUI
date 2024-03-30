@@ -43,6 +43,7 @@ public:
 
 	virtual void draw(void) override;
 	virtual void reDraw(void) override;
+	virtual void drawView(void) override;
 
 	virtual void handleEvent(Event *evt) override;
 	virtual bool executeCommand(const uint16_t command, View *caller = nullptr) override;

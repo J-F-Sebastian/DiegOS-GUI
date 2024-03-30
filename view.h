@@ -313,15 +313,25 @@ public:
 	void clearChanged(unsigned char flags);
 
 	/*
-	 * Draw the graphics of the view unconditionally.
-	 * The default method is null.
+	 * Draw the graphics of the view by rendering into renderBuffer.
+	 * If renderBuffer is NULL all rendering happens into the video buffer.
 	 */
-	virtual void draw(void) = 0;
+	virtual void drawView(void) = 0;
+
+	/*
+	 * Draw the graphics of the view by copying the renderBuffer
+	 * contents to the video memory.
+	 * In case the buffer is NULL, rendering output goes directly
+	 * in the video memory so no copy takes place.
+	 */
+	virtual void draw(void);
 
 	/*
 	 * Draw the graphics of the view if VIEW_CHANGED_REDRAW is set.
 	 * After drawing the view the flag is reset.
-	 * This method invokes draw().
+	 * Drawing use renderBuffer as target, if it is NULL then the
+	 * output goes to the video memory.
+	 * This method invokes drawView() and draw().
 	 */
 	virtual void reDraw(void);
 
@@ -663,6 +673,10 @@ private:
 	 * resize flags, state flags, option flags, changed flags
 	 */
 	unsigned char rflags, sflags, oflags, cflags;
+	/*
+	 * Rendering buffer, see viewrenderer.h
+	 */
+	void *renderBuffer;
 };
 
 #endif

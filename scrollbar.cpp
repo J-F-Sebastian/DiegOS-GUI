@@ -26,7 +26,7 @@ ScrollBar::ScrollBar(Rectangle &viewLimits) : View(viewLimits), refElements(1), 
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
-void ScrollBar::draw()
+void ScrollBar::drawView()
 {
 	Rectangle viewRect;
 	getExtent(viewRect);

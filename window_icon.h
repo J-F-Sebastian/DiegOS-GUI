@@ -27,7 +27,7 @@ class WindowIconClose : public AbstractButton
 public:
 	explicit WindowIconClose(Rectangle &rect);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 protected:
 	virtual void doAction(void) override;
@@ -38,7 +38,7 @@ class WindowIconZoom : public AbstractButton
 public:
 	explicit WindowIconZoom(Rectangle &rect);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 protected:
 	virtual void doAction(void) override;

@@ -27,7 +27,7 @@ class ProgressBar : public View
 public:
     ProgressBar(Rectangle &rect, bool showpercent);
 
-    virtual void draw(void) override;
+    virtual void drawView(void) override;
 
     virtual void handleEvent(Event *evt) override;
 

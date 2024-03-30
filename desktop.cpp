@@ -26,14 +26,13 @@ Desktop::Desktop(Rectangle &rect) : View(rect)
 {
 }
 
-void Desktop::draw()
+void Desktop::drawView()
 {
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_DESKTOP);
 	unsigned color;
-	getExtent(viewRect);
-	globalize(viewRect);
+	getBorders(viewRect);
 	p->getPalette(DESKTOP_BG, color);
 	r->filledRectangle(viewRect, color);
 }

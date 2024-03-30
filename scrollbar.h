@@ -29,7 +29,7 @@ public:
 
 	virtual void handleEvent(Event *evt) override;
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 	void setRefElements(unsigned newval);
 	void setRefSize(unsigned newval);

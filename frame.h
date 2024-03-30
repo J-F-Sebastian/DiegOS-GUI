@@ -33,7 +33,7 @@ public:
 
 	explicit Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
 
-	virtual void draw(void) override;
+	virtual void drawView(void) override;
 
 	virtual void handleEvent(Event *evt) override;
 
