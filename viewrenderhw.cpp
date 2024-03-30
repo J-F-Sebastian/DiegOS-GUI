@@ -309,6 +309,8 @@ void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 void ViewRenderHW::show()
 {
 	// Update the surface
+	if (SDL_SetRenderTarget(renderer, NULL))
+		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 	SDL_RenderPresent(renderer);
 }
 
