@@ -85,6 +85,14 @@ ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, 
 		return;
 	}
 
+	if (SDL_RenderTargetSupported(renderer) == SDL_FALSE)
+	{
+		std::cout << "Renderer cannot render to textures!" << std::endl;
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+		return;
+	}
+
 	std::cout << "RENDERER: " << info.name << std::endl;
 	std::cout << "TEXTURE FORMATS: " << info.num_texture_formats << std::endl;
 	for (unsigned i = 0; i < info.num_texture_formats; i++)
@@ -324,15 +332,19 @@ void *ViewRenderHW::createBuffer(const Rectangle &rect)
 						 rect.width(),
 						 rect.height());
 
-	if (texture)
+	if (texture == NULL)
 	{
-		if (SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE))
-		{
-			std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
-			SDL_DestroyTexture(texture);
-			return NULL;
-		}
+		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		return NULL;
 	}
+
+	if (SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE))
+	{
+		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		SDL_DestroyTexture(texture);
+		return NULL;
+	}
+
 	return (void *)texture;
 }
 
@@ -344,8 +356,11 @@ void ViewRenderHW::releaseBuffer(const void *buffer)
 
 void ViewRenderHW::setBuffer(const void *buffer)
 {
+	if (buffer == nullptr)
+		std::cout << __FUNCSIG__ << std::endl;
+
 	if (SDL_SetRenderTarget(renderer, (SDL_Texture *)buffer))
-		std::cout << "Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 }
 
 void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect)
