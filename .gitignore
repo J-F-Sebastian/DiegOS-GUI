@@ -1,5 +1,8 @@
 #ignore generated binaries
 build/*
+windows/*
+windowsdbg/*
+doxygen/*
 *.exe
 *.dll
 #ignore commodities like fonts and SDKs
