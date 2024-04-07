@@ -48,9 +48,7 @@ void ViewApplication::handleEvent(Event *evt)
 {
 	static unsigned i = 0;
 
-	std::cout << " ++++" << std::endl;
-	std::cout << i << " ## ViewApplication::handleEvent " << std::hex << this << std::dec << std::endl;
-	evt->print();
+	// evt->print();
 	++i;
 
 	if (evt->isEventKey())

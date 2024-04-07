@@ -303,7 +303,6 @@ void View::reDraw()
 	if (getChanged(VIEW_CHANGED_REDRAW))
 	{
 		GRenderer->setBuffer(renderBuffer);
-		std::cout << std::hex << this << "  " << __FUNCSIG__ << std::endl;
 		drawView();
 		draw();
 		clearChanged(VIEW_CHANGED_REDRAW);

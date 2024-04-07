@@ -87,7 +87,6 @@ void TitleBar::handleEvent(Event *evt)
 			else if (lastPressure != newPressure)
 			{
 				lastPressure = newPressure;
-				// std::cout << deltaPressure.x << " " << deltaPressure.y << std::endl;
 
 				getParent()->moveLocation(deltaPressure);
 				/* Now ask for redrawing */

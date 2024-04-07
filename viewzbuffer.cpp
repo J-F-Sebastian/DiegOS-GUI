@@ -32,8 +32,8 @@ void ViewZBuffer::configure(Rectangle &mainscreen)
 
 	if (buffer)
 		delete buffer;
+
 	buffer = new uint8_t[screen.width() * screen.height()];
-	// std::cout << "SIZE" << screen.width() * screen.height() << std::endl;
 	memset(buffer, 0, screen.width() * screen.height());
 }
 

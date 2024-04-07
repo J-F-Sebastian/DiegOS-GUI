@@ -29,8 +29,6 @@ AbstractButton::AbstractButton(Rectangle &rect) : View(rect), buttonIsDown(false
 
 void AbstractButton::handleEvent(Event *evt)
 {
-	std::cout << "AbstractButton::handleEvent " << std::hex << this << std::dec << std::endl;
-
 	View::handleEvent(evt);
 
 	if (isEventPositionValid(evt))
@@ -42,10 +40,8 @@ void AbstractButton::handleEvent(Event *evt)
 		if (!evt->testPositionalEventStatus(POS_EVT_DRAG))
 		{
 			bool pressed = (evt->testPositionalEventStatus(POS_EVT_PRESSED) && evt->testPositionalEventPos(POS_EVT_LEFT));
-			std::cout << pressed << std::endl;
 			if (updateButtonState(pressed))
 			{
-				std::cout << "updated" << std::endl;
 				setChanged(VIEW_CHANGED_REDRAW);
 				/* Now ask for redrawing */
 				sendCommand(CMD_REDRAW);
