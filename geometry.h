@@ -250,6 +250,11 @@ public:
 		return ((ul == other.ul) && (lr == other.lr)) ? true : false;
 	}
 
+	inline bool operator!=(const Rectangle &other)
+	{
+		return !((*this) == other);
+	}
+
 	inline Rectangle &operator=(const Rectangle &other)
 	{
 		ul = other.ul;
