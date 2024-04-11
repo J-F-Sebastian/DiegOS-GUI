@@ -32,13 +32,16 @@ void ViewExec::run()
 {
 	Event event;
 
-	setState(VIEW_STATE_EVLOOP);
-	sendCommand(CMD_DRAW);
+	reDraw();
 
 	while (getState(VIEW_STATE_EVLOOP))
 	{
 		while (evtM->wait(&event, 1000))
+		{
 			handleEvent(&event);
+			if (!event.isEventUnknown())
+				std::cout << " ERROR !!!" << std::endl;
+		}
 	}
 }
 
