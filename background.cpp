@@ -32,7 +32,7 @@ void Background::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
-	getBorders(viewRect);
+	getExtent(viewRect);
 	unsigned color;
 
 	if (getState(VIEW_STATE_DISABLED))

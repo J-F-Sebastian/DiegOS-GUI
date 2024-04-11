@@ -37,7 +37,7 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
 void Frame::drawView()
 {
 	Rectangle viewRect;
-	getBorders(viewRect);
+	getExtent(viewRect);
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);

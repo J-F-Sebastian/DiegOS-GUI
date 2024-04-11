@@ -30,7 +30,6 @@ void ScrollBar::drawView()
 {
 	Rectangle viewRect;
 	getExtent(viewRect);
-	globalize(viewRect);
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);

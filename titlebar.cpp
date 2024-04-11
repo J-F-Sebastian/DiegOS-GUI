@@ -36,7 +36,7 @@ void TitleBar::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
-	getBorders(viewRect);
+	getExtent(viewRect);
 
 	if (getState(VIEW_STATE_FOREGROUND))
 	{

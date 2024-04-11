@@ -33,7 +33,7 @@ void WindowIconClose::drawView()
 	Rectangle viewRect;
 	ViewRender *renderer = GRenderer;
 	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-	getBorders(viewRect);
+	getExtent(viewRect);
 
 	unsigned color, color2;
 	palette->getPalette(WINICON_BRIGHT, color);
@@ -124,7 +124,7 @@ void WindowIconZoom::drawView()
 	Rectangle viewRect;
 	ViewRender *renderer = GRenderer;
 	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-	getBorders(viewRect);
+	getExtent(viewRect);
 
 	unsigned color, color2;
 	palette->getPalette(WINICON_BRIGHT, color);

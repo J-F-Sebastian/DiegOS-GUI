@@ -32,7 +32,7 @@ void Desktop::drawView()
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_DESKTOP);
 	unsigned color;
-	getBorders(viewRect);
+	getExtent(viewRect);
 	p->getPalette(DESKTOP_BG, color);
 	r->filledRectangle(viewRect, color);
 }
