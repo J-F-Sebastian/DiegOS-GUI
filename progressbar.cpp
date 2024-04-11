@@ -67,8 +67,8 @@ void ProgressBar::handleEvent(Event *evt)
 				setChanged(VIEW_CHANGED_REDRAW);
 				/* Now ask for redrawing */
 				sendCommand(CMD_REDRAW);
-				evt->clear();
 			}
+			evt->clear();
 		}
 	}
 }
