@@ -22,6 +22,8 @@
 #include "background.h"
 #include "event_keyboard.h"
 
+#include <iostream>
+
 ViewExec::ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewGroup(limits, parent), evtM(evt)
 {
 	clearOptions(VIEW_OPT_ALL);
@@ -61,6 +63,7 @@ void ViewExec::reDraw()
 {
 	if (getState(VIEW_STATE_EVLOOP))
 	{
+		GRenderer->clear(0);
 		GZBuffer->clear();
 		computeExposure();
 		ViewGroup::reDraw();
@@ -91,7 +94,6 @@ void ViewExec::handleEvent(Event *evt)
 				// ViewGroup will take care of this
 				sendCommand(CMD_CLOSE, this, actual);
 				evt->clear();
-				return;
 			}
 			break;
 		}

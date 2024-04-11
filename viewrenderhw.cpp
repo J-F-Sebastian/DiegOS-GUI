@@ -97,7 +97,7 @@ ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, 
 	std::cout << "TEXTURE FORMATS: " << info.num_texture_formats << std::endl;
 	for (unsigned i = 0; i < info.num_texture_formats; i++)
 	{
-		std::cout << '(' << i << ')' << ' ' << SDL_GetPixelFormatName(info.texture_formats[i])
+		std::cout << '(' << i << ')' << ' ' << SDL_GetPixelFormatName(info.texture_formats[i]) << std::hex << " Hex " << info.texture_formats[i] << std::dec
 			  << " pixel type " << SDL_PIXELTYPE(info.texture_formats[i])
 			  << " bits per pixel " << SDL_BITSPERPIXEL(info.texture_formats[i]);
 
@@ -240,11 +240,16 @@ void ViewRenderHW::text(const Rectangle &rect, uint32_t color, const char *text)
 	clor.g = c.colorARGB.g;
 	clor.r = c.colorARGB.r;
 
+#if 1
 	SDL_Surface *surface = TTF_RenderText_Solid(font, text, clor);
 	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
+	//	SDL_Texture *temp = SDL_GetRenderTarget(renderer);
+	//	SDL_SetRenderTarget(renderer, NULL);
 	SDL_RenderCopy(renderer, message, NULL, &srect);
+	//	SDL_SetRenderTarget(renderer, temp);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(message);
+#endif
 }
 
 void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text)
@@ -311,6 +316,7 @@ void ViewRenderHW::show()
 	// Update the surface
 	if (SDL_SetRenderTarget(renderer, NULL))
 		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+
 	SDL_RenderPresent(renderer);
 }
 
@@ -377,7 +383,8 @@ void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect, const 
 		if (SDL_SetRenderTarget(renderer, NULL))
 			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 
-		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
+		// if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
+		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, NULL, &vrect))
 			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 	}
 }

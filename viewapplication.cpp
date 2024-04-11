@@ -66,7 +66,7 @@ void ViewApplication::handleEvent(Event *evt)
 				 */
 				while (evtM->wait(&event, 100))
 					handleEvent(&event);
-				draw();
+				// draw();
 				clearState(VIEW_STATE_EVLOOP);
 			}
 			break;

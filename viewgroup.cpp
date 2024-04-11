@@ -143,8 +143,6 @@ void ViewGroup::drawView()
 
 void ViewGroup::handleEvent(Event *evt)
 {
-	std::cout << "ViewGroup::handleEvent " << std::hex << this << std::dec << std::endl;
-
 	View::handleEvent(evt);
 
 	/* If the event is positional, look for a view including the event in its
