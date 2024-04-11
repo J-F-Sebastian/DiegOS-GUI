@@ -77,8 +77,6 @@ void TitleBar::handleEvent(Event *evt)
 		else if (checkAll(status, POS_EVT_PRESSED | POS_EVT_DRAG))
 		{
 			Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-			Point deltaPressure(newPressure);
-			deltaPressure -= lastPressure;
 			if (!getParent()->getState(VIEW_STATE_DRAGGING))
 			{
 				lastPressure = newPressure;
@@ -86,11 +84,13 @@ void TitleBar::handleEvent(Event *evt)
 			}
 			else if (lastPressure != newPressure)
 			{
+				Point deltaPressure(newPressure);
+				deltaPressure -= lastPressure;
 				lastPressure = newPressure;
 
 				getParent()->moveLocation(deltaPressure);
 				/* Now ask for redrawing */
-				sendCommand(CMD_DRAW);
+				sendCommand(CMD_REDRAW);
 			}
 		}
 		else if (getParent()->getState(VIEW_STATE_DRAGGING))
@@ -98,7 +98,6 @@ void TitleBar::handleEvent(Event *evt)
 			/* Reset dragging */
 			getParent()->clearState(VIEW_STATE_DRAGGING);
 		}
-		evt->clear();
 	}
 }
 
