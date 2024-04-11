@@ -150,7 +150,7 @@ public:
 	 * Point &min - minimum width and height
 	 * Point &max - maximum width and height
 	 */
-	virtual void sizeLimits(Point &min, Point &max);
+	void sizeLimits(Point &min, Point &max);
 
 	/*
 	 * Validate the new location coordinates stored in loc
@@ -202,9 +202,9 @@ public:
 	 * both vertical and horizontal lines.
 	 *
 	 * PARAMETERS OUT
-	 * Rectangle &extent - reference to a Rectangle set to the extents of the view
+	 * Rectangle &extnt - reference to a Rectangle set to the extents of the view
 	 */
-	void getExtent(Rectangle &extent);
+	void getExtent(Rectangle &extnt);
 
 	/*
 	 * Copy borders into rect.

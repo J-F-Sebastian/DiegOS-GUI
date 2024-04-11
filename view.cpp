@@ -89,32 +89,24 @@ void View::getOrigin(Point &origin) const
 	origin = borders.ul;
 }
 
-void View::getExtent(Rectangle &extent)
+void View::getExtent(Rectangle &extnt)
 {
-	extent = this->extent;
+	extnt = extent;
 }
 
 void View::localize(Rectangle &rect)
 {
-	Point p = rect.ul;
-
 	/* Make coordinates local, relative to this view */
-	makeLocal(p);
-	rect.lr -= rect.ul;
-	rect.ul = p;
-	rect.lr += p;
 	/* FIXME: Should perform clipping ? */
+	makeLocal(rect.ul);
+	makeLocal(rect.lr);
 }
 
 void View::globalize(Rectangle &rect)
 {
-	Point p = rect.ul;
-
 	/* Make coordinates global, relative to the root view */
-	makeGlobal(p);
-	rect.lr -= rect.ul;
-	rect.ul = p;
-	rect.lr += p;
+	makeGlobal(rect.ul);
+	makeGlobal(rect.lr);
 }
 
 void View::setParent(View *par)
