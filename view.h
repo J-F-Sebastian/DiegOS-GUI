@@ -374,7 +374,24 @@ public:
 	 */
 	virtual void computeExposure(void);
 
+	/*
+	 * Try to get the focus to this view.
+	 * If the view is selectable, and selection is successful, then grab the focus
+	 * and set the corresponding state.
+	 *
+	 * RETURN
+	 * true if the focus is acquired (or the view was already focused)
+	 * false if the focus cannot be granted, or the view cannot be selected
+	 */
 	bool focus(void);
+
+	/*
+	 * Select the view by recursive executing a command within the parent's context.
+	 *
+	 * RETURN
+	 * true if the backwards selection was successful, so the top View has a path to this view
+	 * false if it is not possible to link the top View and this view
+	 */
 	bool select(void);
 
 	/*

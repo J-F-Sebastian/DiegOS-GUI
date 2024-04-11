@@ -245,7 +245,7 @@ void View::setChanged(unsigned char flags)
 	if (flags & CVALIDATE)
 	{
 		cflags |= flags;
-		if (!getState(VIEW_STATE_EVLOOP) && getParent())
+		if (/*!getState(VIEW_STATE_EVLOOP) && */ getParent())
 			getParent()->setChanged(flags);
 	}
 }
@@ -288,20 +288,37 @@ void View::reDraw()
 
 void View::handleEvent(Event *evt)
 {
+	/*
+	 * Mouse or touch event
+	 */
 	if (isEventPositional(evt))
 	{
-		if (evt->testPositionalEventStatus(POS_EVT_PRESSED))
+		/*
+		 * Pressure detected and view NOT focused yet
+		 */
+		if (evt->testPositionalEventStatus(POS_EVT_PRESSED) && !getState(VIEW_STATE_FOCUSED))
 		{
-			MessageEvent cmd = {CMD_REQ_FOCUS, 0, this, this, getParent(), {0, 0, 0, 0}};
-			if (!executeCommand(&cmd))
-				evt->clear();
+			if (getParent())
+			{
+				if (getParent()->executeCommand(CMD_REQ_FOCUS, this))
+					if (focus())
+						sendCommand(CMD_REDRAW);
+			}
+			else
+			{
+				if (focus())
+					sendCommand(CMD_REDRAW);
+			}
 		}
 	}
 	else if (evt->isEventCommand())
 	{
-		executeCommand(evt->getMessageEvent());
-		if (isCommandForMe(evt->getMessageEvent()))
-			evt->clear();
+		MessageEvent *me = evt->getMessageEvent();
+		if (isCommandForMe(me))
+		{
+			if (executeCommand(me->command /*, reinterpret_cast<View *>(me->senderObject)*/))
+				evt->clear();
+		}
 	}
 }
 
@@ -339,8 +356,6 @@ bool View::validateCommand(const uint16_t command)
 	case CMD_DRAW:
 	/* FALLTHRU */
 	case CMD_REDRAW:
-		/* FALLTHRU */
-	case CMD_REQ_FOCUS:
 	/* FALLTHRU */
 	case CMD_REL_FOCUS:
 	/* FALLTHRU */
@@ -469,26 +484,27 @@ bool View::focus()
 
 	if (!getState(VIEW_STATE_EVLOOP))
 	{
-		if (!getState(VIEW_STATE_SELECTED))
+		if (select())
 		{
-			if (select())
-			{
-				setState(VIEW_STATE_FOCUSED);
-				return true;
-			}
-
-			return false;
+			setState(VIEW_STATE_FOCUSED);
+			// sendCommand(CMD_DRAW);
+			return true;
 		}
 	}
 
-	return true;
+	return false;
 }
 
 bool View::select()
 {
-	if (!getOptions(VIEW_OPT_SELECTABLE) || getState(VIEW_STATE_SELECTED))
+	if (!getOptions(VIEW_OPT_SELECTABLE))
 		return false;
 
+	if (getParent())
+	{
+		if (!getParent()->executeCommand(CMD_SELECT, this))
+			return false;
+	}
 	setState(VIEW_STATE_SELECTED);
 
 	return true;
