@@ -25,7 +25,7 @@
 ViewExec::ViewExec(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewGroup(limits, parent), evtM(evt)
 {
 	clearOptions(VIEW_OPT_ALL);
-	setState(VIEW_STATE_FOCUSED | VIEW_STATE_SELECTED);
+	setState(VIEW_STATE_SELECTED | VIEW_STATE_EVLOOP | VIEW_STATE_FOCUSED);
 }
 
 void ViewExec::run()
