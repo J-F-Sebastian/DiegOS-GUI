@@ -20,10 +20,12 @@
 
 #include "viewgroup.h"
 #include "viewzbuffer.h"
+#include "viewinstances.h"
 
 ViewGroup::ViewGroup(Rectangle &limits, View *parent) : View(limits, parent), lastLimits(limits), actual(nullptr), listHead(nullptr), listSize(0), lastrflags(0)
 {
 	setOptions(VIEW_OPT_SELECTABLE);
+	updateRenderBuffer();
 }
 
 ViewGroup::~ViewGroup()
@@ -48,6 +50,11 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	if (getResizeMode(VIEW_ZOOMED))
 		return false;
 
+	getBorders(update);
+
+	if (update == loc)
+		return true;
+
 	sizeLimits(min, max);
 	if ((loc.width() > max.x) ||
 	    (loc.width() < min.x) ||
@@ -55,7 +62,6 @@ bool ViewGroup::setLocation(const Rectangle &loc)
 	    (loc.height() < min.y))
 		return false;
 
-	getBorders(update);
 	delta.x = loc.width() - update.width();
 	delta.y = loc.height() - update.height();
 	setBorders(loc);
@@ -81,13 +87,14 @@ void ViewGroup::draw()
 			/*
 			 * Accumulate the exposed views
 			 */
-			forEachView([this, &i, storage](View *head)
+			forEachView([&i, storage](View *head)
 				    {
 					if (head->getState(VIEW_STATE_EXPOSED))
 						storage[i++] = head; });
 
 			/*
-			 * Draw the accumulated views in reverse order
+			 * Draw the accumulated views in reverse order.
+			 * Owner buffer is automatically used by views.
 			 */
 			while (i--)
 			{
@@ -523,14 +530,14 @@ void ViewGroup::forEachExecuteCommand(MessageEvent *cmd)
 
 void ViewGroup::setForeground()
 {
-	setState(VIEW_STATE_FOREGROUND);
+	View::setForeground();
 	forEachView([](View *head)
 		    { head->setForeground(); });
 }
 
 void ViewGroup::setBackground()
 {
-	clearState(VIEW_STATE_FOREGROUND);
+	View::setBackground();
 	forEachView([](View *head)
 		    { head->setBackground(); });
 }
@@ -690,8 +697,6 @@ bool ViewGroup::selectView(View *target)
 
 void ViewGroup::toForeground(View *target)
 {
-	target->setForeground();
-
 	if (listHead != target)
 	{
 		/*
@@ -715,8 +720,10 @@ void ViewGroup::toForeground(View *target)
 		listHead = target;
 	}
 
+	target->setForeground();
+
 	/* Now ask for redrawing */
-	sendCommand(CMD_DRAW);
+	sendCommand(CMD_REDRAW);
 }
 
 void ViewGroup::toBackground(View *target)
@@ -727,7 +734,7 @@ void ViewGroup::toBackground(View *target)
 	target->setBackground();
 
 	/* Now ask for redrawing */
-	sendCommand(CMD_DRAW);
+	sendCommand(CMD_REDRAW);
 }
 
 void ViewGroup::maximize()
@@ -737,6 +744,7 @@ void ViewGroup::maximize()
 
 	if (getParent())
 	{
+
 		getBorders(lastLimits);
 		Rectangle max;
 		getParent()->getExtent(max);
@@ -744,7 +752,7 @@ void ViewGroup::maximize()
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
-		sendCommand(CMD_DRAW);
+		sendCommand(CMD_REDRAW);
 	}
 }
 
@@ -756,7 +764,7 @@ void ViewGroup::minimize()
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
 	/* Now ask for redrawing */
-	sendCommand(CMD_DRAW);
+	sendCommand(CMD_REDRAW);
 }
 
 void ViewGroup::restore()
@@ -768,7 +776,7 @@ void ViewGroup::restore()
 	setResizeMode(lastrflags);
 	setLocation(lastLimits);
 	/* Now ask for redrawing */
-	sendCommand(CMD_DRAW);
+	sendCommand(CMD_REDRAW);
 }
 
 bool ViewGroup::thisViewIsMine(View *who)

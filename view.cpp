@@ -28,14 +28,18 @@ View::View(Rectangle &limits, View *parent) : parentView(parent),
 					      rflags(0),
 					      sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
 					      oflags(0),
-					      cflags(VIEW_CHANGED_REDRAW)
+					      cflags(VIEW_CHANGED_REDRAW),
+					      renderBuffer(nullptr)
 {
+	updateRenderBuffer();
 }
 
 View::~View()
 {
 	parentView = nullptr;
 	nextView = nullptr;
+	if (renderBuffer)
+		GRenderer->releaseBuffer(renderBuffer);
 }
 
 void View::sizeLimits(Point &min, Point &max)
@@ -271,23 +275,20 @@ void View::clearChanged(unsigned char flags)
 
 void View::draw()
 {
-	Rectangle area;
 	Rectangle dest;
 
 	if (getParent() == nullptr)
 	{
-		area = extent;
 		dest = extent;
 	}
 	else
 	{
-		area = borders;
 		dest = borders;
 		makeGlobal(dest.ul);
 		makeGlobal(dest.lr);
 	}
 
-	GRenderer->writeBuffer(renderBuffer, area, dest);
+	GRenderer->writeBuffer(renderBuffer, extent, dest);
 }
 
 void View::reDraw()
@@ -296,9 +297,9 @@ void View::reDraw()
 	{
 		GRenderer->setBuffer(renderBuffer);
 		drawView();
-		draw();
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
+	draw();
 }
 
 void View::handleEvent(Event *evt)
@@ -527,8 +528,20 @@ bool View::select()
 
 void View::setBorders(const Rectangle &newrect)
 {
-	borders = newrect;
+	bool change = false;
+
+	if (borders != newrect)
+	{
+		change = true;
+		borders = newrect;
+	}
+
 	extent.lr = Point(borders.width() - 1, borders.height() - 1);
+	if (change)
+	{
+		setChanged(VIEW_CHANGED_REDRAW);
+		updateRenderBuffer();
+	}
 }
 
 void View::getBorders(Rectangle &rect)
@@ -587,11 +600,13 @@ void View::setExposed(bool exposed)
 void View::setForeground()
 {
 	setState(VIEW_STATE_FOREGROUND);
+	setChanged(VIEW_CHANGED_REDRAW);
 }
 
 void View::setBackground()
 {
 	clearState(VIEW_STATE_FOREGROUND);
+	setChanged(VIEW_CHANGED_REDRAW);
 }
 
 View *View::topView()
@@ -606,4 +621,12 @@ View *View::topView()
 	}
 
 	return top;
+}
+
+void View::updateRenderBuffer()
+{
+	if (renderBuffer)
+		GRenderer->releaseBuffer(renderBuffer);
+
+	renderBuffer = GRenderer->createBuffer(extent);
 }

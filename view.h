@@ -650,6 +650,8 @@ protected:
 
 	View *topView(void);
 
+	void updateRenderBuffer(void);
+
 private:
 	/*
 	 * The parent or Owner of this view, can be nullptr
