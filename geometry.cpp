@@ -261,5 +261,5 @@ void Rectangle::print()
 	ul.print();
 	std::cout << "LR ";
 	lr.print();
-	std::cout << "WIDTH " << width() << " HEIGHT " << height() << std::endl;
+	std::cout << "W " << width() << " H " << height() << std::endl;
 }
