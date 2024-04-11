@@ -558,18 +558,18 @@ void View::makeLocal(Point &origin)
 {
 	if (parentView)
 	{
+		origin -= parentView->borders.ul;
 		parentView->makeLocal(origin);
 	}
-	origin -= borders.ul;
 }
 
 void View::makeGlobal(Point &origin)
 {
 	if (parentView)
 	{
+		origin += parentView->borders.ul;
 		parentView->makeGlobal(origin);
 	}
-	origin += borders.ul;
 }
 
 void View::setExposed(bool exposed)
