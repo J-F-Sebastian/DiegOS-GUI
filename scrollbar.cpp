@@ -89,7 +89,8 @@ void ScrollBar::handleEvent(Event *evt)
 				computeAttributes();
 				lastPressure = newPressure;
 				/* Now ask for redrawing of the parent */
-				sendCommand(CMD_DRAW, getParent(), this);
+				setChanged(VIEW_CHANGED_REDRAW);
+				sendCommand(CMD_REDRAW, getParent(), this);
 			}
 			evt->clear();
 		}
