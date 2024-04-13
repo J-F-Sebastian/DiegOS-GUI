@@ -26,10 +26,14 @@
 #include "titlebar.h"
 #include "background.h"
 
-Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent), wFlags(ctrlflags), isZoomed(false)
+Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent),
+												  wFlags(ctrlflags),
+												  isZoomed(false),
+												  frame(extent)
 {
 	setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
 	setResizeMode(VIEW_RESIZEABLE);
+	setGfx(VIEW_GFX_FRAMED);
 
 	View *tmpView = nullptr;
 	Rectangle ext;
@@ -58,11 +62,23 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	insert(tmpView);
 
 	getExtent(ext);
-	tmpView = new Frame(ext);
-	insert(tmpView);
+	makeGlobal(ext.ul);
+	makeGlobal(ext.lr);
+	frame.setExtent(ext);
 
+	getExtent(ext);
 	ext.zoom(-4, -4);
 	ext.ul.move(0, 25);
 	tmpView = new Background(ext);
 	insert(tmpView);
+}
+
+void Window::draw()
+{
+	Rectangle ext = extent;
+	makeGlobal(ext.ul);
+	makeGlobal(ext.lr);
+	frame.setExtent(ext);
+	frame.draw(nullptr);
+	ViewGroup::draw();
 }

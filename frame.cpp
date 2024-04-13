@@ -23,22 +23,32 @@
 #include "frame.h"
 #include "frame_palette.h"
 
-Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect), style(style), width(width)
+Frame::Frame(Rectangle &extent, unsigned width, enum FrameStyle style) : extent(extent), style(style), width(width)
 {
 	if (style == FRAME_BEVELLED)
 	{
 		if (width < 5)
 			width = 5;
 	}
-	setResizeMode(VIEW_RESIZEABLE);
-	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
-void Frame::draw()
+void Frame::setExtent(Rectangle &extent)
 {
-	Rectangle viewRect;
-	getExtent(viewRect);
-	globalize(viewRect);
+	this->extent = extent;
+}
+
+void Frame::setWidth(unsigned pix)
+{
+	width = pix;
+	if (style == FRAME_BEVELLED)
+	{
+		if (width < 5)
+			width = 5;
+	}
+}
+
+void Frame::draw(void *buffer)
+{
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
@@ -48,13 +58,13 @@ void Frame::draw()
 		p->getPalette(FRAME_MAIN, color);
 		for (unsigned i = 0; i < width; i++)
 		{
-			r->rectangle(viewRect, color);
-			viewRect.zoom(-1, -1);
+			r->rectangle(extent, color);
+			extent.zoom(-1, -1);
 		}
 	}
 	else if (style == FRAME_BEVELLED)
 	{
-		Rectangle temp(viewRect);
+		Rectangle temp(extent);
 
 		p->getPalette(FRAME_BRIGHT, color);
 		p->getPalette(FRAME_DARK, color2);
@@ -121,70 +131,4 @@ void Frame::draw()
 		ul.move(-temp.width(), temp.height() - 1);
 		r->hline(ul, temp.width() - 1, color);
 	}
-}
-
-void Frame::handleEvent(Event *evt)
-{
-	View::handleEvent(evt);
-}
-
-bool Frame::isEventPositionInRange(Event *evt)
-{
-	/*
-	 * I am somewhat different ...
-	 */
-	Rectangle lims;
-	Point where(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-
-	makeLocal(where);
-	getExtent(lims);
-
-	// lims.print();
-	// where.print();
-	/*
-	 * Our limits are different: where is in range if it falls inside the 2 rectangles
-	 * defining the borders of the frame.
-	 */
-	if (lims.includes(where))
-	{
-		lims.zoom(-(int)width, -(int)width);
-		if (!lims.includes(where))
-			return true;
-	}
-
-	return false;
-}
-
-void Frame ::computeExposure()
-{
-	Rectangle ext;
-	bool areaSet = true;
-
-	getExtent(ext);
-
-	{
-		Rectangle temp(0, 0, ext.width(), width);
-		globalize(temp);
-
-		areaSet = areaSet && GZBuffer->isAreaSet(temp);
-		GZBuffer->set(temp);
-
-		temp.move(0, ext.height() - width);
-		areaSet = areaSet && GZBuffer->isAreaSet(temp);
-		GZBuffer->set(temp);
-	}
-
-	{
-		Rectangle temp(0, width, width, ext.height() - width);
-		globalize(temp);
-
-		areaSet = areaSet && GZBuffer->isAreaSet(temp);
-		GZBuffer->set(temp);
-
-		temp.move(ext.width() - width, 0);
-		areaSet = areaSet && GZBuffer->isAreaSet(temp);
-		GZBuffer->set(temp);
-	}
-
-	setExposed(!areaSet);
 }

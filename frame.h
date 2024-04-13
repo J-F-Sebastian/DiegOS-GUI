@@ -20,30 +20,27 @@
 #ifndef _FRAME_H_
 #define _FRAME_H_
 
-#include "view.h"
-
-class Frame : public View
+#include "geometry.h"
+class Frame
 {
 public:
 	enum FrameStyle
 	{
 		FRAME_BEVELLED,
-		FRAME_FLAT,
+		FRAME_FLAT
 	};
 
-	explicit Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
+	Frame(Rectangle &rect, unsigned width = 5, enum FrameStyle style = FRAME_BEVELLED);
 
-	virtual void draw(void) override;
+	void setExtent(Rectangle &extent);
+	void setWidth(unsigned pix);
 
-	virtual void handleEvent(Event *evt) override;
-
-	virtual bool isEventPositionInRange(Event *evt) override;
-
-	void computeExposure() override;
+	void draw(void *buffer);
 
 private:
 	enum FrameStyle style;
 	unsigned width;
+	Rectangle extent;
 };
 
 #endif

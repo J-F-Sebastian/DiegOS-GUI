@@ -21,6 +21,7 @@
 #define _WINDOW_H_
 
 #include "viewgroup.h"
+#include "frame.h"
 
 /*
  * Window control flags.
@@ -44,6 +45,8 @@ class Window : public ViewGroup
 public:
 	Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags = WINDOW_DEFAULT);
 
+	virtual void draw(void) override;
+
 protected:
 	bool canMove() { return (wFlags & WINDOW_MOVE) ? true : false; }
 	bool canGrow() { return (wFlags & WINDOW_GROW) ? true : false; }
@@ -53,6 +56,7 @@ protected:
 private:
 	unsigned char wFlags;
 	bool isZoomed;
+	Frame frame;
 };
 
 #endif
