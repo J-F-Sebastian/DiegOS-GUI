@@ -29,6 +29,7 @@ View::View(Rectangle &limits, View *parent) : parentView(parent),
 					      sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
 					      oflags(0),
 					      cflags(VIEW_CHANGED_REDRAW),
+					      gflags(VIEW_GFX_SOLID)
 {
 }
 
@@ -275,6 +276,41 @@ void View::clearChanged(unsigned char flags)
 {
 	if (flags & CVALIDATE)
 		cflags &= ~flags;
+}
+
+void View::setGfx(unsigned char flags)
+{
+	if (flags & VIEW_GFX_ALL)
+	{
+		gflags |= flags;
+	}
+}
+
+bool View::getGfx(unsigned char flags) const
+{
+	if (gflags & flags)
+		return true;
+	else
+		return false;
+}
+
+bool View::getGfxAll(unsigned char flags) const
+{
+	if ((gflags & flags) == flags)
+		return true;
+	else
+		return false;
+}
+
+unsigned char View::getGfx() const
+{
+	return gflags;
+}
+
+void View::clearGfx(unsigned char flags)
+{
+	if (gflags & VIEW_GFX_ALL)
+		gflags &= ~flags;
 }
 
 void View::reDraw()

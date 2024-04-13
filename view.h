@@ -113,6 +113,22 @@ enum
 };
 
 /*
+ * Graphic flags, used to decorate the view with specific graphical properties.
+ */
+enum
+{
+	/* View is framed */
+	VIEW_GFX_FRAMED = (1 << 0),
+	/* View has solid colors, no blending */
+	VIEW_GFX_SOLID = (1 << 1),
+	/* View loads a background image */
+	VIEW_GFX_BGIMG = (1 << 2),
+	VIEW_GFX_ALL = (VIEW_GFX_FRAMED |
+			VIEW_GFX_SOLID |
+			VIEW_GFX_BGIMG)
+};
+
+/*
  * Class View is the basic interface to a graphical - or text view.
  * Coordinates are referred to the owner's origin.
  */
@@ -311,6 +327,15 @@ public:
 	bool getChangedAll(unsigned char flags) const;
 	unsigned char getChanged(void) const;
 	void clearChanged(unsigned char flags);
+
+	/*
+	 * Operate on the view graphics flags.
+	 */
+	void setGfx(unsigned char flags);
+	bool getGfx(unsigned char flags) const;
+	bool getGfxAll(unsigned char flags) const;
+	unsigned char getGfx(void) const;
+	void clearGfx(unsigned char flags);
 
 	/*
 	 * Draw the graphics of the view unconditionally.
@@ -660,9 +685,9 @@ private:
 	 */
 	Rectangle extent;
 	/*
-	 * resize flags, state flags, option flags, changed flags
+	 * resize flags, state flags, option flags, changed flags, graphic flags
 	 */
-	unsigned char rflags, sflags, oflags, cflags;
+	unsigned char rflags, sflags, oflags, cflags, gflags;
 };
 
 #endif
