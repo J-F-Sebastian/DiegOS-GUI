@@ -577,6 +577,7 @@ void View::setForeground()
 void View::setBackground()
 {
 	clearState(VIEW_STATE_FOREGROUND);
+}
 
 View *View::topView()
 {
