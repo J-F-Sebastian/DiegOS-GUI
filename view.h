@@ -665,6 +665,16 @@ protected:
 
 	View *topView(void);
 
+	/*
+	 * borders is expressed in owner's coordinates; borders.ul is the origin
+	 * of this view in owner's coordinates.
+	 */
+	Rectangle borders;
+	/*
+	 * extent is the width and height of the view
+	 */
+	Rectangle extent;
+
 private:
 	/*
 	 * The parent or Owner of this view, can be nullptr
@@ -676,14 +686,6 @@ private:
 	 * (a group).
 	 */
 	View *nextView;
-	/*
-	 * borders is expressed in owner's coordinates
-	 */
-	Rectangle borders;
-	/*
-	 * extent is the width and height of the view
-	 */
-	Rectangle extent;
 	/*
 	 * resize flags, state flags, option flags, changed flags, graphic flags
 	 */
