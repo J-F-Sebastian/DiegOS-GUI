@@ -31,6 +31,14 @@ static inline void to_SDL_Rect(const Rectangle &rect, SDL_Rect &srect)
 	srect.h = rect.height();
 }
 
+inline void to_SDL_Color(const uint32_t ARGB, SDL_Color *clr)
+{
+	clr->b = ARGB & 0xFF;
+	clr->g = (ARGB >> 8) & 0xFF;
+	clr->r = (ARGB >> 16) & 0xFF;
+	clr->a = (ARGB >> 24) & 0xFF;
+}
+
 // The window we'll be rendering to
 static SDL_Window *window = NULL;
 // The renderer
@@ -225,49 +233,36 @@ void ViewRenderHW::textBox(const char *text, Rectangle &out)
 	}
 }
 
-void ViewRenderHW::text(const Rectangle &rect, uint32_t color, const char *text)
+void ViewRenderHW::text(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const char *text)
 {
 	if (!text)
 		return;
 
-	union ARGBColor c;
-	toARGBColor(color, &c);
 	SDL_Rect srect;
+	SDL_Color f, b;
 	to_SDL_Rect(rect, srect);
-	SDL_Color clor;
-	clor.a = c.colorARGB.a;
-	clor.b = c.colorARGB.b;
-	clor.g = c.colorARGB.g;
-	clor.r = c.colorARGB.r;
+	to_SDL_Color(fcolor, &f);
+	to_SDL_Color(bcolor, &b);
 
-#if 1
-	SDL_Surface *surface = TTF_RenderText_Solid(font, text, clor);
+	SDL_Surface *surface = TTF_RenderText_LCD(font, text, f, b);
 	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
-	//	SDL_Texture *temp = SDL_GetRenderTarget(renderer);
-	//	SDL_SetRenderTarget(renderer, NULL);
 	SDL_RenderCopy(renderer, message, NULL, &srect);
-	//	SDL_SetRenderTarget(renderer, temp);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(message);
-#endif
 }
 
-void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text)
+void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const uint16_t *text)
 {
 	if (!text)
 		return;
 
-	union ARGBColor c;
-	toARGBColor(color, &c);
 	SDL_Rect srect;
+	SDL_Color f, b;
 	to_SDL_Rect(rect, srect);
-	SDL_Color clor;
-	clor.a = c.colorARGB.a;
-	clor.b = c.colorARGB.b;
-	clor.g = c.colorARGB.g;
-	clor.r = c.colorARGB.r;
+	to_SDL_Color(fcolor, &f);
+	to_SDL_Color(bcolor, &b);
 
-	SDL_Surface *surface = TTF_RenderUNICODE_Solid(font, text, clor);
+	SDL_Surface *surface = TTF_RenderUNICODE_LCD(font, text, f, b);
 	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_RenderCopy(renderer, message, NULL, &srect);
 	SDL_FreeSurface(surface);
@@ -309,6 +304,13 @@ void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 		to_SDL_Rect(rect, srect);
 		SDL_RenderCopy(renderer, mybmp, NULL, &srect);
 	}
+}
+
+void ViewRenderHW::start()
+{
+	if (SDL_SetRenderTarget(renderer, NULL))
+		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+	SDL_RenderClear(renderer);
 }
 
 void ViewRenderHW::show()

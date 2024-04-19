@@ -104,24 +104,30 @@ public:
 	 *
 	 * PARAMETER IN
 	 *  Rectangle &rect - reference to the rectangle on screen
-	 *  uint32_t color - the color to be used (bit depth depends on the renderer),
+	 *  uint32_t fcolor - the color to be used for text (bit depth depends on the renderer)
+	 *  uint32_t bcolor - the color to be used in background (bit depth depends on the renderer)
 	 *  char *text - Text to be written on screen
 	 */
-	virtual void text(const Rectangle &rect, uint32_t color, const char *text) = 0;
+	virtual void text(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const char *text) = 0;
 	/*
 	 * Write the specified text using the coordinates stored in rect with the specified color.
 	 * The rectangle is filled in height and width with respect to the font size and aspect ratio.
 	 *
 	 * PARAMETER IN
 	 *  Rectangle &rect - reference to the rectangle on screen
-	 *  uint32_t color - the color to be used (bit depth depends on the renderer),
+	 *  uint32_t fcolor - the color to be used for text (bit depth depends on the renderer)
+	 *  uint32_t bcolor - the color to be used in background (bit depth depends on the renderer)
 	 *  char *text - Text to be written on screen
 	 */
-	virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) = 0;
+	virtual void textUNICODE(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const uint16_t *text) = 0;
 
 	virtual void *loadBMP(const char *name) = 0;
 	virtual bool unloadBMP(void *bmp) = 0;
 	virtual void drawBMP(void *bmp, const Rectangle &rect) = 0;
+	/*
+	 * Start rendering phase. This method need to be called before drawing to buffers.
+	 */
+	virtual void start(void) = 0;
 	/*
 	 * Show on screen the video buffer; should have no effect if the renderer use no buffering
 	 * and writes directly to video memory.

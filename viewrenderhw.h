@@ -34,11 +34,12 @@ public:
 	virtual void filledRectangle(const Rectangle &rect, uint32_t color) override;
 	virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) override;
 	virtual void textBox(const char *text, Rectangle &out) override;
-	virtual void text(const Rectangle &rect, uint32_t color, const char *text) override;
-	virtual void textUNICODE(const Rectangle &rect, uint32_t color, const uint16_t *text) override;
+	virtual void text(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const char *text) override;
+	virtual void textUNICODE(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const uint16_t *text) override;
 	virtual void *loadBMP(const char *name) override;
 	virtual bool unloadBMP(void *bmp) override;
 	virtual void drawBMP(void *bmp, const Rectangle &rect) override;
+	virtual void start(void) override;
 	virtual void show(void) override;
 	virtual void clear(uint32_t color) override;
 	virtual void *createBuffer(const Rectangle &rect);
