@@ -35,19 +35,28 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	Rectangle ext;
 
 	getExtent(ext);
-	ext.zoom(-4, -4);
-	ext.lr.y = 28;
+	tmpView = new Frame(ext);
+	insert(tmpView);
+
+	ext.zoom(-5, -5);
+	ext.ul.move(0, 25);
+	tmpView = new Background(ext);
+	insert(tmpView);
+
+	getExtent(ext);
+	ext.zoom(-5, -5);
+	ext.lr.y = 29;
 
 	if (wFlags & WINDOW_CLOSE)
 	{
-		Rectangle temp(4, 4, 28, 28);
+		Rectangle temp(5, 5, 29, 29);
 		tmpView = new WindowIconClose(temp);
 		insert(tmpView);
 		ext.ul.move(25, 0);
 	}
 	if (wFlags & WINDOW_ZOOM)
 	{
-		Rectangle temp(4, 4, 28, 28);
+		Rectangle temp(5, 5, 29, 29);
 		temp.move(ext.width(), 0);
 		tmpView = new WindowIconZoom(temp);
 		insert(tmpView);
@@ -55,14 +64,5 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	}
 
 	tmpView = new TitleBar(ext, title);
-	insert(tmpView);
-
-	getExtent(ext);
-	tmpView = new Frame(ext);
-	insert(tmpView);
-
-	ext.zoom(-4, -4);
-	ext.ul.move(0, 25);
-	tmpView = new Background(ext);
 	insert(tmpView);
 }
