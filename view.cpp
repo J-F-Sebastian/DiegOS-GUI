@@ -530,8 +530,8 @@ void View::setBorders(const Rectangle &newrect)
 	extent.lr = Point(borders.width() - 1, borders.height() - 1);
 	if (change)
 	{
-		setChanged(VIEW_CHANGED_REDRAW);
 		updateRenderBuffer();
+		setChanged(VIEW_CHANGED_REDRAW);
 	}
 }
 
