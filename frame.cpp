@@ -31,7 +31,7 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
 			width = 5;
 	}
 	setResizeMode(VIEW_RESIZEABLE);
-	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
+	setOptions(VIEW_OPT_SELECTABLE);
 }
 
 void Frame::drawView()
