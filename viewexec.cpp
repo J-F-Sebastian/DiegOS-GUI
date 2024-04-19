@@ -49,11 +49,13 @@ void ViewExec::run()
 
 void ViewExec::draw()
 {
+	std::cout << "PIPPO" << std::endl;
 	if (getState(VIEW_STATE_EVLOOP))
 	{
-		GRenderer->clear(0);
 		GZBuffer->clear();
 		computeExposure();
+		GRenderer->start();
+		GRenderer->clear(0);
 		ViewGroup::draw();
 		GRenderer->show();
 	}
@@ -61,12 +63,15 @@ void ViewExec::draw()
 
 void ViewExec::reDraw()
 {
+	std::cout << "PLUTO" << std::endl;
 	if (getState(VIEW_STATE_EVLOOP))
 	{
-		GRenderer->clear(0);
 		GZBuffer->clear();
 		computeExposure();
+		GRenderer->start();
+		GRenderer->clear(0);
 		ViewGroup::reDraw();
+		ViewGroup::draw();
 		GRenderer->show();
 	}
 }
