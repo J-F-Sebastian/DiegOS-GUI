@@ -648,7 +648,7 @@ protected:
 
 	inline View *getParent(void) { return parentView; }
 
-	View *topView(void);
+	View *getTopView(void);
 
 	void updateRenderBuffer(void);
 
@@ -657,6 +657,12 @@ private:
 	 * The parent or Owner of this view, can be nullptr
 	 */
 	View *parentView;
+	/*
+	 * The top parent of this view, can be nullptr.
+	 * If not null, then it is the first object running the
+	 * event loop.
+	 */
+	View *topView;
 	/*
 	 * The sibling of this view, can be nullptr.
 	 * This field can be used to link views in a collection

@@ -21,7 +21,7 @@
 #include "view.h"
 #include "viewinstances.h"
 View::View(Rectangle &limits, View *parent) : parentView(parent),
-
+					      topView(nullptr),
 					      nextView(nullptr),
 					      borders(limits),
 					      extent(0, 0, limits.width() - 1, limits.height() - 1),
@@ -416,8 +416,8 @@ void View::sendEvent(Event *evt)
 {
 	if (isCommandForMe(evt->getMessageEvent()))
 		handleEvent(evt);
-	else if (topView())
-		topView()->sendEvent(evt);
+	else if (getTopView())
+		getTopView()->sendEvent(evt);
 }
 
 bool View::isEventPositional(Event *evt)
@@ -609,18 +609,21 @@ void View::setBackground()
 	setChanged(VIEW_CHANGED_REDRAW);
 }
 
-View *View::topView()
+View *View::getTopView()
 {
 	if (parentView == nullptr)
 		return this;
 
-	View *top = parentView;
-	while (top->parentView && !top->getState(VIEW_STATE_EVLOOP))
+	if (topView == nullptr)
 	{
-		top = top->parentView;
+		topView = parentView;
+		while (topView->parentView && !topView->getState(VIEW_STATE_EVLOOP))
+		{
+			topView = topView->parentView;
+		}
 	}
 
-	return top;
+	return topView;
 }
 
 void View::updateRenderBuffer()
