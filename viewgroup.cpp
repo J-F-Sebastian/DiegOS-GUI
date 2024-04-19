@@ -533,20 +533,18 @@ void ViewGroup::insert(View *newView)
 	if (newView)
 	{
 		newView->setParent(this);
-		newView->setBackground();
 		/*
 		 * Insert to the front
 		 */
 		if (listHead)
 		{
 			newView->setNext(listHead);
-			listHead = newView;
 		}
 		else
 		{
-			listHead = newView;
-			listHead->setNext(nullptr);
+			newView->setNext(nullptr);
 		}
+		listHead = newView;
 		listSize++;
 	}
 }
