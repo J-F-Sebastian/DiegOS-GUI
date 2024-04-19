@@ -29,7 +29,7 @@ ProgressBar::ProgressBar(Rectangle &rect, bool showpercent) : View(rect), showPe
 
 void ProgressBar::drawView()
 {
-	unsigned color;
+	unsigned color, color2;
 	int pxcent;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
@@ -41,14 +41,14 @@ void ProgressBar::drawView()
 	viewRect.zoom(-2, -2);
 	pxcent = viewRect.width() * percent / 100;
 	viewRect.width(pxcent);
-	p->getPalette(PROGRESSBAR_FG, color);
-	r->filledRectangle(viewRect, color);
+	p->getPalette(PROGRESSBAR_FG, color2);
+	r->filledRectangle(viewRect, color2);
 	if (showPercent)
 	{
 		char buffer[5];
 		snprintf(buffer, sizeof(buffer), "%3d%%", percent);
-		p->getPalette(PROGRESSBAR_TEXT, color);
-		r->text(viewRect, color, buffer);
+		p->getPalette(PROGRESSBAR_TEXT, color2);
+		r->text(viewRect, color2, color, buffer);
 	}
 }
 

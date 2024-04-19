@@ -55,7 +55,7 @@ void TitleBar::drawView()
 	r->textBox(title.c_str(), temp);
 	temp.move(viewRect.ul.x, viewRect.ul.y);
 	temp.center(viewRect);
-	r->text(temp, color2, title.c_str());
+	r->text(temp, color2, color, title.c_str());
 }
 
 static inline bool checkAll(uint8_t status, uint8_t test)
