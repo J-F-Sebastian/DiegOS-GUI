@@ -25,7 +25,6 @@
 
 Button::Button(Rectangle &rect) : AbstractButton(rect)
 {
-	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
 void Button::drawView()
