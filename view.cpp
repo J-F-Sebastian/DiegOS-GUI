@@ -275,18 +275,10 @@ void View::clearChanged(unsigned char flags)
 
 void View::draw()
 {
-	Rectangle dest;
+	Rectangle dest = extent;
 
-	if (getParent() == nullptr)
-	{
-		dest = extent;
-	}
-	else
-	{
-		dest = borders;
-		makeGlobal(dest.ul);
-		makeGlobal(dest.lr);
-	}
+	makeGlobal(dest.ul);
+	makeGlobal(dest.lr);
 
 	GRenderer->writeBuffer(renderBuffer, extent, dest);
 }
@@ -299,7 +291,6 @@ void View::reDraw()
 		drawView();
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
-	draw();
 }
 
 void View::handleEvent(Event *evt)
