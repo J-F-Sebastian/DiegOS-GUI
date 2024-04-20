@@ -31,7 +31,7 @@ ScrollBar::ScrollBar(Rectangle &viewLimits) : View(viewLimits), refElements(1), 
 void ScrollBar::drawView()
 {
 	Rectangle viewRect;
-	getExtent(viewRect);
+	getViewport(viewRect);
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);

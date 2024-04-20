@@ -34,7 +34,7 @@ void ProgressBar::drawView()
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_PROGRESSBAR);
 	Rectangle viewRect;
-	getExtent(viewRect);
+	getViewport(viewRect);
 
 	p->getPalette(PROGRESSBAR_BG, color);
 	r->filledRectangle(viewRect, color);

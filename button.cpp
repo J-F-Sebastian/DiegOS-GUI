@@ -32,7 +32,7 @@ void Button::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
-	getExtent(viewRect);
+	getViewport(viewRect);
 	Rectangle temp(viewRect);
 
 	unsigned color, color2;
