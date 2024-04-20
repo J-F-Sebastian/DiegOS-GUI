@@ -113,6 +113,21 @@ enum
 };
 
 /*
+ * Visual attributes
+ */
+enum
+{
+	/* View is surrounded by a frame */
+	VIEW_IS_FRAMED = (1 << 0),
+	/* View is solid, filled with an opaque background */
+	VIEW_IS_SOLID = (1 << 1),
+	/* View casts a shadow */
+	VIEW_IS_SHADOWED = (1 << 2),
+	/* View draws to its own buffer */
+	VIEW_IS_BUFFERED = (1 << 3)
+};
+
+/*
  * Class View is the basic interface to a graphical - or text view.
  * Coordinates are referred to the owner's origin.
  */
@@ -313,6 +328,15 @@ public:
 	void clearChanged(unsigned char flags);
 
 	/*
+	 * Operate on the view attributes flags.
+	 * Attributes can be set only in constructors.
+	 */
+	bool getAttribute(unsigned char flags) const;
+	bool getAttributeAll(unsigned char flags) const;
+	unsigned char getAttribute(void) const;
+	void clearAttribute(unsigned char flags);
+
+	/*
 	 * Draw the graphics of the view by rendering into renderBuffer.
 	 * If renderBuffer is NULL all rendering happens into the video buffer.
 	 */
@@ -464,8 +488,9 @@ protected:
 	 * sflags set to (VIEW_STATE_VISIBLE), view is visible
 	 * oflags set to (0), no options set
 	 * cflags set to (VIEW_CHANGED_REDRAW), view need to be drawn
+	 * aflags set to (VIEW_IS_BUFFERED), view draws to its own buffer
 	 */
-	explicit View(Rectangle &limits, View *parent = nullptr);
+	explicit View(Rectangle &limits, unsigned char flags = VIEW_IS_BUFFERED, View *parent = nullptr);
 
 	/*
 	 * Apply new coordinates.
@@ -678,9 +703,9 @@ private:
 	 */
 	Rectangle extent;
 	/*
-	 * resize flags, state flags, option flags, changed flags
+	 * resize flags, state flags, option flags, changed flags, attributes flags
 	 */
-	unsigned char rflags, sflags, oflags, cflags;
+	unsigned char rflags, sflags, oflags, cflags, aflags;
 	/*
 	 * Rendering buffer, see viewrenderer.h
 	 */

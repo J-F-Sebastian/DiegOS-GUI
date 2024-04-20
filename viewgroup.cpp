@@ -22,10 +22,9 @@
 #include "viewzbuffer.h"
 #include "viewinstances.h"
 
-ViewGroup::ViewGroup(Rectangle &limits, View *parent) : View(limits, parent), lastLimits(limits), actual(nullptr), listHead(nullptr), listSize(0), lastrflags(0)
+ViewGroup::ViewGroup(Rectangle &limits, unsigned char flags, View *parent) : View(limits, flags, parent), lastLimits(limits), actual(nullptr), listHead(nullptr), listSize(0), lastrflags(0)
 {
 	setOptions(VIEW_OPT_SELECTABLE);
-	updateRenderBuffer();
 }
 
 ViewGroup::~ViewGroup()

@@ -20,16 +20,18 @@
 
 #include "view.h"
 #include "viewinstances.h"
-View::View(Rectangle &limits, View *parent) : parentView(parent),
-					      topView(nullptr),
-					      nextView(nullptr),
-					      borders(limits),
-					      extent(0, 0, limits.width() - 1, limits.height() - 1),
-					      rflags(0),
-					      sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
-					      oflags(0),
-					      cflags(VIEW_CHANGED_REDRAW),
-					      renderBuffer(nullptr)
+
+View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(parent),
+								   topView(nullptr),
+								   nextView(nullptr),
+								   borders(limits),
+								   extent(0, 0, limits.width() - 1, limits.height() - 1),
+								   rflags(0),
+								   sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
+								   oflags(0),
+								   cflags(VIEW_CHANGED_REDRAW),
+								   aflags(flags),
+								   renderBuffer(nullptr)
 {
 	updateRenderBuffer();
 }
@@ -38,8 +40,9 @@ View::~View()
 {
 	parentView = nullptr;
 	nextView = nullptr;
-	if (renderBuffer)
-		GRenderer->releaseBuffer(renderBuffer);
+	if (aflags & VIEW_IS_BUFFERED)
+		if (renderBuffer)
+			GRenderer->releaseBuffer(renderBuffer);
 }
 
 void View::sizeLimits(Point &min, Point &max)
@@ -116,6 +119,7 @@ void View::globalize(Rectangle &rect)
 void View::setParent(View *par)
 {
 	parentView = par;
+	updateRenderBuffer();
 }
 
 void View::setNext(View *par)
@@ -273,14 +277,54 @@ void View::clearChanged(unsigned char flags)
 		cflags &= ~flags;
 }
 
+static const unsigned char AVALIDATE = (VIEW_IS_FRAMED |
+					VIEW_IS_SHADOWED |
+					VIEW_IS_SOLID |
+					VIEW_IS_BUFFERED);
+
+bool View::getAttribute(unsigned char flags) const
+{
+	if (aflags & flags)
+		return true;
+	else
+		return false;
+}
+
+bool View::getAttributeAll(unsigned char flags) const
+{
+	if ((aflags & flags) == flags)
+		return true;
+	else
+		return false;
+}
+
+unsigned char View::getAttribute() const
+{
+	return aflags;
+}
+
+void View::clearAttribute(unsigned char flags)
+{
+	if (flags & AVALIDATE)
+	{
+		if ((aflags & flags) & VIEW_IS_BUFFERED)
+		{
+			if (renderBuffer)
+				GRenderer->releaseBuffer(renderBuffer);
+		}
+		aflags &= ~flags;
+	}
+}
+
 void View::draw()
 {
-	Rectangle dest = extent;
-
-	makeGlobal(dest.ul);
-	makeGlobal(dest.lr);
-
-	GRenderer->writeBuffer(renderBuffer, extent, dest);
+	if (aflags & VIEW_IS_BUFFERED)
+	{
+		Rectangle dest = extent;
+		makeGlobal(dest.ul);
+		makeGlobal(dest.lr);
+		GRenderer->writeBuffer(renderBuffer, extent, dest);
+	}
 }
 
 void View::reDraw()
@@ -494,7 +538,6 @@ bool View::focus()
 		if (select())
 		{
 			setState(VIEW_STATE_FOCUSED);
-			// sendCommand(CMD_DRAW);
 			return true;
 		}
 	}
@@ -619,8 +662,15 @@ View *View::getTopView()
 
 void View::updateRenderBuffer()
 {
-	if (renderBuffer)
-		GRenderer->releaseBuffer(renderBuffer);
+	if (aflags & VIEW_IS_BUFFERED)
+	{
+		if (renderBuffer)
+			GRenderer->releaseBuffer(renderBuffer);
 
-	renderBuffer = GRenderer->createBuffer(extent);
+		renderBuffer = GRenderer->createBuffer(extent);
+	}
+	else if (getParent())
+	{
+		renderBuffer = getParent()->renderBuffer;
+	}
 }

@@ -27,7 +27,7 @@
 #include "background.h"
 #include "scrollbar.h"
 
-Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent), wFlags(ctrlflags), isZoomed(false)
+Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, VIEW_IS_BUFFERED, parent), wFlags(ctrlflags), isZoomed(false)
 {
 	setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
 	setResizeMode(VIEW_RESIZEABLE);
