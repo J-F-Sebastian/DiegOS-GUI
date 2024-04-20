@@ -685,3 +685,8 @@ void View::updateViewport()
 	if (aflags & VIEW_IS_SHADOWED)
 		viewport.lr.move(-2, -1);
 }
+
+void View::getViewport(Rectangle &rect)
+{
+	rect = viewport;
+}

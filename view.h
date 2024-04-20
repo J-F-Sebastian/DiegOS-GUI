@@ -477,6 +477,14 @@ public:
 
 	inline View *getNext(void) { return nextView; }
 
+	/*
+	 * Copy viewport into rect.
+	 *
+	 * PARAMETERS OUT
+	 * Rectangle &rect - viewport coordinates
+	 */
+	void getViewport(Rectangle &rect);
+
 protected:
 	/*
 	 * View constructor.
