@@ -49,7 +49,6 @@ void ViewExec::run()
 
 void ViewExec::draw()
 {
-	std::cout << "PIPPO" << std::endl;
 	if (getState(VIEW_STATE_EVLOOP))
 	{
 		GZBuffer->clear();
@@ -63,7 +62,6 @@ void ViewExec::draw()
 
 void ViewExec::reDraw()
 {
-	std::cout << "PLUTO" << std::endl;
 	if (getState(VIEW_STATE_EVLOOP))
 	{
 		GZBuffer->clear();
