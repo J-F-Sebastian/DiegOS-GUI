@@ -562,19 +562,17 @@ bool View::select()
 
 void View::setBorders(const Rectangle &newrect)
 {
-	bool change = false;
-
 	if (borders != newrect)
 	{
-		change = true;
 		borders = newrect;
-	}
 
-	extent.lr = Point(borders.width() - 1, borders.height() - 1);
-	if (change)
-	{
-		updateRenderBuffer();
-		setChanged(VIEW_CHANGED_REDRAW);
+		// View was resized
+		if ((borders.width() != extent.width()) || (borders.height() != extent.height()))
+		{
+			extent.lr = Point(borders.width() - 1, borders.height() - 1);
+			updateRenderBuffer();
+			setChanged(VIEW_CHANGED_REDRAW);
+		}
 	}
 }
 
