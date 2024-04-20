@@ -116,9 +116,7 @@ void ViewGroup::reDraw()
 			 * Update exposed buffers
 			 */
 			forEachView([](View *head)
-				    {
-					if (head->getState(VIEW_STATE_EXPOSED))
-						head->reDraw(); });
+				    { head->reDraw(); });
 		}
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
