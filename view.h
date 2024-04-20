@@ -679,6 +679,11 @@ protected:
 
 private:
 	/*
+	 * Called on attributes change or extent change.
+	 */
+	void updateViewport(void);
+
+	/*
 	 * The parent or Owner of this view, can be nullptr
 	 */
 	View *parentView;
@@ -695,13 +700,20 @@ private:
 	 */
 	View *nextView;
 	/*
-	 * borders is expressed in owner's coordinates
+	 * borders is expressed in owner's coordinates,
+	 * and is the area covered by this view in owner's space.
 	 */
 	Rectangle borders;
 	/*
 	 * extent is the width and height of the view
 	 */
 	Rectangle extent;
+	/*
+	 * viewport is the drawable area of the view, it excludes areas covered
+	 * by frame or shadow.
+	 * It refers to extent NOT to borders.
+	 */
+	Rectangle viewport;
 	/*
 	 * resize flags, state flags, option flags, changed flags, attributes flags
 	 */

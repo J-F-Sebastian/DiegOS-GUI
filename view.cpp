@@ -26,6 +26,7 @@ View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(pa
 								   nextView(nullptr),
 								   borders(limits),
 								   extent(0, 0, limits.width() - 1, limits.height() - 1),
+								   viewport(0, 0, limits.width() - 1, limits.height() - 1),
 								   rflags(0),
 								   sflags(VIEW_STATE_VISIBLE | VIEW_STATE_EXPOSED),
 								   oflags(0),
@@ -33,6 +34,7 @@ View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(pa
 								   aflags(flags),
 								   renderBuffer(nullptr)
 {
+	updateViewport();
 	updateRenderBuffer();
 }
 
@@ -313,6 +315,7 @@ void View::clearAttribute(unsigned char flags)
 				GRenderer->releaseBuffer(renderBuffer);
 		}
 		aflags &= ~flags;
+		updateViewport();
 	}
 }
 
@@ -570,6 +573,7 @@ void View::setBorders(const Rectangle &newrect)
 		if ((borders.width() != extent.width()) || (borders.height() != extent.height()))
 		{
 			extent.lr = Point(borders.width() - 1, borders.height() - 1);
+			updateViewport();
 			updateRenderBuffer();
 			setChanged(VIEW_CHANGED_REDRAW);
 		}
@@ -671,4 +675,13 @@ void View::updateRenderBuffer()
 	{
 		renderBuffer = getParent()->renderBuffer;
 	}
+}
+
+void View::updateViewport()
+{
+	viewport = extent;
+	if (aflags & VIEW_IS_FRAMED)
+		viewport.zoom(6, 6);
+	if (aflags & VIEW_IS_SHADOWED)
+		viewport.lr.move(-2, -1);
 }
