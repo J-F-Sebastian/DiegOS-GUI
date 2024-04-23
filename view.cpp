@@ -570,13 +570,13 @@ void View::setBorders(const Rectangle &newrect)
 		borders = newrect;
 
 		// View was resized
-		if ((borders.width() != extent.width()) || (borders.height() != extent.height()))
+		if (!borders.superpose(extent))
 		{
 			extent.lr = Point(borders.width() - 1, borders.height() - 1);
 			updateViewport();
 			updateRenderBuffer();
-			setChanged(VIEW_CHANGED_REDRAW);
 		}
+		setChanged(VIEW_CHANGED_REDRAW);
 	}
 }
 
