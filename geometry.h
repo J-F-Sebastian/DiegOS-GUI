@@ -240,6 +240,18 @@ public:
 	 */
 	void clip(Rectangle &clipping);
 
+	/*
+	 * Verify if the other rectangle superpose this rectangle.
+	 * Superposition happens when both rectangles are similar and
+	 * congruent, so they have the same shape and same area: in other
+	 * words they have the same width and height but are translated in space.
+	 * Covering one with the other results in coincident rectangles.
+	 *
+	 * PARAMETERS IN
+	 * other - the rectangle to be verified for superposition
+	 */
+	bool superpose(Rectangle &other);
+
 	int width(void) const;
 	int height(void) const;
 	void width(int w);

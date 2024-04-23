@@ -228,6 +228,11 @@ void Rectangle::clip(Rectangle &clipping)
 	intersection(clipping);
 }
 
+bool Rectangle::superpose(Rectangle &other)
+{
+	return (width() == other.width()) && (height() == other.height()) ? true : false;
+}
+
 int Rectangle::width() const
 {
 	int retval = lr.x - ul.x + 1;
