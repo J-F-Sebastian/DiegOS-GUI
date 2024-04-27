@@ -78,7 +78,7 @@ public:
 	 */
 	virtual void filledRectangle(const Rectangle &rect, uint32_t color) = 0;
 	/*
-	 * Trace a rectangle using the coordinates stored in rect with the specified color.
+	 * Trace a rectangle using the coordinates stored in rect with the specified colors.
 	 * The rectangle is filled with the second specified color.
 	 *
 	 * PARAMETER IN
@@ -88,6 +88,35 @@ public:
 	 *                           to fill the rectangle.
 	 */
 	virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) = 0;
+	/*
+	 * Trace a frame using the coordinates stored in rect with the specified colors.
+	 * The frame can be drawn using first color for upper left lines, and second color
+	 * for lower right lines, or reverse.
+	 * Inner true or false decides which drawing schema is to be used.
+	 * Please note the corner pixels DO NOT change over the schemas.
+	 *
+	 *    Inner false
+	 *
+	 *    111111111
+	 *    1       2
+	 *    1       2
+	 *    1       2
+	 *    222222222
+	 *
+	 *    Inner true
+	 *
+	 *    222222221
+	 *    2       1
+	 *    2       1
+	 *    2       1
+	 *    211111111
+	 *
+	 * PARAMETER IN
+	 * Rectangle &rect - reference to the rectangle on screen
+	 * uint32_t colors[] - the colors to be used(bit depth depends on the renderer),
+	 *                     first color is applied to the border, second color is used to fill the rectangle.
+	 */
+	virtual void frame(const Rectangle &rect, uint32_t colors[2], bool inner) = 0;
 	/*
 	 * Write the specified text using the coordinates stored in rect with the specified color.
 	 * The rectangle is filled in height and width with respect to the font size and aspect ratio.

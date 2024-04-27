@@ -23,6 +23,12 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
+static inline void to_SDL_Point(const Point &point, SDL_Point &spoint)
+{
+	spoint.x = point.x;
+	spoint.y = point.y;
+}
+
 static inline void to_SDL_Rect(const Rectangle &rect, SDL_Rect &srect)
 {
 	srect.x = rect.ul.x;
@@ -215,6 +221,53 @@ void ViewRenderHW::filledRectangle2(const Rectangle &rect, uint32_t colors[2])
 	srect.h -= 2;
 	SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(renderer, &srect);
+}
+
+void ViewRenderHW::frame(const Rectangle &rect, uint32_t colors[2], bool inner)
+{
+	union ARGBColor c[2];
+	toARGBColor(colors[0], &c[0]);
+	toARGBColor(colors[1], &c[1]);
+	SDL_Point spoint[3];
+
+	to_SDL_Point(rect.ul, spoint[1]);
+
+	if (inner)
+	{
+		spoint[2].x = spoint[1].x + rect.width() - 2;
+		spoint[2].y = spoint[1].y;
+		spoint[0].x = spoint[1].x;
+		spoint[0].y = spoint[1].y + rect.height() - 1;
+
+		SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawLines(renderer, spoint, 3);
+
+		spoint[0].x++;
+		spoint[2].x++;
+		spoint[1].x += rect.width() - 1;
+		spoint[1].y += rect.height() - 1;
+
+		SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawLines(renderer, spoint, 3);
+	}
+	else
+	{
+		spoint[2].x = spoint[1].x + rect.width() - 1;
+		spoint[2].y = spoint[1].y;
+		spoint[0].x = spoint[1].x;
+		spoint[0].y = spoint[1].y + rect.height() - 2;
+
+		SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawLines(renderer, spoint, 3);
+
+		spoint[0].y++;
+		spoint[2].y++;
+		spoint[1].x += rect.width() - 1;
+		spoint[1].y += rect.height() - 1;
+
+		SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawLines(renderer, spoint, 3);
+	}
 }
 
 void ViewRenderHW::textBox(const char *text, Rectangle &out)

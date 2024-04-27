@@ -33,6 +33,7 @@ public:
 	virtual void rectangle(const Rectangle &rect, uint32_t color) override;
 	virtual void filledRectangle(const Rectangle &rect, uint32_t color) override;
 	virtual void filledRectangle2(const Rectangle &rect, uint32_t colors[2]) override;
+	virtual void frame(const Rectangle &rect, uint32_t colors[2], bool inner) override;
 	virtual void textBox(const char *text, Rectangle &out) override;
 	virtual void text(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const char *text) override;
 	virtual void textUNICODE(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor, const uint16_t *text) override;
