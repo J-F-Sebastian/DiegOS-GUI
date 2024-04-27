@@ -38,16 +38,16 @@ void Frame::drawView()
 {
 	Rectangle viewRect;
 	getViewport(viewRect);
-	unsigned color, color2;
+	unsigned color[2];
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
 
 	if (style == FRAME_FLAT)
 	{
-		p->getPalette(FRAME_MAIN, color);
+		p->getPalette(FRAME_MAIN, color[0]);
 		for (unsigned i = 0; i < width; i++)
 		{
-			r->rectangle(viewRect, color);
+			r->rectangle(viewRect, color[0]);
 			viewRect.zoom(-1, -1);
 		}
 	}
@@ -55,8 +55,8 @@ void Frame::drawView()
 	{
 		Rectangle temp(viewRect);
 
-		p->getPalette(FRAME_BRIGHT, color);
-		p->getPalette(FRAME_DARK, color2);
+		p->getPalette(FRAME_BRIGHT, color[0]);
+		p->getPalette(FRAME_DARK, color[1]);
 
 		// Outer shadow, 2 pixels
 
@@ -67,58 +67,43 @@ void Frame::drawView()
 		 *    B       D
 		 *    DDDDDDDDD
 		 */
-		Point ul(temp.ul);
-		r->hline(ul, temp.width(), color);
-		r->vline(ul, temp.height() - 1, color);
-		ul.move(temp.width(), 1);
-		r->vline(ul, temp.height() - 1, color2);
-		ul.move(-temp.width(), temp.height() - 1);
-		r->hline(ul, temp.width() - 1, color2);
 
+		r->frame(temp, color, false);
 		temp.zoom(-1, -1);
-		ul = temp.ul;
-		r->hline(ul, temp.width(), color);
-		r->vline(ul, temp.height() - 1, color);
-		ul.move(temp.width(), 1);
-		r->vline(ul, temp.height() - 1, color2);
-		ul.move(-temp.width(), temp.height() - 1);
-		r->hline(ul, temp.width() - 1, color2);
+		r->frame(temp, color, false);
 
 		// The frame, width - 4 pixels
-		p->getPalette(FRAME_MAIN, color);
+		p->getPalette(FRAME_MAIN, color[0]);
 		for (unsigned i = 0; i < width - 4; i++)
 		{
 			temp.zoom(-1, -1);
-			r->rectangle(temp, color);
+			r->rectangle(temp, color[0]);
 		}
 
 		// Inner shadow, 2 pixels
 
 		/*
-		 *    DDDDDDDDD
+		 *    DDDDDDDDB
 		 *    D       B
 		 *    D       B
 		 *    D       B
-		 *    BBBBBBBBB
+		 *    DBBBBBBBB
 		 */
 		temp.zoom(-1, -1);
-		p->getPalette(FRAME_BRIGHT, color);
-		ul = temp.ul;
-		r->hline(ul, temp.width(), color2);
-		r->vline(ul, temp.height() - 1, color2);
-		ul.move(temp.width(), 1);
-		r->vline(ul, temp.height() - 1, color);
-		ul.move(-temp.width(), temp.height() - 1);
-		r->hline(ul, temp.width() - 1, color);
-
+		r->frame(temp, color, true);
 		temp.zoom(-1, -1);
-		ul = temp.ul;
-		r->hline(ul, temp.width(), color2);
-		r->vline(ul, temp.height() - 1, color2);
-		ul.move(temp.width(), 1);
-		r->vline(ul, temp.height() - 1, color);
-		ul.move(-temp.width(), temp.height() - 1);
-		r->hline(ul, temp.width() - 1, color);
+		r->frame(temp, color, true);
+
+		if (getParent()->getResizeMode(VIEW_RESIZEABLE))
+		{
+			temp = viewRect;
+			temp.ul = temp.lr;
+			temp.ul.move(-6, -6);
+
+			// The active lower right corner
+			p->getPalette(FRAME_DRAGGING, color[0]);
+			r->filledRectangle(temp, color[0]);
+		}
 	}
 }
 
