@@ -25,6 +25,7 @@
 
 Button::Button(Rectangle &rect) : AbstractButton(rect)
 {
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void Button::drawView()
@@ -32,7 +33,7 @@ void Button::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
-	getViewport(viewRect);
+	getBorders(viewRect);
 	Rectangle temp(viewRect);
 
 	unsigned color, color2;
