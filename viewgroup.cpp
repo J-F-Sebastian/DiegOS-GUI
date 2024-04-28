@@ -77,6 +77,7 @@ void ViewGroup::draw()
 {
 	if (getState(VIEW_STATE_EXPOSED))
 	{
+		View::draw();
 		//  Draw children back-to-top, following the painter algorithm
 		if (listSize)
 		{
