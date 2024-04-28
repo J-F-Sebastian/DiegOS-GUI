@@ -105,19 +105,19 @@ static const unsigned PALETTERISCOS[] = {WHITE, 0xDDDDDD, 0xBBBBBB, 0x999999, 0x
  * 0 - white       8 - green
  * 1 - yellow      9 - sea green
  * 2 - orange     10 - cornsilk
- * 3 - red        11 - tan
+ * 3 - red        11 - fuchsia
  * 4 - magenta    12 - light grey
  * 5 - purple     13 - medium grey
  * 6 - blue       14 - dark grey
  * 7 - powderblue 15 - black
  */
-static const unsigned PALETTEDIEGOS[] = {WHITE, YELLOW, ORANGE, RED, MAGENTA, PURPLE, BLUE, POWDERBLUE, GREEN, SEAGREEN, CORNSILK, 0x90713A, 0x90713A, SILVER, GRAY, 0x404040, BLACK};
+static const unsigned PALETTEDIEGOS[] = {WHITE, YELLOW, ORANGE, RED, MAGENTA, PURPLE, BLUE, POWDERBLUE, GREEN, SEAGREEN, CORNSILK, FUCHSIA, LIGHTGREY, SILVER, GRAY, 0x404040, BLACK};
 
 // Palette set for  PALETTE_WINOS2
 #define C(x) PALETTEWINOS2[x]
 
 static const unsigned framePaletteWINOS2[] = {C(15), C(0), C(7), C(9), C(8), C(10)};	   // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteWINOS2[] = {C(12), C(15), C(8), C(0)};		   // Background, text, background disabled, text disabled
+static const unsigned titlebarPaletteWINOS2[] = {C(15), C(0), C(12), C(15), C(8), C(0)};   // Bright, Dark, Background, text, background disabled, text disabled
 static const unsigned backgroundPaletteWINOS2[] = {C(7), C(8), C(7)};			   // Background, disabled
 static const unsigned progressbarPaletteWINOS2[] = {C(0), C(12), C(15), C(0), C(8), C(7)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
 static const unsigned desktopPaletteWINOS2[] = {C(10)};					   // Desktop background
@@ -127,7 +127,7 @@ static const unsigned scrollbarPaletteWINOS2[] = {C(15), C(0), C(3), C(7), C(0)}
 
 // Palette set for  PALETTE_DEBUG
 static const unsigned framePaletteDBG[] = {RED, GREEN, BLUE};			       // Bright, dark, main
-static const unsigned titlebarPaletteDBG[] = {YELLOW, WHITE};			       // Background, text
+static const unsigned titlebarPaletteDBG[] = {RED, GREEN, YELLOW, WHITE};	       // Bright, Dark, Background, text
 static const unsigned backgroundPaletteDBG[] = {AQUA, BLUE, YELLOW};		       // Background, disabled, foreground
 static const unsigned progressbarPaletteDBG[] = {BLACK, BLUE, WHITE};		       // Background, Foreground, text
 static const unsigned desktopPaletteDBG[] = {BLACK};				       // Desktop background
@@ -140,7 +140,7 @@ static const unsigned scrollbarPaletteDBG[] = {WHITE, BLACK, SILVER, RED, BLACK}
 #define C(x) PALETTEMAC[x]
 
 static const unsigned framePaletteMAC[] = {C(12), C(14), C(13), C(9), C(14), C(8)};	   // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteMAC[] = {C(0), C(15), C(13), C(15)};		   // Background, text, background disabled, text disabled
+static const unsigned titlebarPaletteMAC[] = {C(12), C(14), C(0), C(15), C(13), C(15)};	   // Bright, Dark, Background, text, background disabled, text disabled
 static const unsigned backgroundPaletteMAC[] = {C(12), C(13), C(0)};			   // Background, disabled, foreground
 static const unsigned progressbarPaletteMAC[] = {C(12), C(14), C(0), C(15), C(14), C(13)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
 static const unsigned desktopPaletteMAC[] = {C(12)};					   // Desktop background
@@ -153,7 +153,7 @@ static const unsigned scrollbarPaletteMAC[] = {C(12), C(14), C(13), C(15), C(14)
 #define C(x) PALETTERISCOS[x]
 
 static const unsigned framePaletteRISCOS[] = {C(4), C(7), C(1), C(9), C(6), C(4)};	  // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteRISCOS[] = {C(12), C(7), C(5), C(7)};		  // Background, text, background disabled, text disabled
+static const unsigned titlebarPaletteRISCOS[] = {C(4), C(7), C(12), C(7), C(5), C(7)};	  // Bright, Dark, Background, text, background disabled, text disabled
 static const unsigned backgroundPaletteRISCOS[] = {C(2), C(12), C(6)};			  // Background, disabled, foreground
 static const unsigned progressbarPaletteRISCOS[] = {C(5), C(10), C(0), C(7), C(6), C(2)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
 static const unsigned desktopPaletteRISCOS[] = {C(3)};					  // Desktop background
@@ -165,14 +165,14 @@ static const unsigned scrollbarPaletteRISCOS[] = {C(4), C(7), C(1), C(5), C(6)};
 #undef C
 #define C(x) PALETTEDIEGOS[x]
 
-static const unsigned framePaletteDIEGOS[] = {C(12), C(14), C(13), C(11), C(15), C(0)};	  // Bright, dark, main, dragging, disabled, active
-static const unsigned titlebarPaletteDIEGOS[] = {C(13), C(11), C(15), C(14)};		  // Background, text, background disabled, text disabled
-static const unsigned backgroundPaletteDIEGOS[] = {C(10), C(14), C(7)};			  // Background, disabled, Foreground
-static const unsigned progressbarPaletteDIEGOS[] = {C(14), C(9), C(0), C(7), C(6), C(2)}; // Background, Foreground, text, bg disabled, fg disabled, text disabled
-static const unsigned desktopPaletteDIEGOS[] = {C(2)};					  // Desktop background
-static const unsigned buttonPaletteDIEGOS[] = {C(12), C(14), C(13), C(9), C(14), C(8)};	  // Bright, Dark, main, selected, disabled, pressed
-static const unsigned winiconPaletteDIEGOS[] = {C(12), C(14), C(13), C(3), C(15)};	  // Bright, Dark, main, pressed, released
-static const unsigned scrollbarPaletteDIEGOS[] = {C(12), C(14), C(13), C(15), C(14)};	  // Bright, Dark, Foreground, Background, disabled
+static const unsigned framePaletteDIEGOS[] = {C(12), C(14), C(13), C(9), C(15), C(0)};	   // Bright, dark, main, dragging, disabled, active
+static const unsigned titlebarPaletteDIEGOS[] = {C(12), C(14), C(13), C(1), C(15), C(14)}; // Bright, Dark, Background, text, background disabled, text disabled
+static const unsigned backgroundPaletteDIEGOS[] = {C(10), C(14), C(7)};			   // Background, disabled, Foreground
+static const unsigned progressbarPaletteDIEGOS[] = {C(14), C(9), C(0), C(7), C(6), C(2)};  // Background, Foreground, text, bg disabled, fg disabled, text disabled
+static const unsigned desktopPaletteDIEGOS[] = {C(2)};					   // Desktop background
+static const unsigned buttonPaletteDIEGOS[] = {C(12), C(14), C(13), C(9), C(14), C(8)};	   // Bright, Dark, main, selected, disabled, pressed
+static const unsigned winiconPaletteDIEGOS[] = {C(12), C(14), C(13), C(3), C(15)};	   // Bright, Dark, main, pressed, released
+static const unsigned scrollbarPaletteDIEGOS[] = {C(12), C(14), C(13), C(15), C(14)};	   // Bright, Dark, Foreground, Background, disabled
 
 class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int bitdepth)
 {
