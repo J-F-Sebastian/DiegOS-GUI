@@ -25,6 +25,7 @@
 #include "frame.h"
 #include "titlebar.h"
 #include "background.h"
+#include "scrollbar.h"
 
 Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, parent), wFlags(ctrlflags), isZoomed(false)
 {
@@ -35,34 +36,38 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	Rectangle ext;
 
 	getExtent(ext);
-	tmpView = new Frame(ext);
+	tmpView = new Frame(ext, 6);
 	insert(tmpView);
 
-	ext.zoom(-5, -5);
+	ext.zoom(-6, -6);
 	ext.ul.move(0, 25);
 	tmpView = new Background(ext);
 	insert(tmpView);
 
 	getExtent(ext);
-	ext.zoom(-5, -5);
-	ext.lr.y = 29;
+	ext.zoom(-6, -6);
+	ext.lr.y = 30;
 
 	if (wFlags & WINDOW_CLOSE)
 	{
-		Rectangle temp(5, 5, 29, 29);
+		Rectangle temp(6, 6, 30, 30);
 		tmpView = new WindowIconClose(temp);
 		insert(tmpView);
-		ext.ul.move(25, 0);
+		ext.ul.move(temp.width(), 0);
 	}
 	if (wFlags & WINDOW_ZOOM)
 	{
-		Rectangle temp(5, 5, 29, 29);
-		temp.move(ext.width(), 0);
+		Rectangle temp(6, 6, 30, 30);
+		temp.move(ext.width() - 1, 0);
 		tmpView = new WindowIconZoom(temp);
 		insert(tmpView);
-		ext.lr.move(-25, 0);
+		ext.lr.move(-temp.width() - 1, 0);
 	}
 
 	tmpView = new TitleBar(ext, title);
+	insert(tmpView);
+
+	Rectangle temp(175, 75, 200, 190);
+	tmpView = new VScrollBar(temp);
 	insert(tmpView);
 }
