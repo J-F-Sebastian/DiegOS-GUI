@@ -28,51 +28,6 @@ ScrollBar::ScrollBar(Rectangle &viewLimits) : View(viewLimits), refElements(1), 
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
-void ScrollBar::drawView()
-{
-	Rectangle viewRect;
-	getViewport(viewRect);
-	unsigned color, color2;
-	ViewRender *r = GRenderer;
-	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
-
-	Rectangle temp(viewRect);
-
-	p->getPalette(SCROLLBAR_BRIGHT, color);
-	p->getPalette(SCROLLBAR_DARK, color2);
-
-	// Outer shadow
-
-	/*
-	 *    BBBBBBBBB
-	 *    B       D
-	 *    B       D
-	 *    B       D
-	 *    DDDDDDDDD
-	 */
-	Point ul(temp.ul);
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
-
-	temp.zoom(-1, -1);
-	ul = temp.ul;
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
-
-	// The pad
-	p->getPalette(SCROLLBAR_FG, color);
-	temp.zoom(-1, -1);
-	r->filledRectangle(temp, color);
-}
-
 void ScrollBar::handleEvent(Event *evt)
 {
 	View::handleEvent(evt);
@@ -92,7 +47,7 @@ void ScrollBar::handleEvent(Event *evt)
 				lastPressure = newPressure;
 				/* Now ask for redrawing of the parent */
 				setChanged(VIEW_CHANGED_REDRAW);
-				sendCommand(CMD_REDRAW, getParent(), this);
+				sendCommand(CMD_REDRAW);
 			}
 			evt->clear();
 		}
@@ -104,7 +59,9 @@ void ScrollBar::setRefElements(unsigned newval)
 	if (newval != refElements)
 	{
 		refElements = newval;
-		reDraw();
+		/* Now ask for redrawing of the parent */
+		setChanged(VIEW_CHANGED_REDRAW);
+		sendCommand(CMD_REDRAW);
 	}
 }
 
@@ -113,7 +70,9 @@ void ScrollBar::setRefSize(unsigned newval)
 	if (newval != refSize)
 	{
 		refSize = newval;
-		reDraw();
+		/* Now ask for redrawing of the parent */
+		setChanged(VIEW_CHANGED_REDRAW);
+		sendCommand(CMD_REDRAW);
 	}
 }
 
@@ -122,7 +81,9 @@ void ScrollBar::setRefPosition(unsigned newval)
 	if (newval != refPosition)
 	{
 		refPosition = newval;
-		reDraw();
+		/* Now ask for redrawing of the parent */
+		setChanged(VIEW_CHANGED_REDRAW);
+		sendCommand(CMD_REDRAW);
 	}
 }
 
@@ -181,4 +142,49 @@ void VScrollBar::computeAttributes()
 {
 	Rectangle viewRect;
 	getExtent(viewRect);
+}
+
+void VScrollBar::drawView()
+{
+	Rectangle viewRect;
+	getViewport(viewRect);
+	unsigned color, color2;
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
+
+	Rectangle temp(viewRect);
+
+	p->getPalette(SCROLLBAR_BRIGHT, color);
+	p->getPalette(SCROLLBAR_DARK, color2);
+
+	// Outer shadow
+
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	Point ul(temp.ul);
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
+	ul.move(temp.width(), 1);
+	r->vline(ul, temp.height() - 1, color2);
+	ul.move(-temp.width(), temp.height() - 1);
+	r->hline(ul, temp.width() - 1, color2);
+
+	temp.zoom(-1, -1);
+	ul = temp.ul;
+	r->hline(ul, temp.width(), color);
+	r->vline(ul, temp.height() - 1, color);
+	ul.move(temp.width(), 1);
+	r->vline(ul, temp.height() - 1, color2);
+	ul.move(-temp.width(), temp.height() - 1);
+	r->hline(ul, temp.width() - 1, color2);
+
+	// The pad
+	p->getPalette(SCROLLBAR_FG, color);
+	temp.zoom(-1, -1);
+	r->filledRectangle(temp, color);
 }

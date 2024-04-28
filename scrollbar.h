@@ -29,8 +29,6 @@ public:
 
 	virtual void handleEvent(Event *evt) override;
 
-	virtual void drawView(void) override;
-
 	void setRefElements(unsigned newval);
 	void setRefSize(unsigned newval);
 	void setRefPosition(unsigned newval);
@@ -77,6 +75,7 @@ public:
 	VScrollBar(Rectangle &viewLimits);
 
 protected:
+	virtual void drawView(void) override;
 	virtual void updateActivePad(Point &newpos) override;
 	virtual void computeActivePad(void) override;
 	virtual void computeAttributes(void) override;
@@ -88,6 +87,7 @@ public:
 	HScrollBar(Rectangle &viewLimits);
 
 protected:
+	virtual void drawView(void) override;
 	virtual void updateActivePad(Point &newpos) override;
 	virtual void computeActivePad(void) override;
 	virtual void computeAttributes(void) override;
