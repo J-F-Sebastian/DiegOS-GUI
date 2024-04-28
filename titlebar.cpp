@@ -32,30 +32,50 @@ TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title
 
 void TitleBar::drawView()
 {
-	unsigned color, color2;
+	unsigned color[2];
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
 	getViewport(viewRect);
 
+	p->getPalette(TITELBAR_BRIGHT, color[0]);
+	p->getPalette(TITLEBAR_DARK, color[1]);
+
+	// Outer shadow
+
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+	r->frame(viewRect, color, false);
+	viewRect.zoom(-1, -1);
+	r->frame(viewRect, color, false);
+
 	if (getState(VIEW_STATE_FOREGROUND))
 	{
-		p->getPalette(TITLEBAR_BG, color);
-		p->getPalette(TITLEBAR_TEXT, color2);
+		p->getPalette(TITLEBAR_BG, color[0]);
+		p->getPalette(TITLEBAR_TEXT, color[1]);
 	}
 	else
 	{
-		p->getPalette(TITLEBAR_BG_DISABLED, color);
-		p->getPalette(TITLEBAR_TEXT_DISABLED, color2);
+		p->getPalette(TITLEBAR_BG_DISABLED, color[0]);
+		p->getPalette(TITLEBAR_TEXT_DISABLED, color[1]);
 	}
+
+	Rectangle vr;
+	getViewport(vr);
+	vr.zoom(-2, -2);
 	// The titlebar frame
-	r->filledRectangle(viewRect, color);
+	r->filledRectangle(vr, color[0]);
 	// The title
 	Rectangle temp;
 	r->textBox(title.c_str(), temp);
-	temp.move(viewRect.ul.x, viewRect.ul.y);
-	temp.center(viewRect);
-	r->text(temp, color2, color, title.c_str());
+	temp.move(vr.ul.x, vr.ul.y);
+	temp.center(vr);
+	r->text(temp, color[1], color[0], title.c_str());
 }
 
 static inline bool checkAll(uint8_t status, uint8_t test)
