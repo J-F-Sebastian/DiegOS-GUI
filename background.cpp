@@ -25,6 +25,7 @@
 Background::Background(Rectangle &rect) : View(rect)
 {
 	setResizeMode(VIEW_RESIZEABLE);
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void Background::drawView()
@@ -32,7 +33,7 @@ void Background::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
-	getViewport(viewRect);
+	getBorders(viewRect);
 	unsigned color;
 
 	if (getState(VIEW_STATE_DISABLED))
