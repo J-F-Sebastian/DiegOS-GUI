@@ -247,8 +247,9 @@ void View::setChanged(unsigned char flags)
 	if (flags & CVALIDATE)
 	{
 		cflags |= flags;
-		if (/*!getState(VIEW_STATE_EVLOOP) && */ getParent())
-			getParent()->setChanged(flags);
+
+		if (parentView)
+			parentView->setChanged(flags);
 	}
 }
 
@@ -352,9 +353,9 @@ void View::handleEvent(Event *evt)
 		 */
 		if (evt->testPositionalEventStatus(POS_EVT_PRESSED) && !getState(VIEW_STATE_FOCUSED))
 		{
-			if (getParent())
+			if (parentView)
 			{
-				if (getParent()->executeCommand(CMD_REQ_FOCUS, this))
+				if (parentView->executeCommand(CMD_REQ_FOCUS, this))
 					if (focus())
 						sendCommand(CMD_REDRAW);
 			}
@@ -434,7 +435,7 @@ void View::sendCommand(const uint16_t command, void *destination, void *target)
 void View::sendCommandToParent(const uint16_t command)
 {
 	Event evt;
-	MessageEvent cmd = {command, 0, this, getParent(), this, {0, 0, 0, 0}};
+	MessageEvent cmd = {command, 0, this, parentView, this, {0, 0, 0, 0}};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
 }
@@ -553,9 +554,9 @@ bool View::select()
 	if (!getOptions(VIEW_OPT_SELECTABLE))
 		return false;
 
-	if (getParent())
+	if (parentView)
 	{
-		if (!getParent()->executeCommand(CMD_SELECT, this))
+		if (!parentView->executeCommand(CMD_SELECT, this))
 			return false;
 	}
 	setState(VIEW_STATE_SELECTED);
@@ -671,9 +672,9 @@ void View::updateRenderBuffer()
 
 		renderBuffer = GRenderer->createBuffer(extent);
 	}
-	else if (getParent())
+	else if (parentView)
 	{
-		renderBuffer = getParent()->renderBuffer;
+		renderBuffer = parentView->renderBuffer;
 	}
 }
 
