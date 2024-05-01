@@ -104,6 +104,7 @@ unsigned ScrollBar::getRefPosition() const
 
 VScrollBar::VScrollBar(Rectangle &viewLimits) : ScrollBar(viewLimits)
 {
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void VScrollBar::updateActivePad(Point &newpos)
@@ -147,7 +148,8 @@ void VScrollBar::computeAttributes()
 void VScrollBar::drawView()
 {
 	Rectangle viewRect;
-	getViewport(viewRect);
+	// getViewport(viewRect);
+	getBorders(viewRect);
 	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);

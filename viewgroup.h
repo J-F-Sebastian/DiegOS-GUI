@@ -127,6 +127,8 @@ protected:
 
 	virtual void computeExposure(void) override;
 
+	void updateRenderer(void);
+
 	Rectangle lastLimits;
 
 	/*

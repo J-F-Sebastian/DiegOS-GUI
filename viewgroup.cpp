@@ -648,7 +648,7 @@ void ViewGroup::selectNext(bool forward)
 
 bool ViewGroup::focusView(View *target)
 {
-	std::cout << std::hex << "PTR " << target << std::endl;
+	std::cout << __FUNCSIG__ << " PTR " << std::hex << target << std::dec << std::endl;
 	if (!target)
 		return false;
 
@@ -733,6 +733,7 @@ void ViewGroup::maximize()
 		setLocation(max);
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
+		updateRenderer();
 		/* Now ask for redrawing */
 		sendCommand(CMD_REDRAW);
 	}
@@ -745,6 +746,7 @@ void ViewGroup::minimize()
 	// FIX ME
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
+	updateRenderer();
 	/* Now ask for redrawing */
 	sendCommand(CMD_REDRAW);
 }
@@ -757,6 +759,7 @@ void ViewGroup::restore()
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
 	setLocation(lastLimits);
+	updateRenderer();
 	/* Now ask for redrawing */
 	sendCommand(CMD_REDRAW);
 }
@@ -788,4 +791,16 @@ void ViewGroup::computeExposure()
 	 * recomputed by the method.
 	 */
 	setExposed(true);
+}
+
+void ViewGroup::updateRenderer()
+{
+	updateRenderBuffer();
+	forEachView([](View *head)
+		    {
+				if (!head->getAttribute(VIEW_IS_BUFFERED))
+				{
+					head->updateRenderBuffer();
+					//head->setChanged(VIEW_CHANGED_REDRAW);
+				} });
 }

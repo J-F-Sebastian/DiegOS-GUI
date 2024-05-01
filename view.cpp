@@ -78,6 +78,7 @@ bool View::setLocation(const Rectangle &loc)
 		return false;
 
 	changeBorders(loc);
+	// updateRenderBuffer();
 	return true;
 }
 
@@ -310,10 +311,19 @@ void View::clearAttribute(unsigned char flags)
 {
 	if (flags & AVALIDATE)
 	{
+		/* VIEW_IS_BUFFERED was set and now we want to clear it */
 		if ((aflags & flags) & VIEW_IS_BUFFERED)
 		{
 			if (renderBuffer)
+			{
 				GRenderer->releaseBuffer(renderBuffer);
+				renderBuffer = nullptr;
+			}
+			/* If our parent exists we inherit its renderBuffer pointer */
+			if (parentView)
+			{
+				renderBuffer = parentView->renderBuffer;
+			}
 		}
 		aflags &= ~flags;
 		updateViewport();
@@ -575,7 +585,6 @@ void View::setBorders(const Rectangle &newrect)
 		{
 			extent.lr = Point(borders.width() - 1, borders.height() - 1);
 			updateViewport();
-			updateRenderBuffer();
 		}
 		setChanged(VIEW_CHANGED_REDRAW);
 	}
@@ -674,7 +683,10 @@ void View::updateRenderBuffer()
 	}
 	else if (parentView)
 	{
-		renderBuffer = parentView->renderBuffer;
+		if (renderBuffer != parentView->renderBuffer)
+		{
+			renderBuffer = parentView->renderBuffer;
+		}
 	}
 }
 

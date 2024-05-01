@@ -485,6 +485,8 @@ public:
 	 */
 	void getViewport(Rectangle &rect);
 
+	void updateRenderBuffer(void);
+
 protected:
 	/*
 	 * View constructor.
@@ -682,8 +684,6 @@ protected:
 	inline View *getParent(void) { return parentView; }
 
 	View *getTopView(void);
-
-	void updateRenderBuffer(void);
 
 private:
 	/*
