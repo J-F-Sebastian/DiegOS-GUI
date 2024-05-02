@@ -28,6 +28,7 @@ TitleBar::TitleBar(Rectangle &rect, const char *title) : View(rect), title(title
 {
 	setOptions(VIEW_OPT_SELECTABLE);
 	setResizeMode(VIEW_RESIZE_LX);
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void TitleBar::drawView()
@@ -36,7 +37,7 @@ void TitleBar::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_TITLEBAR);
-	getViewport(viewRect);
+	getBorders(viewRect);
 
 	p->getPalette(TITELBAR_BRIGHT, color[0]);
 	p->getPalette(TITLEBAR_DARK, color[1]);
@@ -66,7 +67,7 @@ void TitleBar::drawView()
 	}
 
 	Rectangle vr;
-	getViewport(vr);
+	getBorders(vr);
 	vr.zoom(-2, -2);
 	// The titlebar frame
 	r->filledRectangle(vr, color[0]);
