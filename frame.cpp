@@ -32,12 +32,13 @@ Frame::Frame(Rectangle &rect, unsigned width, enum FrameStyle style) : View(rect
 	}
 	setResizeMode(VIEW_RESIZEABLE);
 	setOptions(VIEW_OPT_SELECTABLE);
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void Frame::drawView()
 {
 	Rectangle viewRect;
-	getViewport(viewRect);
+	getBorders(viewRect);
 	unsigned color[2];
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
