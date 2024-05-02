@@ -26,6 +26,7 @@
 WindowIconClose::WindowIconClose(Rectangle &rect) : AbstractButton(rect)
 {
 	clearOptions(VIEW_OPT_VALIDATE);
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void WindowIconClose::drawView()
@@ -33,7 +34,7 @@ void WindowIconClose::drawView()
 	Rectangle viewRect;
 	ViewRender *renderer = GRenderer;
 	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-	getViewport(viewRect);
+	getBorders(viewRect);
 
 	unsigned color[2];
 	palette->getPalette(WINICON_BRIGHT, color[0]);
@@ -113,6 +114,7 @@ WindowIconZoom::WindowIconZoom(Rectangle &rect) : AbstractButton(rect)
 {
 	clearOptions(VIEW_OPT_VALIDATE);
 	setResizeMode(VIEW_RESIZE_UX | VIEW_RESIZE_LX);
+	clearAttribute(VIEW_IS_BUFFERED);
 }
 
 void WindowIconZoom::drawView()
@@ -120,7 +122,7 @@ void WindowIconZoom::drawView()
 	Rectangle viewRect;
 	ViewRender *renderer = GRenderer;
 	Palette *palette = GPaletteGroup->getPalette(PaletteGroup::PAL_WINICON);
-	getViewport(viewRect);
+	getBorders(viewRect);
 
 	unsigned color, color2;
 	palette->getPalette(WINICON_BRIGHT, color);
