@@ -96,9 +96,9 @@ void ViewGroup::draw()
 			 * Draw the accumulated views in reverse order.
 			 * Owner buffer is automatically used by views.
 			 */
-			while (i--)
+			while (i)
 			{
-				storage[i]->draw();
+				storage[--i]->draw();
 			}
 
 			delete[] storage;
