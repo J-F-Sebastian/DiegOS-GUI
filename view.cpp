@@ -248,7 +248,7 @@ void View::setChanged(unsigned char flags)
 	{
 		cflags |= flags;
 
-		if (parentView)
+		if (parentView && (cflags != parentView->cflags))
 			parentView->setChanged(flags);
 	}
 }
