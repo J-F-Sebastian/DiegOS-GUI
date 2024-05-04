@@ -793,17 +793,23 @@ void ViewGroup::setExposed(bool exposed)
 
 void ViewGroup::computeExposure()
 {
+	bool exposed = false;
 	/*
 	 * Set in the Z buffer the layer depth of each view
 	 */
-	forEachView([](View *head)
-		    { head->computeExposure(); });
+	forEachView([&exposed](View *head)
+		    {
+		     head->computeExposure();
+		     if (head->getState(VIEW_STATE_EXPOSED))
+		     {
+			exposed = true;
+		     } });
 
 	/*
 	 * true or false does not matter, the value is
 	 * recomputed by the method.
 	 */
-	setExposed(true);
+	View::setExposed(exposed);
 }
 
 void ViewGroup::updateRenderer()
