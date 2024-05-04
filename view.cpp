@@ -680,13 +680,12 @@ void View::updateRenderBuffer()
 			GRenderer->releaseBuffer(renderBuffer);
 
 		renderBuffer = GRenderer->createBuffer(extent);
+		setChanged(VIEW_CHANGED_REDRAW);
 	}
 	else if (parentView)
 	{
-		if (renderBuffer != parentView->renderBuffer)
-		{
-			renderBuffer = parentView->renderBuffer;
-		}
+		renderBuffer = parentView->renderBuffer;
+		setChanged(VIEW_CHANGED_REDRAW);
 	}
 }
 
