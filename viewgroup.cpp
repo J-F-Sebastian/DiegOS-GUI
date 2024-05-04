@@ -110,14 +110,27 @@ void ViewGroup::reDraw()
 {
 	if (getChanged(VIEW_CHANGED_REDRAW))
 	{
-		// Update buffers
+		//  Update buffers back-to-top, following the painter algorithm
 		if (listSize)
 		{
+			View **storage = new View *[listSize];
+			unsigned i = 0;
+
 			/*
-			 * Update exposed buffers
+			 * Accumulate the exposed views
 			 */
-			forEachView([](View *head)
-				    { head->reDraw(); });
+			forEachView([&i, storage](View *head)
+				    {
+					if (head->getChanged(VIEW_CHANGED_REDRAW))
+						storage[i++] = head; });
+			/*
+			 * Draw to buffers to be updated
+			 */
+			while (i)
+			{
+				storage[--i]->reDraw();
+			}
+			delete[] storage;
 		}
 		clearChanged(VIEW_CHANGED_REDRAW);
 	}
