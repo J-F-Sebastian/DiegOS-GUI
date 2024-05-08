@@ -438,8 +438,7 @@ void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect, const 
 		if (SDL_SetRenderTarget(renderer, NULL))
 			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 
-		// if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
-		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, NULL, &vrect))
+		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
 			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 	}
 }
