@@ -22,7 +22,13 @@
 #include "viewzbuffer.h"
 #include "viewinstances.h"
 
-ViewGroup::ViewGroup(Rectangle &limits, unsigned char flags, View *parent) : View(limits, flags, parent), lastLimits(limits), actual(nullptr), listHead(nullptr), listSize(0), lastrflags(0)
+ViewGroup::ViewGroup(Rectangle &limits, unsigned char flags, View *parent) : View(limits, flags, parent),
+									     lastLimits(limits),
+									     actual(nullptr),
+									     listHead(nullptr),
+									     listTail(nullptr),
+									     listSize(0),
+									     lastrflags(0)
 {
 	setOptions(VIEW_OPT_SELECTABLE);
 }
@@ -36,7 +42,7 @@ ViewGroup::~ViewGroup()
 		listHead = next;
 	}
 
-	actual = nullptr;
+	actual = listHead = listTail = nullptr;
 	listSize = 0;
 }
 
@@ -254,6 +260,11 @@ void ViewGroup::handleEvent(Event *evt)
 				{
 					if (remove(target))
 					{
+						if (target == actual)
+						{
+							actual = nullptr;
+						}
+
 						delete target;
 						/* Now ask for redrawing */
 						sendCommand(CMD_DRAW);
@@ -531,17 +542,21 @@ void ViewGroup::insert(View *newView)
 	{
 		newView->setParent(this);
 		/*
-		 * Insert to the front
+		 * Insert to the front of the list, i.e. in foreground
 		 */
 		if (listHead)
 		{
 			newView->setNext(listHead);
+			newView->setPrev(nullptr);
+			listHead->setPrev(newView);
+			listHead = newView;
 		}
 		else
 		{
 			newView->setNext(nullptr);
+			newView->setPrev(nullptr);
+			listHead = listTail = newView;
 		}
-		listHead = newView;
 		listSize++;
 	}
 }
@@ -551,39 +566,23 @@ bool ViewGroup::remove(View *target)
 	if (!target || !listSize)
 		return false;
 
-	if (target == actual)
-	{
-		/*
-		 * We are removing the view, so if this view has the focus,
-		 * and it is not possible to focus another view, the actual
-		 * pointer must be null.
-		 */
-		if (!focusNext(true))
-		{
-			actual = nullptr;
-		}
-	}
-
-	View *head = listHead;
-	if (head == target)
-	{
+	if (target == listHead)
 		listHead = listHead->getNext();
-		listSize--;
-		return true;
-	}
+	else if (target == listTail)
+		listTail = listTail->getPrev();
 
-	while (head->getNext())
-	{
-		if (head->getNext() == target)
-		{
-			head->setNext(target->getNext());
-			listSize--;
-			return true;
-		}
-		head = head->getNext();
-	}
+	View *next = target->getNext();
+	View *prev = target->getPrev();
+	if (next)
+		next->setPrev(prev);
+	if (prev)
+		prev->setNext(next);
 
-	return false;
+	target->setNext(nullptr);
+	target->setPrev(nullptr);
+	listSize--;
+
+	return true;
 }
 
 View *ViewGroup::actualView()
@@ -684,21 +683,9 @@ void ViewGroup::toForeground(View *target)
 		 * Update Foreground/Background status
 		 */
 		listHead->setBackground();
-		/*
-		 * temp points to target's father
-		 */
-		View *temp = forEachViewUntilTrue([target](View *v) -> bool
-						  { return (v->getNext() == target) ? true : false; });
 
-		/*
-		 * Unlink target setting its father "next" points to target's "next".
-		 */
-		temp->setNext(target->getNext());
-		/*
-		 * Promote target to the top of the list
-		 */
-		target->setNext(listHead);
-		listHead = target;
+		if (remove(target))
+			insert(target);
 	}
 
 	target->setForeground();

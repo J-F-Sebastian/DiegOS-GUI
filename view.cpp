@@ -24,6 +24,7 @@
 View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(parent),
 								   topView(nullptr),
 								   nextView(nullptr),
+								   prevView(nullptr),
 								   borders(limits),
 								   extent(0, 0, limits.width() - 1, limits.height() - 1),
 								   viewport(0, 0, limits.width() - 1, limits.height() - 1),
@@ -40,8 +41,8 @@ View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(pa
 
 View::~View()
 {
-	parentView = nullptr;
-	nextView = nullptr;
+	parentView = nextView = prevView = nullptr;
+
 	if (aflags & VIEW_IS_BUFFERED)
 		if (renderBuffer)
 			GRenderer->releaseBuffer(renderBuffer);
@@ -127,6 +128,11 @@ void View::setParent(View *par)
 void View::setNext(View *par)
 {
 	nextView = par;
+}
+
+void View::setPrev(View *par)
+{
+	prevView = par;
 }
 
 static const unsigned char RVALIDATE = (VIEW_BOUNDED | VIEW_ZOOMED);
