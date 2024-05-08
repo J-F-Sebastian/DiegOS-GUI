@@ -122,9 +122,7 @@ enum
 	/* View is solid, filled with an opaque background */
 	VIEW_IS_SOLID = (1 << 1),
 	/* View casts a shadow */
-	VIEW_IS_SHADOWED = (1 << 2),
-	/* View draws to its own buffer */
-	VIEW_IS_BUFFERED = (1 << 3)
+	VIEW_IS_SHADOWED = (1 << 2)
 };
 
 /*
@@ -506,9 +504,9 @@ protected:
 	 * sflags set to (VIEW_STATE_VISIBLE), view is visible
 	 * oflags set to (0), no options set
 	 * cflags set to (VIEW_CHANGED_REDRAW), view need to be drawn
-	 * aflags set to (VIEW_IS_BUFFERED), view draws to its own buffer
+	 * aflags set to (0), no attributes set
 	 */
-	explicit View(Rectangle &limits, unsigned char flags = VIEW_IS_BUFFERED, View *parent = nullptr);
+	explicit View(Rectangle &limits, unsigned char flags = 0, View *parent = nullptr);
 
 	/*
 	 * Apply new coordinates.
