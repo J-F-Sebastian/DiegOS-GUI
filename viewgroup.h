@@ -83,6 +83,25 @@ public:
 	/*
 	 * Call function f passing every child view as parameter.
 	 * This way the effect of f() are applied to all views.
+	 * The view list is traversed in reverse.
+	 *
+	 * PARAMETERS IN
+	 * void f(View *) - a function call, either a pointer or a lambda function
+	 */
+	template <typename FV>
+	void forEachViewR(FV &&f)
+	{
+		View *tail = listTail;
+		while (tail)
+		{
+			f(tail);
+			tail = tail->getPrev();
+		}
+	}
+
+	/*
+	 * Call function f passing every child view as parameter.
+	 * This way the effect of f() are applied to all views.
 	 * The function f is expected to return false if other views need to be
 	 * processed, and is expected to return true if the view passed as parameter
 	 * is the one required for processing.
@@ -138,8 +157,9 @@ protected:
 	/*
 	 * siblings list, views collection of this group.
 	 * listHead points to the foreground view.
+	 * listTail to the last background view.
 	 */
-	View *listHead;
+	View *listHead, *listTail;
 	/*
 	 * Number of siblings in the views collection
 	 */

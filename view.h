@@ -263,9 +263,17 @@ public:
 	 * Set the sibling view (another view in a collection or a group).
 	 *
 	 * PARAMETERS IN
-	 * View *par - pointer to a View instance
+	 * View *par - pointer to a View instance in background
 	 */
 	void setNext(View *par);
+
+	/*
+	 * Set the sibling view (another view in a collection or a group).
+	 *
+	 * PARAMETERS IN
+	 * View *par - pointer to a View instance in foreground
+	 */
+	void setPrev(View *par);
 
 	/*
 	 * Set state to foreground, this view is visible and on top
@@ -476,6 +484,8 @@ public:
 	virtual bool isEventPositionInRange(Event *evt);
 
 	inline View *getNext(void) { return nextView; }
+
+	inline View *getPrev(void) { return prevView; }
 
 	/*
 	 * Copy viewport into rect.
@@ -702,11 +712,13 @@ private:
 	 */
 	View *topView;
 	/*
-	 * The sibling of this view, can be nullptr.
-	 * This field can be used to link views in a collection
+	 * The siblings of this view, can be nullptr.
+	 * These fields can be used to link views in a collection
 	 * (a group).
+	 * nextView points to the next view in list - going background.
+	 * prevView points to the previous view in list - going foreground.
 	 */
-	View *nextView;
+	View *nextView, *prevView;
 	/*
 	 * borders is expressed in owner's coordinates,
 	 * and is the area covered by this view in owner's space.
