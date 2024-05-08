@@ -43,9 +43,8 @@ View::~View()
 {
 	parentView = nextView = prevView = nullptr;
 
-	if (aflags & VIEW_IS_BUFFERED)
-		if (renderBuffer)
-			GRenderer->releaseBuffer(renderBuffer);
+	if (renderBuffer)
+		GRenderer->releaseBuffer(renderBuffer);
 }
 
 void View::sizeLimits(Point &min, Point &max)
@@ -123,7 +122,6 @@ void View::globalize(Rectangle &rect)
 void View::setParent(View *par)
 {
 	parentView = par;
-	updateRenderBuffer();
 }
 
 void View::setNext(View *par)
@@ -289,8 +287,7 @@ void View::clearChanged(unsigned char flags)
 
 static const unsigned char AVALIDATE = (VIEW_IS_FRAMED |
 					VIEW_IS_SHADOWED |
-					VIEW_IS_SOLID |
-					VIEW_IS_BUFFERED);
+					VIEW_IS_SOLID);
 
 bool View::getAttribute(unsigned char flags) const
 {
@@ -317,20 +314,6 @@ void View::clearAttribute(unsigned char flags)
 {
 	if (flags & AVALIDATE)
 	{
-		/* VIEW_IS_BUFFERED was set and now we want to clear it */
-		if ((aflags & flags) & VIEW_IS_BUFFERED)
-		{
-			if (renderBuffer)
-			{
-				GRenderer->releaseBuffer(renderBuffer);
-				renderBuffer = nullptr;
-			}
-			/* If our parent exists we inherit its renderBuffer pointer */
-			if (parentView)
-			{
-				renderBuffer = parentView->renderBuffer;
-			}
-		}
 		aflags &= ~flags;
 		updateViewport();
 	}
@@ -338,13 +321,10 @@ void View::clearAttribute(unsigned char flags)
 
 void View::draw()
 {
-	if (aflags & VIEW_IS_BUFFERED)
-	{
-		Rectangle dest = extent;
-		makeGlobal(dest.ul);
-		makeGlobal(dest.lr);
-		GRenderer->writeBuffer(renderBuffer, extent, dest);
-	}
+	Rectangle dest = extent;
+	makeGlobal(dest.ul);
+	makeGlobal(dest.lr);
+	GRenderer->writeBuffer(renderBuffer, extent, dest);
 }
 
 void View::reDraw()
@@ -680,19 +660,10 @@ View *View::getTopView()
 
 void View::updateRenderBuffer()
 {
-	if (aflags & VIEW_IS_BUFFERED)
-	{
-		if (renderBuffer)
-			GRenderer->releaseBuffer(renderBuffer);
+	if (renderBuffer)
+		GRenderer->releaseBuffer(renderBuffer);
 
-		renderBuffer = GRenderer->createBuffer(extent);
-		setChanged(VIEW_CHANGED_REDRAW);
-	}
-	else if (parentView)
-	{
-		renderBuffer = parentView->renderBuffer;
-		setChanged(VIEW_CHANGED_REDRAW);
-	}
+	renderBuffer = GRenderer->createBuffer(extent);
 }
 
 void View::updateViewport()

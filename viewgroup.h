@@ -25,7 +25,7 @@
 class ViewGroup : public View
 {
 public:
-	explicit ViewGroup(Rectangle &limits, unsigned char flags = VIEW_IS_BUFFERED, View *parent = nullptr);
+	explicit ViewGroup(Rectangle &limits, unsigned char flags = 0, View *parent = nullptr);
 	virtual ~ViewGroup();
 
 	/*
