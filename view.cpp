@@ -744,7 +744,7 @@ void View::updateViewport()
 {
 	viewport = extent;
 	if (aflags & VIEW_IS_FRAMED)
-		viewport.zoom(6, 6);
+		viewport.zoom(-6, -6);
 	if (aflags & VIEW_IS_SHADOWED)
 		viewport.lr.move(-2, -1);
 }
