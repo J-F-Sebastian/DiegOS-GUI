@@ -730,7 +730,7 @@ void ViewGroup::maximize()
 
 		getBorders(lastLimits);
 		Rectangle max;
-		getParent()->getExtent(max);
+		getParent()->getViewport(max);
 		setLocation(max);
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
