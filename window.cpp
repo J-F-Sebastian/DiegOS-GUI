@@ -27,7 +27,9 @@
 #include "background.h"
 #include "scrollbar.h"
 
-Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, 0, parent), wFlags(ctrlflags), isZoomed(false)
+Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, VIEW_IS_FRAMED | VIEW_IS_SOLID | VIEW_IS_SHADOWED, parent),
+												  wFlags(ctrlflags),
+												  isZoomed(false)
 {
 	setOptions(VIEW_OPT_TOPSELECT | VIEW_OPT_TILEABLE | VIEW_OPT_SELECTABLE);
 	setResizeMode(VIEW_RESIZEABLE);
@@ -35,33 +37,24 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	View *tmpView = nullptr;
 	Rectangle ext;
 
-	getExtent(ext);
-	tmpView = new Frame(ext, 6);
-	insert(tmpView);
-
-	ext.zoom(-6, -6);
-	ext.ul.move(0, 25);
-	tmpView = new Background(ext);
-	insert(tmpView);
-
-	getExtent(ext);
-	ext.zoom(-6, -6);
-	ext.lr.y = 30;
+	getViewport(ext);
+	ext.height(24);
 
 	if (wFlags & WINDOW_CLOSE)
 	{
-		Rectangle temp(6, 6, 30, 30);
+		Rectangle temp = ext;
+		temp.width(24);
 		tmpView = new WindowIconClose(temp);
 		insert(tmpView);
 		ext.ul.move(temp.width(), 0);
 	}
 	if (wFlags & WINDOW_ZOOM)
 	{
-		Rectangle temp(6, 6, 30, 30);
-		temp.move(ext.width() - 1, 0);
+		Rectangle temp = ext;
+		temp.ul.x = temp.lr.x - 24;
 		tmpView = new WindowIconZoom(temp);
 		insert(tmpView);
-		ext.lr.move(-temp.width() - 1, 0);
+		ext.lr.move(-temp.width(), 0);
 	}
 
 	tmpView = new TitleBar(ext, title);
