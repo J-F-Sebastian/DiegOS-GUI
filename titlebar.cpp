@@ -110,7 +110,7 @@ void TitleBar::handleEvent(Event *evt)
 
 				getParent()->moveLocation(deltaPressure);
 				/* Now ask for redrawing */
-				sendCommand(CMD_REDRAW);
+				sendCommand(CMD_DRAW);
 			}
 		}
 		else if (getParent()->getState(VIEW_STATE_DRAGGING))
