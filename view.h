@@ -346,7 +346,7 @@ public:
 	 * Draw the graphics of the view by rendering into renderBuffer.
 	 * If renderBuffer is NULL all rendering happens into the video buffer.
 	 */
-	virtual void drawView(void) = 0;
+	virtual void drawView(void);
 
 	/*
 	 * Draw the graphics of the view by copying the renderBuffer

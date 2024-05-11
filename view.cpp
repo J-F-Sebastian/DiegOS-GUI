@@ -20,6 +20,8 @@
 
 #include "view.h"
 #include "viewinstances.h"
+#include "background_palette.h"
+#include "frame_palette.h"
 
 View::View(Rectangle &limits, unsigned char flags, View *parent) : parentView(parent),
 								   topView(nullptr),
@@ -318,12 +320,84 @@ void View::clearAttribute(unsigned char flags)
 	}
 }
 
+void View::drawView()
+{
+	ViewRender *r = GRenderer;
+
+	if (aflags & VIEW_IS_SOLID)
+	{
+		Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BACKGROUND);
+		unsigned color;
+
+		if (getState(VIEW_STATE_DISABLED))
+			p->getPalette(BACKGROUND_BG_DISABLED, color);
+		else if (getState(VIEW_STATE_FOREGROUND))
+			p->getPalette(BACKGROUND_FG, color);
+		else
+			p->getPalette(BACKGROUND_BG, color);
+
+		r->filledRectangle(viewport, color);
+	}
+
+	if (aflags & VIEW_IS_FRAMED)
+	{
+		unsigned color[2];
+		Rectangle temp(viewport);
+		temp.zoom(6, 6);
+		Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_FRAME);
+
+		p->getPalette(FRAME_BRIGHT, color[0]);
+		p->getPalette(FRAME_DARK, color[1]);
+
+		// Outer shadow, 2 pixels
+
+		/*
+		 *    BBBBBBBBB
+		 *    B       D
+		 *    B       D
+		 *    B       D
+		 *    DDDDDDDDD
+		 */
+
+		r->frame(temp, color, false);
+		temp.zoom(-1, -1);
+		r->frame(temp, color, false);
+
+		// The frame, width 2 pixels
+		p->getPalette(FRAME_MAIN, color[0]);
+		temp.zoom(-1, -1);
+		r->rectangle(temp, color[0]);
+		temp.zoom(-1, -1);
+		r->rectangle(temp, color[0]);
+
+		// Inner shadow, 2 pixels
+
+		/*
+		 *    DDDDDDDDB
+		 *    D       B
+		 *    D       B
+		 *    D       B
+		 *    DBBBBBBBB
+		 */
+		temp.zoom(-1, -1);
+		r->frame(temp, color, true);
+		temp.zoom(-1, -1);
+		r->frame(temp, color, true);
+	}
+	if (aflags & VIEW_IS_SHADOWED)
+	{
+		}
+}
+
 void View::draw()
 {
-	Rectangle dest = extent;
-	makeGlobal(dest.ul);
-	makeGlobal(dest.lr);
-	GRenderer->writeBuffer(renderBuffer, extent, dest);
+	if (sflags & VIEW_STATE_EXPOSED)
+	{
+		Rectangle dest = extent;
+		makeGlobal(dest.ul);
+		makeGlobal(dest.lr);
+		GRenderer->writeBuffer(renderBuffer, extent, dest);
+	}
 }
 
 void View::reDraw()

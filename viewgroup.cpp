@@ -130,6 +130,7 @@ void ViewGroup::reDraw()
 
 void ViewGroup::drawView()
 {
+	View::drawView();
 }
 
 void ViewGroup::handleEvent(Event *evt)
