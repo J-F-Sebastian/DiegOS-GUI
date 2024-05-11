@@ -87,27 +87,8 @@ void ViewGroup::draw()
 		//  Draw children back-to-top, following the painter algorithm
 		if (listSize)
 		{
-			View **storage = new View *[listSize];
-			unsigned i = 0;
-
-			/*
-			 * Accumulate the exposed views
-			 */
-			forEachView([&i, storage](View *head)
-				    {
-					if (head->getState(VIEW_STATE_EXPOSED))
-						storage[i++] = head; });
-
-			/*
-			 * Draw the accumulated views in reverse order.
-			 * Owner buffer is automatically used by views.
-			 */
-			while (i)
-			{
-				storage[--i]->draw();
-			}
-
-			delete[] storage;
+			forEachViewR([](View *tail)
+				     { tail->draw(); });
 		}
 	}
 }
@@ -116,7 +97,8 @@ void ViewGroup::reDraw()
 {
 	if (getChanged(VIEW_CHANGED_REDRAW))
 	{
-		//  Update buffers back-to-top, following the painter algorithm
+		View::reDraw();
+		// Update buffers
 		if (listSize)
 		{
 			View **storage = new View *[listSize];
