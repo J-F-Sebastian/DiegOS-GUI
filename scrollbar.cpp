@@ -23,7 +23,12 @@
 #include "scrollbar.h"
 #include "scrollbar_palette.h"
 
-ScrollBar::ScrollBar(Rectangle &viewLimits) : View(viewLimits), refElements(1), refSize(1), refPosition(0), activePad(viewLimits), lastPressure(0, 0)
+ScrollBar::ScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition) : View(viewLimits),
+													       refElements(refElements),
+													       refVisible(refVisible),
+													       refPosition(refPosition),
+													       activePad(viewLimits),
+													       lastPressure(0, 0)
 {
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
@@ -39,8 +44,8 @@ void ScrollBar::handleEvent(Event *evt)
 		if (status & POS_EVT_PRESSED)
 		{
 			Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
-			Point deltaPressure(newPressure);
-			if (lastPressure != newPressure)
+			makeLocal(newPressure);
+			if (lastPressure.y != newPressure.y)
 			{
 				updateActivePad(newPressure);
 				computeAttributes();
@@ -59,17 +64,19 @@ void ScrollBar::setRefElements(unsigned newval)
 	if (newval != refElements)
 	{
 		refElements = newval;
+		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
 		sendCommand(CMD_REDRAW);
 	}
 }
 
-void ScrollBar::setRefSize(unsigned newval)
+void ScrollBar::setRefVisible(unsigned newval)
 {
-	if (newval != refSize)
+	if (newval != refVisible)
 	{
-		refSize = newval;
+		refVisible = newval;
+		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
 		sendCommand(CMD_REDRAW);
@@ -81,6 +88,7 @@ void ScrollBar::setRefPosition(unsigned newval)
 	if (newval != refPosition)
 	{
 		refPosition = newval;
+		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
 		sendCommand(CMD_REDRAW);
@@ -92,9 +100,9 @@ unsigned ScrollBar::getRefElements() const
 	return refElements;
 }
 
-unsigned ScrollBar::getRefSize() const
+unsigned ScrollBar::getRefVisible() const
 {
-	return refSize;
+	return refVisible;
 }
 
 unsigned ScrollBar::getRefPosition() const
@@ -102,40 +110,36 @@ unsigned ScrollBar::getRefPosition() const
 	return refPosition;
 }
 
-VScrollBar::VScrollBar(Rectangle &viewLimits) : ScrollBar(viewLimits)
+VScrollBar::VScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition) : ScrollBar(viewLimits, refElements, refVisible, refPosition)
 {
+	computeActivePad();
 }
 
 void VScrollBar::updateActivePad(Point &newpos)
 {
-	Rectangle viewRect;
-	getExtent(viewRect);
 	int y = newpos.y - lastPressure.y;
 
+	Rectangle viewRect;
+	getExtent(viewRect);
+	viewRect.zoom(-2, -2);
 	activePad.moveClipped(0, y, viewRect);
+
+	refPosition = y * refElements / viewRect.height();
+	if (refPosition > refElements - refVisible)
+		refPosition = refElements - refVisible;
 }
 
 void VScrollBar::computeActivePad()
 {
-	int pos;
 	Rectangle viewRect;
 	getExtent(viewRect);
+	viewRect.zoom(-2, -2);
 	activePad = viewRect;
 
-	activePad.zoom(-1, refSize * viewRect.height() / refElements);
-	if (refPosition < refSize)
-	{
-		pos = 0;
-	}
-	else if (refPosition > refElements - refSize)
-	{
-		pos = viewRect.height() - activePad.height();
-	}
-	else
-	{
-		pos = refPosition * viewRect.height() / refElements;
-	}
-	activePad.move(0, pos);
+	unsigned int height = refVisible * activePad.height() / refElements;
+	lastPressure.y = refPosition * activePad.height() / refElements;
+	activePad.height(height);
+	activePad.moveClipped(0, lastPressure.y, viewRect);
 }
 
 void VScrollBar::computeAttributes()
@@ -146,18 +150,16 @@ void VScrollBar::computeAttributes()
 
 void VScrollBar::drawView()
 {
+	unsigned color[2];
 	Rectangle viewRect;
 	getViewport(viewRect);
-	unsigned color, color2;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
 
-	Rectangle temp(viewRect);
+	p->getPalette(SCROLLBAR_BRIGHT, color[0]);
+	p->getPalette(SCROLLBAR_DARK, color[1]);
 
-	p->getPalette(SCROLLBAR_BRIGHT, color);
-	p->getPalette(SCROLLBAR_DARK, color2);
-
-	// Outer shadow
+	// Outer shadow, 2 pixels
 
 	/*
 	 *    BBBBBBBBB
@@ -166,25 +168,13 @@ void VScrollBar::drawView()
 	 *    B       D
 	 *    DDDDDDDDD
 	 */
-	Point ul(temp.ul);
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
 
-	temp.zoom(-1, -1);
-	ul = temp.ul;
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
-
-	// The pad
-	p->getPalette(SCROLLBAR_FG, color);
-	temp.zoom(-1, -1);
-	r->filledRectangle(temp, color);
+	r->frame(viewRect, color, false);
+	viewRect.zoom(-1, -1);
+	r->frame(viewRect, color, false);
+	viewRect.zoom(-1, -1);
+	p->getPalette(SCROLLBAR_BG, color[0]);
+	r->filledRectangle(viewRect, color[0]);
+	p->getPalette(SCROLLBAR_FG, color[0]);
+	r->filledRectangle(activePad, color[0]);
 }

@@ -25,16 +25,16 @@
 class ScrollBar : public View
 {
 public:
-	ScrollBar(Rectangle &viewLimits);
+	ScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
 	virtual void handleEvent(Event *evt) override;
 
 	void setRefElements(unsigned newval);
-	void setRefSize(unsigned newval);
+	void setRefVisible(unsigned newval);
 	void setRefPosition(unsigned newval);
 
 	unsigned getRefElements(void) const;
-	unsigned getRefSize(void) const;
+	unsigned getRefVisible(void) const;
 	unsigned getRefPosition(void) const;
 
 protected:
@@ -64,7 +64,7 @@ protected:
 	 * first visible element (or selectable, or driving the sliding actions).
 	 * The pad size and position are computed with these numbers.
 	 */
-	unsigned refElements, refSize, refPosition;
+	unsigned refElements, refVisible, refPosition;
 	Rectangle activePad;
 	Point lastPressure;
 };
@@ -72,7 +72,7 @@ protected:
 class VScrollBar : public ScrollBar
 {
 public:
-	VScrollBar(Rectangle &viewLimits);
+	VScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
 protected:
 	virtual void drawView(void) override;
@@ -84,7 +84,7 @@ protected:
 class HScrollBar : public ScrollBar
 {
 public:
-	HScrollBar(Rectangle &viewLimits);
+	HScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
 protected:
 	virtual void drawView(void) override;
