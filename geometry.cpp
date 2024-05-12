@@ -98,8 +98,7 @@ void Rectangle::moveClipped(int deltax, int deltay, Rectangle &clipping)
 	if (!clipping.includes(*this))
 		return;
 
-	ul.move(deltax, deltay);
-	lr.move(deltax, deltay);
+	move(deltax, deltay);
 
 	if (!clipping.includes(*this))
 	{
@@ -110,8 +109,7 @@ void Rectangle::moveClipped(int deltax, int deltay, Rectangle &clipping)
 			if (lr.y > clipping.lr.y)
 				deltay = clipping.lr.y - lr.y;
 
-			ul.move(deltax, deltay);
-			lr.move(deltax, deltay);
+			move(deltax, deltay);
 		}
 		else if ((ul.x < clipping.ul.x) || (ul.y < clipping.ul.y))
 		{
@@ -120,8 +118,7 @@ void Rectangle::moveClipped(int deltax, int deltay, Rectangle &clipping)
 			if (ul.y > clipping.ul.y)
 				deltay = clipping.ul.y - ul.y;
 
-			ul.move(deltax, deltay);
-			lr.move(deltax, deltay);
+			move(deltax, deltay);
 		}
 	}
 }
