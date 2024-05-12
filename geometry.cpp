@@ -115,7 +115,7 @@ void Rectangle::moveClipped(int deltax, int deltay, Rectangle &clipping)
 		{
 			if (ul.x < clipping.ul.x)
 				deltax = clipping.ul.x - ul.x;
-			if (ul.y > clipping.ul.y)
+			if (ul.y < clipping.ul.y)
 				deltay = clipping.ul.y - ul.y;
 
 			move(deltax, deltay);
