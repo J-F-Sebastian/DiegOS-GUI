@@ -180,33 +180,41 @@ void VScrollBar::computeAttributes()
 	getExtent(viewRect);
 }
 
-void VScrollBar::drawView()
+HScrollBar::HScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition) : ScrollBar(viewLimits, refElements, refVisible, refPosition)
 {
-	unsigned color[2];
+	setResizeMode(VIEW_RESIZE_LX | VIEW_RESIZE_LY | VIEW_RESIZE_UY);
+	computeActivePad();
+}
+
+void HScrollBar::updateActivePad(Point &newpos)
+{
+	int x = newpos.x - lastPressure.x;
+
 	Rectangle viewRect;
-	getViewport(viewRect);
-	ViewRender *r = GRenderer;
-	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
+	getExtent(viewRect);
+	viewRect.zoom(-2, -2);
+	activePad.moveClipped(x, 0, viewRect);
 
-	p->getPalette(SCROLLBAR_BRIGHT, color[0]);
-	p->getPalette(SCROLLBAR_DARK, color[1]);
+	refPosition = x * refElements / viewRect.width();
+	if (refPosition > refElements - refVisible)
+		refPosition = refElements - refVisible;
+}
 
-	// Outer shadow, 2 pixels
+void HScrollBar::computeActivePad()
+{
+	Rectangle viewRect;
+	getExtent(viewRect);
+	viewRect.zoom(-2, -2);
+	activePad = viewRect;
 
-	/*
-	 *    BBBBBBBBB
-	 *    B       D
-	 *    B       D
-	 *    B       D
-	 *    DDDDDDDDD
-	 */
+	unsigned int width = refVisible * activePad.width() / refElements;
+	lastPressure.x = refPosition * activePad.width() / refElements;
+	activePad.width(width);
+	activePad.moveClipped(lastPressure.x, 0, viewRect);
+}
 
-	r->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
-	r->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
-	p->getPalette(SCROLLBAR_BG, color[0]);
-	r->filledRectangle(viewRect, color[0]);
-	p->getPalette(SCROLLBAR_FG, color[0]);
-	r->filledRectangle(activePad, color[0]);
+void HScrollBar::computeAttributes()
+{
+	Rectangle viewRect;
+	getExtent(viewRect);
 }
