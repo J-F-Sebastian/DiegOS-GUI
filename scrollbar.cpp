@@ -59,6 +59,37 @@ void ScrollBar::handleEvent(Event *evt)
 	}
 }
 
+void ScrollBar::drawView()
+{
+	unsigned color[2];
+	Rectangle viewRect;
+	getViewport(viewRect);
+	ViewRender *r = GRenderer;
+	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_SCROLLBAR);
+
+	p->getPalette(SCROLLBAR_BRIGHT, color[0]);
+	p->getPalette(SCROLLBAR_DARK, color[1]);
+
+	// Outer shadow, 2 pixels
+
+	/*
+	 *    BBBBBBBBB
+	 *    B       D
+	 *    B       D
+	 *    B       D
+	 *    DDDDDDDDD
+	 */
+
+	r->frame(viewRect, color, false);
+	viewRect.zoom(-1, -1);
+	r->frame(viewRect, color, false);
+	viewRect.zoom(-1, -1);
+	p->getPalette(SCROLLBAR_BG, color[0]);
+	r->filledRectangle(viewRect, color[0]);
+	p->getPalette(SCROLLBAR_FG, color[0]);
+	r->filledRectangle(activePad, color[0]);
+}
+
 void ScrollBar::setRefElements(unsigned newval)
 {
 	if (newval != refElements)

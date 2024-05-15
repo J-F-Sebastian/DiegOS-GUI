@@ -38,6 +38,8 @@ public:
 	unsigned getRefPosition(void) const;
 
 protected:
+	virtual void drawView(void) override;
+
 	/*
 	 * Updates coordinates of the active pad sliding the pad
 	 * left/right or up/down
@@ -75,7 +77,6 @@ public:
 	VScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
 protected:
-	virtual void drawView(void) override;
 	virtual void updateActivePad(Point &newpos) override;
 	virtual void computeActivePad(void) override;
 	virtual void computeAttributes(void) override;
@@ -87,7 +88,6 @@ public:
 	HScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
 protected:
-	virtual void drawView(void) override;
 	virtual void updateActivePad(Point &newpos) override;
 	virtual void computeActivePad(void) override;
 	virtual void computeAttributes(void) override;
