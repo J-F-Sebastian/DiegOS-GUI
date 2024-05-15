@@ -33,6 +33,16 @@ ScrollBar::ScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVi
 	setOptions(VIEW_OPT_SELECTABLE | VIEW_OPT_TOPSELECT);
 }
 
+bool ScrollBar::setLocation(const Rectangle &loc)
+{
+	if (View::setLocation(loc))
+	{
+		computeActivePad();
+		return true;
+	}
+	return false;
+}
+
 void ScrollBar::handleEvent(Event *evt)
 {
 	View::handleEvent(evt);

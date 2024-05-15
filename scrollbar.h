@@ -27,6 +27,8 @@ class ScrollBar : public View
 public:
 	ScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition);
 
+	virtual bool setLocation(const Rectangle &loc) override;
+
 	virtual void handleEvent(Event *evt) override;
 
 	void setRefElements(unsigned newval);
