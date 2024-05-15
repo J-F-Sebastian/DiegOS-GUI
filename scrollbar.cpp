@@ -55,7 +55,7 @@ void ScrollBar::handleEvent(Event *evt)
 		{
 			Point newPressure(evt->getPositionalEvent()->x, evt->getPositionalEvent()->y);
 			makeLocal(newPressure);
-			if (lastPressure.y != newPressure.y)
+			if (lastPressure != newPressure)
 			{
 				updateActivePad(newPressure);
 				computeAttributes();
