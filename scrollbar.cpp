@@ -112,6 +112,7 @@ unsigned ScrollBar::getRefPosition() const
 
 VScrollBar::VScrollBar(Rectangle &viewLimits, unsigned refElements, unsigned refVisible, unsigned refPosition) : ScrollBar(viewLimits, refElements, refVisible, refPosition)
 {
+	setResizeMode(VIEW_RESIZE_LX | VIEW_RESIZE_LY | VIEW_RESIZE_UX);
 	computeActivePad();
 }
 
