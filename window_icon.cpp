@@ -48,13 +48,11 @@ void WindowIconClose::drawView()
 	 *    B       D
 	 *    DDDDDDDDD
 	 */
-	renderer->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
-	renderer->frame(viewRect, color, false);
+	renderer->frame(viewRect, 2, color, false);
 
 	// The button frame
 	palette->getPalette(WINICON_MAIN, color[0]);
-	viewRect.zoom(-1, -1);
+	viewRect.zoom(-2, -2);
 	renderer->filledRectangle(viewRect, color[0]);
 
 	if (isDown())
@@ -160,17 +158,15 @@ void WindowIconZoom::drawView()
 	if (getParent() && !getParent()->getResizeMode(VIEW_ZOOMED))
 	{
 		viewRect.zoom(-3, -3);
-		renderer->rectangle(viewRect, color);
-		viewRect.zoom(-1, -1);
-		renderer->rectangle(viewRect, color);
-		viewRect.zoom(-1, -1);
+		renderer->rectangle(viewRect, 2, color);
+		viewRect.zoom(-2, -2);
 		renderer->hline(viewRect.ul, viewRect.width(), color);
 	}
 	else
 	{
 		viewRect.zoom(-6, -6);
 		viewRect.move(-1, 1);
-		renderer->rectangle(viewRect, color);
+		renderer->rectangle(viewRect, 1, color);
 		viewRect.zoom(-1, -1);
 		renderer->hline(viewRect.ul, viewRect.width(), color);
 	}

@@ -45,11 +45,7 @@ void Frame::drawView()
 	if (style == FRAME_FLAT)
 	{
 		p->getPalette(FRAME_MAIN, color[0]);
-		for (unsigned i = 0; i < width; i++)
-		{
-			r->rectangle(viewRect, color[0]);
-			viewRect.zoom(-1, -1);
-		}
+		r->rectangle(viewRect, width, color[0]);
 	}
 	else if (style == FRAME_BEVELLED)
 	{
@@ -68,17 +64,11 @@ void Frame::drawView()
 		 *    DDDDDDDDD
 		 */
 
-		r->frame(temp, color, false);
-		temp.zoom(-1, -1);
-		r->frame(temp, color, false);
-
+		r->frame(temp, 2, color, false);
 		// The frame, width - 4 pixels
 		p->getPalette(FRAME_MAIN, color[0]);
-		for (unsigned i = 0; i < width - 4; i++)
-		{
-			temp.zoom(-1, -1);
-			r->rectangle(temp, color[0]);
-		}
+		temp.zoom(-2, -2);
+		r->rectangle(temp, width - 4, color[0]);
 
 		// Inner shadow, 2 pixels
 
@@ -89,10 +79,9 @@ void Frame::drawView()
 		 *    D       B
 		 *    DBBBBBBBB
 		 */
-		temp.zoom(-1, -1);
-		r->frame(temp, color, true);
-		temp.zoom(-1, -1);
-		r->frame(temp, color, true);
+
+		temp.zoom(4 - width - 1, 4 - width - 1);
+		r->frame(temp, 2, color, true);
 
 		if (getParent()->getResizeMode(VIEW_RESIZEABLE))
 		{

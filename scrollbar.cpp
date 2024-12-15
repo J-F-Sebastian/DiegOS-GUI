@@ -90,10 +90,8 @@ void ScrollBar::drawView()
 	 *    DDDDDDDDD
 	 */
 
-	r->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
-	r->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
+	r->frame(viewRect, 2, color, false);
+	viewRect.zoom(-2, -2);
 	p->getPalette(SCROLLBAR_BG, color[0]);
 	r->filledRectangle(viewRect, color[0]);
 	p->getPalette(SCROLLBAR_FG, color[0]);

@@ -31,7 +31,7 @@
 class ViewRender
 {
 public:
-	virtual ~ViewRender(){};
+	virtual ~ViewRender() {};
 
 	/*
 	 * Trace a line from a to b with the specified color.
@@ -67,7 +67,7 @@ public:
 	 *  Rectangle &rect - reference to the rectangle on screen
 	 *  uint32_t color - the color to be used (bit depth depends on the renderer)
 	 */
-	virtual void rectangle(const Rectangle &rect, uint32_t color) = 0;
+	virtual void rectangle(const Rectangle &rect, int len, uint32_t color) = 0;
 	/*
 	 * Trace a rectangle using the coordinates stored in rect with the specified color.
 	 * The rectangle is filled with the same color.
@@ -116,7 +116,7 @@ public:
 	 * uint32_t colors[] - the colors to be used(bit depth depends on the renderer),
 	 *                     first color is applied to the border, second color is used to fill the rectangle.
 	 */
-	virtual void frame(const Rectangle &rect, uint32_t colors[2], bool inner) = 0;
+	virtual void frame(const Rectangle &rect, int len, uint32_t colors[2], bool inner) = 0;
 	/*
 	 * Write the specified text using the coordinates stored in rect with the specified color.
 	 * The rectangle is filled in height and width with respect to the font size and aspect ratio.

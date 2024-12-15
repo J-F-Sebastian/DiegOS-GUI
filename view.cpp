@@ -359,16 +359,11 @@ void View::drawView()
 		 *    DDDDDDDDD
 		 */
 
-		r->frame(temp, color, false);
-		temp.zoom(-1, -1);
-		r->frame(temp, color, false);
-
+		r->frame(temp, 2, color, false);
 		// The frame, width 2 pixels
 		p->getPalette(FRAME_MAIN, color[0]);
-		temp.zoom(-1, -1);
-		r->rectangle(temp, color[0]);
-		temp.zoom(-1, -1);
-		r->rectangle(temp, color[0]);
+		temp.zoom(-2, -2);
+		r->rectangle(temp, 2, color[0]);
 
 		// Inner shadow, 2 pixels
 
@@ -379,14 +374,13 @@ void View::drawView()
 		 *    D       B
 		 *    DBBBBBBBB
 		 */
-		temp.zoom(-1, -1);
-		r->frame(temp, color, true);
-		temp.zoom(-1, -1);
-		r->frame(temp, color, true);
+
+		temp.zoom(-2, -2);
+		r->frame(temp, 2, color, true);
 	}
 	if (aflags & VIEW_IS_SHADOWED)
 	{
-		}
+	}
 }
 
 void View::draw()

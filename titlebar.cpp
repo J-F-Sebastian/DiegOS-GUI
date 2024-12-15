@@ -50,9 +50,7 @@ void TitleBar::drawView()
 	 *    B       D
 	 *    DDDDDDDDD
 	 */
-	r->frame(viewRect, color, false);
-	viewRect.zoom(-1, -1);
-	r->frame(viewRect, color, false);
+	r->frame(viewRect, 2, color, false);
 
 	if (getState(VIEW_STATE_FOREGROUND))
 	{

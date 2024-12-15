@@ -186,14 +186,21 @@ void ViewRenderHW::vline(const Point &a, int len, uint32_t color)
 	SDL_RenderDrawLine(renderer, a.x, a.y, a.x, a.y + len);
 }
 
-void ViewRenderHW::rectangle(const Rectangle &rect, uint32_t color)
+void ViewRenderHW::rectangle(const Rectangle &rect, int len, uint32_t color)
 {
 	union ARGBColor c;
 	toARGBColor(color, &c);
 	SDL_Rect srect;
 	to_SDL_Rect(rect, srect);
 	SDL_SetRenderDrawColor(renderer, c.colorARGB.r, c.colorARGB.g, c.colorARGB.b, SDL_ALPHA_OPAQUE);
-	SDL_RenderDrawRect(renderer, &srect);
+	while (len--)
+	{
+		SDL_RenderDrawRect(renderer, &srect);
+		++srect.x;
+		++srect.y;
+		srect.w -= 2;
+		srect.h -= 2;
+	}
 }
 
 void ViewRenderHW::filledRectangle(const Rectangle &rect, uint32_t color)
@@ -223,50 +230,70 @@ void ViewRenderHW::filledRectangle2(const Rectangle &rect, uint32_t colors[2])
 	SDL_RenderFillRect(renderer, &srect);
 }
 
-void ViewRenderHW::frame(const Rectangle &rect, uint32_t colors[2], bool inner)
+void ViewRenderHW::frame(const Rectangle &rect, int len, uint32_t colors[2], bool inner)
 {
 	union ARGBColor c[2];
 	toARGBColor(colors[0], &c[0]);
 	toARGBColor(colors[1], &c[1]);
-	SDL_Point spoint[3];
-
-	to_SDL_Point(rect.ul, spoint[1]);
+	SDL_Point spoint[6];
+	SDL_Rect srect;
+	to_SDL_Rect(rect, srect);
+	srect.w -= 1;
+	srect.h -= 1;
 
 	if (inner)
 	{
-		spoint[2].x = spoint[1].x + rect.width() - 2;
-		spoint[2].y = spoint[1].y;
-		spoint[0].x = spoint[1].x;
-		spoint[0].y = spoint[1].y + rect.height() - 1;
+		while (len--)
+		{
+			spoint[1].x = srect.x;
+			spoint[1].y = srect.y;
+			spoint[2].x = spoint[1].x + srect.w - 1;
+			spoint[2].y = spoint[1].y;
+			spoint[0].x = spoint[1].x;
+			spoint[0].y = spoint[1].y + srect.h;
+			spoint[3].x = spoint[0].x + 1;
+			spoint[3].y = spoint[0].y;
+			spoint[4].x = spoint[1].x + srect.w;
+			spoint[4].y = spoint[1].y + srect.h;
+			spoint[5].x = spoint[2].x + 1;
+			spoint[5].y = spoint[2].y;
 
-		SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLines(renderer, spoint, 3);
-
-		spoint[0].x++;
-		spoint[2].x++;
-		spoint[1].x += rect.width() - 1;
-		spoint[1].y += rect.height() - 1;
-
-		SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLines(renderer, spoint, 3);
+			SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
+			SDL_RenderDrawLines(renderer, spoint, 3);
+			SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
+			SDL_RenderDrawLines(renderer, spoint + 3, 3);
+			srect.x++;
+			srect.y++;
+			srect.w -= 2;
+			srect.h -= 2;
+		}
 	}
 	else
 	{
-		spoint[2].x = spoint[1].x + rect.width() - 1;
-		spoint[2].y = spoint[1].y;
-		spoint[0].x = spoint[1].x;
-		spoint[0].y = spoint[1].y + rect.height() - 2;
+		while (len--)
+		{
+			spoint[1].x = srect.x;
+			spoint[1].y = srect.y;
+			spoint[2].x = spoint[1].x + srect.w;
+			spoint[2].y = spoint[1].y;
+			spoint[0].x = spoint[1].x;
+			spoint[0].y = spoint[1].y + srect.h - 1;
+			spoint[3].x = spoint[0].x;
+			spoint[3].y = spoint[0].y + 1;
+			spoint[4].x = spoint[1].x + srect.w;
+			spoint[4].y = spoint[1].y + srect.h;
+			spoint[5].x = spoint[2].x;
+			spoint[5].y = spoint[2].y + 1;
 
-		SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLines(renderer, spoint, 3);
-
-		spoint[0].y++;
-		spoint[2].y++;
-		spoint[1].x += rect.width() - 1;
-		spoint[1].y += rect.height() - 1;
-
-		SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLines(renderer, spoint, 3);
+			SDL_SetRenderDrawColor(renderer, c[0].colorARGB.r, c[0].colorARGB.g, c[0].colorARGB.b, SDL_ALPHA_OPAQUE);
+			SDL_RenderDrawLines(renderer, spoint, 3);
+			SDL_SetRenderDrawColor(renderer, c[1].colorARGB.r, c[1].colorARGB.g, c[1].colorARGB.b, SDL_ALPHA_OPAQUE);
+			SDL_RenderDrawLines(renderer, spoint + 3, 3);
+			srect.x++;
+			srect.y++;
+			srect.w -= 2;
+			srect.h -= 2;
+		}
 	}
 }
 
