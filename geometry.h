@@ -34,7 +34,7 @@ public:
 	Point(int x, int y);
 	Point(const Point &other);
 
-	void set(int x, int y);
+	void set(int newx, int newy);
 	void move(int deltax, int deltay);
 	void add(Point &other);
 	void sub(Point &other);
@@ -98,6 +98,16 @@ public:
 	Rectangle(Point &upleft, Point &lowright);
 	Rectangle(int upleftx, int uplefty, int lowrightx, int lowrighty);
 	Rectangle(Rectangle &other);
+
+	/*
+	 * Sets the coordinates of the lower right point of a rectangle
+	 * to match the specified width and height.
+	 *
+	 * PARAMETERS IN
+	 * width - new rectangle width
+	 * hight - new rectangle height
+	 */
+	void resize(int width, int height);
 
 	/*
 	 * Sets the coordinates of the upper left and lower right points

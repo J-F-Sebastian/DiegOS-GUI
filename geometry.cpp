@@ -33,10 +33,10 @@ Point::Point(const Point &other) : x(other.x), y(other.y)
 {
 }
 
-void Point::set(int x, int y)
+void Point::set(int newx, int newy)
 {
-	this->x = x;
-	this->y = y;
+	x = newx;
+	y = newy;
 }
 
 void Point::move(int deltax, int deltay)
@@ -78,6 +78,15 @@ Rectangle::Rectangle(int upleftx, int uplefty, int lowrightx, int lowrighty) : u
 
 Rectangle::Rectangle(Rectangle &other) : ul(other.ul), lr(other.lr)
 {
+}
+
+void Rectangle::resize(int width, int height)
+{
+	if ((width > 0) && (height > 0))
+	{
+		lr.x = ul.x + width - 1;
+		lr.y = ul.y + height - 1;
+	}
 }
 
 void Rectangle::set(Point &upleft, Point &lowright)
@@ -168,8 +177,8 @@ void Rectangle::center(Rectangle &other)
 		int h = height();
 		ul.x += (other.width() - width()) / 2;
 		ul.y += (other.height() - height()) / 2;
-		lr.x = ul.x + w;
-		lr.y = ul.y + h;
+		lr.x = ul.x + w - 1;
+		lr.y = ul.y + h - 1;
 	}
 }
 
@@ -247,13 +256,13 @@ int Rectangle::height() const
 void Rectangle::width(int w)
 {
 	if (w > 0)
-		lr.x = ul.x + w;
+		lr.x = ul.x + w - 1;
 }
 
 void Rectangle::height(int h)
 {
 	if (h > 0)
-		lr.y = ul.y + h;
+		lr.y = ul.y + h - 1;
 }
 
 void Rectangle::print()
