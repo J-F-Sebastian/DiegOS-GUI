@@ -40,27 +40,37 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	getViewport(ext);
 	ext.height(24);
 
+	Rectangle ic = ext;
+	Rectangle iz = ext;
+	ic.width(24);
+	iz.width(24);
+	iz.move(ext.width() - 24, 0);
+
 	if (wFlags & WINDOW_CLOSE)
 	{
-		Rectangle temp = ext;
-		temp.width(24);
-		tmpView = new WindowIconClose(temp);
+		tmpView = new WindowIconClose(ic);
 		insert(tmpView);
-		ext.ul.move(temp.width(), 0);
+		ext.ul.move(ic.width(), 0);
 	}
 	if (wFlags & WINDOW_ZOOM)
 	{
-		Rectangle temp = ext;
-		temp.ul.x = temp.lr.x - 24;
-		tmpView = new WindowIconZoom(temp);
+		tmpView = new WindowIconZoom(iz);
 		insert(tmpView);
-		ext.lr.move(-temp.width(), 0);
+		ext.lr.move(-iz.width(), 0);
 	}
 
 	tmpView = new TitleBar(ext, title);
 	insert(tmpView);
 
-	Rectangle temp(175, 75, 200, 190);
-	tmpView = new VScrollBar(temp);
-	insert(tmpView);
+	getViewport(ext);
+	ext.ul.move(ext.width() - 24, 25);
+	ext.lr.move(0, -24);
+	VScrollBar *tmpView1 = new VScrollBar(ext, 16, 4, 1);
+	insert(tmpView1);
+
+	getViewport(ext);
+	ext.ul.move(0, ext.height() - 24);
+	ext.lr.move(-24, 0);
+	HScrollBar *tmpView2 = new HScrollBar(ext, 16, 4, 1);
+	insert(tmpView2);
 }
