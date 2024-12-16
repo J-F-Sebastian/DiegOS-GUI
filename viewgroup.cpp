@@ -225,14 +225,14 @@ void ViewGroup::handleEvent(Event *evt)
 	else if (evt->isEventCommand())
 	{
 		MessageEvent *msg = evt->getMessageEvent();
+		View *caller = reinterpret_cast<View *>(msg->senderObject);
+		View *target = reinterpret_cast<View *>(msg->targetObject);
+
 		/*
 		 * This object as destination
 		 */
 		if (isCommandForMe(msg))
 		{
-			View *caller = reinterpret_cast<View *>(msg->senderObject);
-			View *target = reinterpret_cast<View *>(msg->targetObject);
-
 			// evt->print();
 			switch (msg->command)
 			{
@@ -313,12 +313,11 @@ void ViewGroup::handleEvent(Event *evt)
 		 */
 		else
 		{
-			View *target = reinterpret_cast<View *>(msg->targetObject);
 			if (target)
 			{
 				forEachViewUntilTrue([target, evt](View *head) -> bool
 						     {
-							target->handleEvent(evt);
+							head->handleEvent(evt);
 							return (target == head) ? true : false; });
 			}
 		}
