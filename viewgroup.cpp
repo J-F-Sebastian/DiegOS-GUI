@@ -291,7 +291,7 @@ void ViewGroup::handleEvent(Event *evt)
 		 */
 		else if (isCommandForAll(msg))
 		{
-			executeCommand(msg->command, reinterpret_cast<View *>(msg->targetObject));
+			executeCommand(msg->command);
 
 			if (!evt->isEventUnknown())
 			{
