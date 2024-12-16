@@ -26,6 +26,7 @@
 #include "titlebar.h"
 #include "background.h"
 #include "scrollbar.h"
+#include "resizetab.h"
 
 Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned char ctrlflags) : ViewGroup(viewLimits, VIEW_IS_FRAMED | VIEW_IS_SOLID | VIEW_IS_SHADOWED, parent),
 												  wFlags(ctrlflags),
@@ -38,13 +39,16 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	Rectangle ext;
 
 	getViewport(ext);
-	ext.height(24);
 
 	Rectangle ic = ext;
 	Rectangle iz = ext;
-	ic.width(24);
-	iz.width(24);
+	Rectangle rt = ext;
+
+	ic.resize(24, 24);
+	iz.resize(24, 24);
+	rt.resize(24, 24);
 	iz.move(ext.width() - 24, 0);
+	rt.move(ext.width() - 24, ext.height() - 24);
 
 	if (wFlags & WINDOW_CLOSE)
 	{
@@ -59,6 +63,10 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 		ext.lr.move(-iz.width(), 0);
 	}
 
+	tmpView = new ResizeTab(rt);
+	insert(tmpView);
+
+	ext.height(24);
 	tmpView = new TitleBar(ext, title);
 	insert(tmpView);
 
