@@ -434,7 +434,7 @@ void View::handleEvent(Event *evt)
 		MessageEvent *me = evt->getMessageEvent();
 		if (isCommandForMe(me))
 		{
-			if (executeCommand(me->command /*, reinterpret_cast<View *>(me->senderObject)*/))
+			if (executeCommand(me->command))
 				evt->clear();
 		}
 	}
