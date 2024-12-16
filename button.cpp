@@ -32,12 +32,11 @@ void Button::drawView()
 	Rectangle viewRect;
 	ViewRender *r = GRenderer;
 	Palette *p = GPaletteGroup->getPalette(PaletteGroup::PAL_BUTTON);
-	getViewport(viewRect);
-	Rectangle temp(viewRect);
+	unsigned color[2];
 
-	unsigned color, color2;
-	p->getPalette(BUTTON_BRIGHT, color);
-	p->getPalette(BUTTON_DARK, color2);
+	getViewport(viewRect);
+	p->getPalette(BUTTON_BRIGHT, color[0]);
+	p->getPalette(BUTTON_DARK, color[1]);
 
 	// Outer shadow
 
@@ -48,13 +47,7 @@ void Button::drawView()
 	 *    B       D
 	 *    DDDDDDDDD
 	 */
-	Point ul(temp.ul);
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
+	r->frame(viewRect, 2, color, false);
 
 	// Inner shadow
 
@@ -65,14 +58,8 @@ void Button::drawView()
 	 *    D       B
 	 *    BBBBBBBBB
 	 */
-	temp.zoom(-1, -1);
-	ul = temp.ul;
-	r->hline(ul, temp.width(), color2);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color);
+	viewRect.zoom(-2, -2);
+	r->frame(viewRect, 1, color, true);
 
 	// Outer shadow
 
@@ -83,37 +70,31 @@ void Button::drawView()
 	 *    B       D
 	 *    DDDDDDDDD
 	 */
-	temp.zoom(-1, -1);
-	ul = temp.ul;
-	r->hline(ul, temp.width(), color);
-	r->vline(ul, temp.height() - 1, color);
-	ul.move(temp.width(), 1);
-	r->vline(ul, temp.height() - 1, color2);
-	ul.move(-temp.width(), temp.height() - 1);
-	r->hline(ul, temp.width() - 1, color2);
+	viewRect.zoom(-1, -1);
+	r->frame(viewRect, 1, color, false);
 
-	temp.zoom(-1, -1);
+	viewRect.zoom(-1, -1);
 	if (getState(VIEW_STATE_DISABLED))
 	{
-		p->getPalette(BUTTON_DISABLED, color);
-		r->filledRectangle(temp, color);
+		p->getPalette(BUTTON_DISABLED, color[0]);
+		r->filledRectangle(viewRect, color[0]);
 	}
 	else if (getState(VIEW_STATE_SELECTED))
 	{
 		if (isDown())
 		{
-			p->getPalette(BUTTON_PRESSED, color);
+			p->getPalette(BUTTON_PRESSED, color[0]);
 		}
 		else
 		{
-			p->getPalette(BUTTON_SELECTED, color);
+			p->getPalette(BUTTON_SELECTED, color[0]);
 		}
-		r->filledRectangle(temp, color);
+		r->filledRectangle(viewRect, color[0]);
 	}
 	else
 	{
-		p->getPalette(BUTTON_MAIN, color);
-		r->filledRectangle(temp, color);
+		p->getPalette(BUTTON_MAIN, color[0]);
+		r->filledRectangle(viewRect, color[0]);
 	}
 }
 
