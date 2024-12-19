@@ -132,7 +132,7 @@ void ViewGroup::handleEvent(Event *evt)
 		if (toHandle)
 			toHandle->handleEvent(evt);
 		/*
-		 * Cleanup anyway, the message was for THIS object.
+		 * Cleanup anyway, the event was in the range of this object
 		 */
 		evt->clear();
 	}
@@ -154,50 +154,54 @@ void ViewGroup::handleEvent(Event *evt)
 					break;
 				}
 			}
-			if (actual && !evt->isEventUnknown())
+			/*
+			 * This view did not process the keyboard event successfully, move it up to
+			 * the focused chain.
+			 */
+			if (!evt->isEventUnknown() && actual)
 				actual->handleEvent(evt);
 		}
 	}
 	/*
 	 * If the event is a message (a command) then the event is processed if the destination
 	 * is either this view or the broadcast object.
-	 * The event will be propagated to children if the destination is the broadcast object
-	 * or is NOT this view.
+	 * The event will be propagated to all children if the destination is the broadcast object.
+	 * The event will be propagated to the focused view (actual) if the destination is an object.
+	 * The event will be cleared only if the destination is the broadcast object AND the view is
+	 * running the event loop.
 	 *
-	 * +---------------+--------------+
-	 * |  destination  |    action    |
-	 * +---------------+--------------+
-	 * |               |    execute   |
-	 * |  this view    |      and     |
-	 * |               |     clear    |
-	 * +---------------+--------------+
-	 * |               |    execute   |
-	 * |               |    forward   |
-	 * |  broadcast    |      to      |
-	 * |               |    children  |
-	 * |               |      and     |
-	 * |               |     clear    |
-	 * +---------------+--------------+
-	 * |               |    forward   |
-	 * |  child view   |      to      |
-	 * |               |     child    |
-	 * +---------------+--------------+
-	 * |               |    forward   |
-	 * |  unknown view |      to      |
-	 * |               |    children  |
-	 * +---------------+--------------+
+	 * +---------------+----------------------+
+	 * |  destination  |        action        |
+	 * +---------------+----------------------+
+	 * |               |        execute       |
+	 * |  this view    |          and         |
+	 * |               |         clear        |
+	 * +---------------+----------------------+
+	 * |               |    execute, forward  |
+	 * |  broadcast    |      to children     |
+	 * |               |       and clear      |
+	 * +---------------+----------------------+
+	 * |               |        forward       |
+	 * |  child view   |          to          |
+	 * |               |         child        |
+	 * +---------------+----------------------+
+	 * |               |        forward       |
+	 * |  unknown view |          to          |
+	 * |               |      actual view     |
+	 * +---------------+----------------------+
 	 *
 	 * A broadcast destination will make a message be processed by all handleEvent methods
 	 * of all Views in the system.
 	 * A unicast destination will make a message be processed by handleEvent methods
 	 * until the destination view is reached; the message will be forwarded from root to leaves
 	 * until the destination leave (a View) is reached.
+	 * It is possible to pass through several object layers if the destination is the child of
+	 * a focused view.
 	 *
-	 * The targetObject is part of the header message but is used to address the action
+	 * The target is part of the header message but is used to address the action
 	 * of the command, not the destination.
 	 * Due to this a valid target object can be either this view, a child view or the broadcast address.
-	 * Other values must be ignored.
-	 * The message MUST have this view or the broadcast object as destination .
+	 * Other combinations must be ignored.
 	 *
 	 * +---------------+--------------+
 	 * |    target     |    action    |
@@ -225,102 +229,112 @@ void ViewGroup::handleEvent(Event *evt)
 	else if (evt->isEventCommand())
 	{
 		MessageEvent *msg = evt->getMessageEvent();
-		View *caller = reinterpret_cast<View *>(msg->senderObject);
-		View *target = reinterpret_cast<View *>(msg->targetObject);
 
-		/*
-		 * This object as destination
-		 */
-		if (isCommandForMe(msg))
+		if (isCommandValid(msg))
 		{
-			// evt->print();
-			switch (msg->command)
-			{
-			case CMD_CLOSE:
-				/*
-				 * Check if we are instructed to close one of our views
-				 */
-				if (thisViewIsMine(target))
-				{
-					if (remove(target))
-					{
-						if (target == actual)
-						{
-							actual = nullptr;
-						}
+			View *caller = reinterpret_cast<View *>(msg->senderObject);
+			View *receiver = reinterpret_cast<View *>(msg->destObject);
+			View *target = reinterpret_cast<View *>(msg->targetObject);
 
-						delete target;
-						/* Now ask for redrawing */
-						sendCommand(CMD_DRAW);
-					}
-					evt->clear();
-				}
-				else if (target == BROADCAST_OBJECT)
+			/*
+			 * This object as destination
+			 */
+			if (isCommandForMe(msg))
+			{
+				switch (msg->command)
 				{
+				case CMD_CLOSE:
 					/*
-					 * If the target is BROADCAST_OBJECT close all views
+					 * Check if we are instructed to close one of our views
 					 */
-					while (listHead)
+					if (thisViewIsMine(target))
 					{
-						View *next = listHead->getNext();
-						if (listHead->getState(VIEW_STATE_FOCUSED))
-							focusNext(true);
-						else if (listHead->getState(VIEW_STATE_SELECTED))
-							selectNext(true);
-						delete listHead;
-						listHead = next;
-					}
-					actual = nullptr;
-					listSize = 0;
-					evt->clear();
-				}
-				break;
-			}
+						if (remove(target))
+						{
+							if (target == actual)
+							{
+								actual = nullptr;
+							}
 
-			if (!evt->isEventUnknown())
-			{
-				if (executeCommand(msg->command, caller))
-					evt->clear();
+							delete target;
+							/* Now ask for redrawing */
+							sendCommand(CMD_DRAW);
+						}
+						evt->clear();
+					}
+					else if (target == BROADCAST_OBJECT)
+					{
+						/*
+						 * If the target is BROADCAST_OBJECT close all views
+						 */
+						while (listHead)
+						{
+							View *next = listHead->getNext();
+							if (listHead->getState(VIEW_STATE_FOCUSED))
+								focusNext(true);
+							else if (listHead->getState(VIEW_STATE_SELECTED))
+								selectNext(true);
+							delete listHead;
+							listHead = next;
+						}
+						actual = nullptr;
+						listSize = 0;
+						evt->clear();
+					}
+					break;
+				}
+
+				if (!evt->isEventUnknown())
+				{
+					if (executeCommand(msg->command, caller))
+						evt->clear();
+				}
+				/*
+				 * Unsupported messages will generate a trace in the main loop!
+				 */
 			}
 			/*
-			 * Unsupported messages will generate a trace in the main loop!
+			 * All objects as a destination
 			 */
-		}
-		/*
-		 * All objects as a destination
-		 */
-		else if (isCommandForAll(msg))
-		{
-			executeCommand(msg->command);
-
-			if (!evt->isEventUnknown())
+			else if (isCommandForAll(msg))
 			{
-				/*
-				 * Forward message to all children.
-				 */
-				forEachView([evt](View *head)
-					    { head->handleEvent(evt); });
+				executeCommand(msg->command);
 
-				/*
-				 * No event cleanup unless we are the main loop
-				 */
-				if (getState(VIEW_STATE_EVLOOP))
-					evt->clear();
+				if (!evt->isEventUnknown())
+				{
+					/*
+					 * Forward message to all children.
+					 */
+					forEachView([evt](View *head)
+						    { head->handleEvent(evt); });
+
+					/*
+					 * No event cleanup unless we are the main loop
+					 */
+					if (getState(VIEW_STATE_EVLOOP))
+						evt->clear();
+				}
+			}
+			/*
+			 * Destination is a child of this view
+			 */
+			else if (thisViewIsMine(receiver))
+			{
+				evt->print();
+				receiver->handleEvent(evt);
+			}
+			/*
+			 * Destination is unknown, forward to the actual view.
+			 * If actual is nullptr DO NOT clear the event unless
+			 * we are the main loop
+			 */
+			else if (actual)
+			{
+				actual->handleEvent(evt);
 			}
 		}
-		/*
-		 * Destination unknown, forward message to all children.
-		 */
 		else
-		{
-			if (target)
-			{
-				forEachViewUntilTrue([target, evt](View *head) -> bool
-						     {
-							head->handleEvent(evt);
-							return (target == head) ? true : false; });
-			}
-		}
+			evt->clear();
 	}
 }
 
