@@ -547,6 +547,14 @@ bool View::isEventPositionInRange(Event *evt)
 	return lims.includes(where);
 }
 
+bool View::isCommandValid(MessageEvent *evt)
+{
+	if (evt->senderObject && evt->destObject)
+		return true;
+
+	return false;
+}
+
 bool View::isCommandForMe(MessageEvent *evt)
 {
 	if (evt->destObject == this)

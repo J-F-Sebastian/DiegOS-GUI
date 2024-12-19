@@ -578,6 +578,19 @@ protected:
 	void makeGlobal(Point &origin);
 
 	/*
+	 * Verify that the event is a valid command, i.e. has destination and sender
+	 * set to a valid pointer.
+	 *
+	 * PARAMETERS IN
+	 * MessageEvent *evt - the event
+	 *
+	 * RETURN
+	 * true if the event is a valid command
+	 * false in any other case
+	 */
+	bool isCommandValid(MessageEvent *evt);
+
+	/*
 	 * Verify that the event destination object matches this
 	 * instance.
 	 *
