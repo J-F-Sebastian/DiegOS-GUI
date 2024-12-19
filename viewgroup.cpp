@@ -444,7 +444,7 @@ bool ViewGroup::executeCommand(const uint16_t command, View *caller)
 				/*
 				 * We need to close, ask parent to do it
 				 */
-				sendCommandToParent(CMD_CLOSE);
+				sendCommand(CMD_CLOSE, getParent(), this);
 				return true;
 			}
 			break;
