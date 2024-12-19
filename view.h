@@ -699,6 +699,18 @@ protected:
 	 */
 	void sendCommandToParent(const uint16_t command);
 
+	/*
+	 * Create an event and send it up to the root parent view.
+	 * This is a wrap around for sendEvent().
+	 * The message will be passed down the children hierarchy
+	 * to the root view running the event loop.
+	 * The target object is the root view object.
+	 *
+	 * PARAMETERS IN
+	 * uint16_t command - the command code
+	 */
+	void sendCommandToTopView(const uint16_t command);
+
 	inline View *getParent(void) { return parentView; }
 
 	View *getTopView(void);

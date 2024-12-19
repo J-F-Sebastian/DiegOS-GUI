@@ -499,6 +499,12 @@ void View::sendCommandToParent(const uint16_t command)
 {
 	Event evt;
 	MessageEvent cmd = {command, 0, this, parentView, this, {0, 0, 0, 0}};
+}
+
+void View::sendCommandToTopView(const uint16_t command)
+{
+	Event evt;
+	MessageEvent cmd = {command, 0, this, getTopView(), getTopView(), {0, 0, 0, 0}};
 	evt.setMessageEvent(cmd);
 	sendEvent(&evt);
 }
