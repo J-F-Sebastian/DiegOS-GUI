@@ -703,7 +703,7 @@ void ViewGroup::maximize()
 		lastrflags = getResizeMode();
 		setResizeMode(VIEW_ZOOMED);
 		/* Now ask for redrawing */
-		sendCommand(CMD_REDRAW);
+		sendCommandToTopView(CMD_REDRAW);
 	}
 }
 
@@ -715,7 +715,7 @@ void ViewGroup::minimize()
 	clearResizeMode(VIEW_ZOOMED);
 	setResizeMode(lastrflags);
 	/* Now ask for redrawing */
-	sendCommand(CMD_REDRAW);
+	sendCommandToTopView(CMD_REDRAW);
 }
 
 void ViewGroup::restore()
@@ -727,7 +727,7 @@ void ViewGroup::restore()
 	setResizeMode(lastrflags);
 	setLocation(lastLimits);
 	/* Now ask for redrawing */
-	sendCommand(CMD_REDRAW);
+	sendCommandToTopView(CMD_REDRAW);
 }
 
 bool ViewGroup::thisViewIsMine(View *who)

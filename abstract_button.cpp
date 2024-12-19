@@ -44,7 +44,7 @@ void AbstractButton::handleEvent(Event *evt)
 			{
 				setChanged(VIEW_CHANGED_REDRAW);
 				/* Now ask for redrawing */
-				sendCommand(CMD_REDRAW);
+				sendCommandToTopView(CMD_REDRAW);
 				if (!pressed)
 					doAction();
 			}
@@ -61,7 +61,7 @@ bool AbstractButton::validateCommand(const uint16_t command)
 		updateButtonState(false);
 		setChanged(VIEW_CHANGED_REDRAW);
 		/* Now ask for redrawing */
-		sendCommand(CMD_REDRAW);
+		sendCommandToTopView(CMD_REDRAW);
 	}
 	/* FALLTHRU */
 	case CMD_DRAW:

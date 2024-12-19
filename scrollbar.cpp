@@ -62,7 +62,7 @@ void ScrollBar::handleEvent(Event *evt)
 				lastPressure = newPressure;
 				/* Now ask for redrawing of the parent */
 				setChanged(VIEW_CHANGED_REDRAW);
-				sendCommand(CMD_REDRAW);
+				sendCommandToTopView(CMD_REDRAW);
 			}
 			evt->clear();
 		}
@@ -106,7 +106,7 @@ void ScrollBar::setRefElements(unsigned newval)
 		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
-		sendCommand(CMD_REDRAW);
+		sendCommandToTopView(CMD_REDRAW);
 	}
 }
 
@@ -118,7 +118,7 @@ void ScrollBar::setRefVisible(unsigned newval)
 		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
-		sendCommand(CMD_REDRAW);
+		sendCommandToTopView(CMD_REDRAW);
 	}
 }
 
@@ -130,7 +130,7 @@ void ScrollBar::setRefPosition(unsigned newval)
 		computeActivePad();
 		/* Now ask for redrawing of the parent */
 		setChanged(VIEW_CHANGED_REDRAW);
-		sendCommand(CMD_REDRAW);
+		sendCommandToTopView(CMD_REDRAW);
 	}
 }
 
