@@ -103,7 +103,7 @@ void WindowIconClose::doAction()
 {
 	if (getParent())
 	{
-		sendCommand(CMD_CLOSE, getParent(), getParent());
+		sendCommandToParent(CMD_CLOSE);
 	}
 }
 
@@ -177,6 +177,6 @@ void WindowIconZoom::doAction()
 
 	if (getParent())
 	{
-		sendCommand(/*getParent()->getResizeMode(VIEW_ZOOMED) ? CMD_RESTORE : CMD_MAXIMIZE*/ CMD_ZOOM, getParent(), getParent());
+		sendCommandToParent(CMD_ZOOM);
 	}
 }
