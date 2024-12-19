@@ -665,8 +665,10 @@ protected:
 	bool isCommandAny(MessageEvent *evt);
 
 	/*
-	 * Send an event to the view's owner.
-	 * The method will recursively look for the top owner.
+	 * Send an event to a view.
+	 * If the destination is this view the event will be processed immediately.
+	 * If the destination is not this view then the event will be processed by the
+	 * root view running the event loop.
 	 * NO memory management is to be performed on evt.
 	 *
 	 * PARAMETERS IN
@@ -677,9 +679,6 @@ protected:
 	/*
 	 * Create an event and send it up to the root parent.
 	 * This is a wrap around for sendEvent().
-	 * The message will be passed down the children hierarchy
-	 * to the destination object (if specified), or to all objects (if
-	 * BROADCAST_OBJECT is set as destination).
 	 *
 	 * PARAMETERS IN
 	 * uint16_t command - the command code
@@ -689,11 +688,11 @@ protected:
 	void sendCommand(const uint16_t command, void *destination = BROADCAST_OBJECT, void *target = BROADCAST_OBJECT);
 
 	/*
-	 * Create an event and send it up to the root parent.
+	 * Create an event and send it to the parent view.
 	 * This is a wrap around for sendEvent().
 	 * The message will be passed down the children hierarchy
-	 * to the destination object (the parent).
-	 * The target object is this object.
+	 * to the root view running the event loop.
+	 * The message will then be forwarded to the destination.
 	 *
 	 * PARAMETERS IN
 	 * uint16_t command - the command code
