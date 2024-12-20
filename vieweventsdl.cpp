@@ -152,6 +152,8 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 			mouse.status &= ~(POS_EVT_SINGLE | POS_EVT_ONEHALF | POS_EVT_DOUBLE);
 			mouse.x = sdlevt.motion.x;
 			mouse.y = sdlevt.motion.y;
+			mouse.xrel = sdlevt.motion.xrel;
+			mouse.yrel = sdlevt.motion.yrel;
 			evt->setPositionalEvent(mouse);
 		}
 		break;
