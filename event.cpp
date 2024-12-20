@@ -189,6 +189,7 @@ void Event::print()
 	case EVT_POS:
 	{
 		std::cout << "POS: " << myEventData.position.x << "," << myEventData.position.y;
+		std::cout << " RELPOS: " << myEventData.position.xrel << "," << myEventData.position.yrel;
 		std::string temp;
 		if (myEventData.position.status & POS_EVT_PRESSED)
 			temp += "pressed ";

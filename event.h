@@ -63,6 +63,7 @@ enum
 struct PositionalEvent
 {
 	int x, y;
+	int xrel, yrel;
 	/*
 	 * Right --------------+
 	 * Middle ----------+   \
