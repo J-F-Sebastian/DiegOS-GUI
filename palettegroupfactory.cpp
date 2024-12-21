@@ -300,3 +300,41 @@ class PaletteGroup *PaletteGroupFactory::create(enum SystemColorPalette sel, int
 PaletteGroupFactory::PaletteGroupFactory()
 {
 }
+
+class Palette *SystemPaletteFactory::create(enum SystemColorPalette sel, int bitdepth)
+{
+	/*
+	 * Right now supports only 32 bit depth
+	 */
+	if (bitdepth != 32)
+		return nullptr;
+
+	Palette *pal = new PaletteTrueColor(16);
+
+	switch (sel)
+	{
+	case SYS_PALETTE_WINOS2:
+		pal->loadPalette(PALETTEWINOS2);
+		break;
+
+	case SYS_PALETTE_MACINTOSH:
+		pal->loadPalette(PALETTEMAC);
+		break;
+
+	case SYS_PALETTE_RISCOS:
+		pal->loadPalette(PALETTERISCOS);
+		break;
+
+	case SYS_PALETTE_DIEGOS:
+	/* FALLTHRU */
+	case SYS_PALETTE_DEBUG:
+		pal->loadPalette(PALETTEDIEGOS);
+		break;
+	}
+
+	return pal;
+}
+
+SystemPaletteFactory::SystemPaletteFactory()
+{
+}

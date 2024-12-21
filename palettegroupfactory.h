@@ -40,4 +40,13 @@ private:
 	PaletteGroupFactory();
 };
 
+class SystemPaletteFactory
+{
+public:
+	static class Palette *create(enum SystemColorPalette sel, int bitdepth);
+
+private:
+	SystemPaletteFactory();
+};
+
 #endif
