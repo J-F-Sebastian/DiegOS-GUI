@@ -46,10 +46,7 @@ void ViewApplication::initMenu()
 
 void ViewApplication::handleEvent(Event *evt)
 {
-	static unsigned i = 0;
-
 	// evt->print();
-	++i;
 
 	if (evt->isEventKey())
 	{
