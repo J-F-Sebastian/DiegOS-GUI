@@ -26,6 +26,7 @@
 #include "viewexec.h"
 #include "eventqueue.h"
 #include "viewzbuffer.h"
+#include "palettetab.h"
 
 // Screen dimension constants
 static const int SCREEN_WIDTH = 1280;
@@ -57,6 +58,10 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
 	buttonLimits.move(25, 25);
 	ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
 	newWindow->insert(newProgBar);
+	buttonLimits.move(0, 25);
+	buttonLimits.width(buttonLimits.width() * 2);
+	PaletteTab *newPalTab = new PaletteTab(buttonLimits);
+	newWindow->insert(newPalTab);
 	app->insert(newWindow);
 	return newWindow;
 }
