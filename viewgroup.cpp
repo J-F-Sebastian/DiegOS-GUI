@@ -686,9 +686,8 @@ void ViewGroup::toForeground(View *target)
 	}
 
 	target->setForeground();
-
 	/* Now ask for redrawing */
-	sendCommand(CMD_REDRAW);
+	sendCommandToTopView(CMD_REDRAW);
 }
 
 void ViewGroup::toBackground(View *target)
@@ -697,9 +696,8 @@ void ViewGroup::toBackground(View *target)
 	 * Update Foreground/Background status
 	 */
 	target->setBackground();
-
 	/* Now ask for redrawing */
-	sendCommand(CMD_REDRAW);
+	sendCommandToTopView(CMD_REDRAW);
 }
 
 void ViewGroup::maximize()
