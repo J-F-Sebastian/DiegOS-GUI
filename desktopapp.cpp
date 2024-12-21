@@ -28,7 +28,7 @@
 #include "viewzbuffer.h"
 
 // Screen dimension constants
-static const int SCREEN_WIDTH = 720;
+static const int SCREEN_WIDTH = 1280;
 static const int SCREEN_HEIGHT = 720;
 
 DesktopApp::DesktopApp()
