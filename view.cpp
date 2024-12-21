@@ -387,10 +387,24 @@ void View::draw()
 {
 	if (sflags & VIEW_STATE_EXPOSED)
 	{
-		Rectangle dest = extent;
+		Rectangle exposed;
+
+		if (getParent())
+		{
+			exposed = borders;
+			Rectangle clipping;
+			getParent()->getViewport(clipping);
+			exposed.clip(clipping);
+			exposed.move(-exposed.ul.x, -exposed.ul.y);
+		}
+		else
+		{
+			exposed = extent;
+		}
+		Rectangle dest = exposed;
 		makeGlobal(dest.ul);
 		makeGlobal(dest.lr);
-		GRenderer->writeBuffer(renderBuffer, extent, dest);
+		GRenderer->writeBuffer(renderBuffer, exposed, dest);
 	}
 }
 
