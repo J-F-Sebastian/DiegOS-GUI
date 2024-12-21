@@ -39,6 +39,7 @@ DesktopApp::DesktopApp()
 	ViewRenderInstance::instance()->configure(VRENDER_HW, SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 	ViewZBuffer::instance()->configure(master);
 	he = ViewEventFactory::create(EST_SDL);
+	SystemPaletteInstance::instance()->configure(SYS_PALETTE_DIEGOS, 32);
 	PaletteGroupInstance::instance()->configure(SYS_PALETTE_DIEGOS, 32);
 
 	app = new ViewApplication(master, he);
