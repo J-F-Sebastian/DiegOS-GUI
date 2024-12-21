@@ -90,7 +90,7 @@ void TitleBar::handleEvent(Event *evt)
 		uint8_t status = evt->getPositionalEvent()->status;
 		if (checkAll(status, POS_EVT_DOUBLE | POS_EVT_RELEASED))
 		{
-			sendCommand((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE, getParent(), getParent());
+			sendCommandToParent((getParent()->getResizeMode(VIEW_ZOOMED)) ? CMD_RESTORE : CMD_MAXIMIZE);
 		}
 		else if (checkAll(status, POS_EVT_PRESSED | POS_EVT_DRAG))
 		{
