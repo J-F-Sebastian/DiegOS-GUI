@@ -34,7 +34,7 @@ public:
 	/*
 	 * Retrieve the configured PaletteGroup object.
 	 */
-	class PaletteGroup *get();
+	class PaletteGroup *get(void);
 
 	/*
 	 * Retrieve the singleton instance.
