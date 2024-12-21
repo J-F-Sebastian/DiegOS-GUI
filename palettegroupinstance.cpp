@@ -30,7 +30,7 @@ PaletteGroupInstance *PaletteGroupInstance::instance()
 	return &instance;
 }
 
-void PaletteGroupInstance::configure(enum PaletteGroupType sel, int bitdepth)
+void PaletteGroupInstance::configure(enum SystemColorPalette sel, int bitdepth)
 {
 	if (pg)
 		delete pg;

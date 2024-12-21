@@ -22,19 +22,19 @@
 
 #include "palettegroup.h"
 
-enum PaletteGroupType
+enum SystemColorPalette
 {
-	PALETTE_WINOS2,
-	PALETTE_MACINTOSH,
-	PALETTE_RISCOS,
-	PALETTE_DIEGOS,
-	PALETTE_DEBUG
+	SYS_PALETTE_WINOS2,
+	SYS_PALETTE_MACINTOSH,
+	SYS_PALETTE_RISCOS,
+	SYS_PALETTE_DIEGOS,
+	SYS_PALETTE_DEBUG,
+	SYS_PALETTE_NUM
 };
-
 class PaletteGroupFactory
 {
 public:
-	static class PaletteGroup *create(enum PaletteGroupType sel, int bitdepth);
+	static class PaletteGroup *create(enum SystemColorPalette sel, int bitdepth);
 
 private:
 	PaletteGroupFactory();

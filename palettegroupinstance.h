@@ -29,7 +29,7 @@ public:
 	 * Configure the system palette with the specified type and bit depth.
 	 * This method can be invoked runtime at will to change the colors theme.
 	 */
-	void configure(enum PaletteGroupType sel, int bitdepth);
+	void configure(enum SystemColorPalette sel, int bitdepth);
 
 	/*
 	 * Retrieve the configured PaletteGroup object.

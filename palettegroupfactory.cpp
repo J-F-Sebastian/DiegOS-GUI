@@ -215,7 +215,7 @@ static const unsigned winiconPaletteDIEGOS[] = {C(12), C(14), C(13), C(3), C(15)
 // Bright, Dark, Foreground, Background, disabled
 static const unsigned scrollbarPaletteDIEGOS[] = {C(12), C(14), C(13), C(15), C(14)};
 
-class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int bitdepth)
+class PaletteGroup *PaletteGroupFactory::create(enum SystemColorPalette sel, int bitdepth)
 {
 	/*
 	 * Right now supports only 32 bit depth
@@ -238,7 +238,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
 
 	switch (sel)
 	{
-	case PALETTE_WINOS2:
+	case SYS_PALETTE_WINOS2:
 		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteWINOS2);
 		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteWINOS2);
 		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteWINOS2);
@@ -249,7 +249,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
 		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteWINOS2);
 		break;
 
-	case PALETTE_MACINTOSH:
+	case SYS_PALETTE_MACINTOSH:
 		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteMAC);
 		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteMAC);
 		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteMAC);
@@ -260,7 +260,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
 		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteMAC);
 		break;
 
-	case PALETTE_RISCOS:
+	case SYS_PALETTE_RISCOS:
 		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteRISCOS);
 		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteRISCOS);
 		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteRISCOS);
@@ -271,7 +271,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
 		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteRISCOS);
 		break;
 
-	case PALETTE_DIEGOS:
+	case SYS_PALETTE_DIEGOS:
 		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDIEGOS);
 		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDIEGOS);
 		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDIEGOS);
@@ -282,7 +282,7 @@ class PaletteGroup *PaletteGroupFactory::create(enum PaletteGroupType sel, int b
 		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDIEGOS);
 		break;
 
-	case PALETTE_DEBUG:
+	case SYS_PALETTE_DEBUG:
 		pal[PaletteGroup::PAL_BACKGROUND]->loadPalette(backgroundPaletteDBG);
 		pal[PaletteGroup::PAL_FRAME]->loadPalette(framePaletteDBG);
 		pal[PaletteGroup::PAL_TITLEBAR]->loadPalette(titlebarPaletteDBG);
