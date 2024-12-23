@@ -26,15 +26,11 @@ class ViewApplication : public ViewExec
 {
 public:
 	ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent = nullptr);
-	virtual ~ViewApplication();
 
 	virtual void initDesktop(void);
 	virtual void initMenu(void);
 
 	virtual void handleEvent(Event *evt) override;
-
-private:
-	View *background;
 };
 
 #endif

@@ -23,20 +23,15 @@
 
 #include <iostream>
 
-ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewExec(limits, evt, parent), background(nullptr)
+ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewExec(limits, evt, parent)
 {
-}
-
-ViewApplication::~ViewApplication()
-{
-	delete background;
 }
 
 void ViewApplication::initDesktop()
 {
 	Rectangle rect;
 	getExtent(rect);
-	background = new Desktop(rect);
+	View *background = new Desktop(rect);
 	insert(background);
 }
 
