@@ -63,8 +63,8 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 		ext.lr.move(-iz.width(), 0);
 	}
 
-	tmpView = new ResizeTab(rt);
-	insert(tmpView);
+	View *tmpView1 = new ResizeTab(rt);
+	insert(tmpView1);
 
 	ext.height(24);
 	tmpView = new TitleBar(ext, title);
@@ -73,12 +73,12 @@ Window::Window(Rectangle &viewLimits, const char *title, View *parent, unsigned 
 	getViewport(ext);
 	ext.ul.move(ext.width() - 24, 25);
 	ext.lr.move(0, -24);
-	VScrollBar *tmpView1 = new VScrollBar(ext, 16, 4, 1);
-	insert(tmpView1);
+	View *tmpView2 = new VScrollBar(ext, 16, 4, 1);
+	insert(tmpView2);
 
 	getViewport(ext);
 	ext.ul.move(0, ext.height() - 24);
 	ext.lr.move(-24, 0);
-	HScrollBar *tmpView2 = new HScrollBar(ext, 16, 4, 1);
-	insert(tmpView2);
+	View *tmpView3 = new HScrollBar(ext, 16, 4, 1);
+	insert(tmpView3);
 }
