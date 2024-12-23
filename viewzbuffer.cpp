@@ -18,6 +18,7 @@
  */
 
 #include <iostream>
+#include <cstring>
 #include "viewzbuffer.h"
 
 ViewZBuffer *ViewZBuffer::instance()
