@@ -56,9 +56,9 @@ Window *DesktopApp::createWindow(Rectangle &viewLimits, const char *title)
 	Button *newButton = new Button(buttonLimits);
 	newWindow->insert(newButton);
 	buttonLimits.move(25, 25);
-	ProgressBar *newProgBar = new ProgressBar(buttonLimits, 1);
+	ProgressBar *newProgBar = new ProgressBar(buttonLimits, true);
 	newWindow->insert(newProgBar);
-	buttonLimits.move(0, 25);
+	buttonLimits.move(0, 75);
 	buttonLimits.width(buttonLimits.width() * 2);
 	PaletteTab *newPalTab = new PaletteTab(buttonLimits);
 	newWindow->insert(newPalTab);
