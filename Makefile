@@ -1,25 +1,74 @@
-.PHONY: all clean
+.PHONY: all clean builddir build
 
 OBJDIR := build
 
-OBJS := event.o eventqueue.o view.o viewgroup.o viewexec.o frame.o geometry.o palette.o palettegroup.o
-OBJS += palettegroupfactory.o viewrenderfactory.o viewrenderhw.o vieweventfactory.o vieweventsdl.o
-OBJS += titlebar.o window.o background.o progressbar.o button.o window_icon.o desktopapp.o scrollbar.o
-OBJS += testdesktopapp.o viewapplication.o palettegroupinstance.o viewrenderinstance.o
-OBJS += viewzbuffer.o desktop.o
-CXXFLAGS += -Wall -Wextra -Winline -Wcast-align -g -O4
-CXXFLAGS += -I"E:\sviluppo\SDL2_ttf-2.20.1\i686-w64-mingw32\include\SDL2"
-CXXFLAGS += -I"E:\sviluppo\SDL2-2.24.0\i686-w64-mingw32\include\SDL2"
-LFLAGS = -L"E:\sviluppo\SDL2-2.24.0\i686-w64-mingw32\lib"
-LFLAGS += -L"E:\sviluppo\SDL2_ttf-2.20.1\i686-w64-mingw32\lib"
+# Geometry classes, Points and Rectangles
+OBJS := geometry.o
+
+# The Z-Buffer
+OBJS += viewzbuffer.o
+
+# Events related objects
+OBJS += event.o
+OBJS += eventqueue.o
+OBJS += vieweventfactory.o
+OBJS += vieweventsdl.o
+
+# Color Palettes
+OBJS += palette.o
+OBJS += palettegroup.o
+OBJS += palettegroupfactory.o
+
+# Rendering
+OBJS += viewrenderfactory.o
+OBJS += viewrenderhw.o
+
+# View and ViewGroup
+OBJS += view.o
+OBJS += viewgroup.o
+
+# Specialized ViewGroups
+OBJS += viewexec.o
+OBJS += viewapplication.o
+OBJS += window.o
+OBJS += desktopapp.o
+
+# Specialized Views
+OBJS += frame.o
+OBJS += titlebar.o
+OBJS += background.o
+OBJS += progressbar.o
+OBJS += scrollbar.o
+OBJS += abstract_button.o
+OBJS += button.o
+OBJS += window_icon.o
+OBJS += desktop.o
+OBJS += resizetab.o
+OBJS += palettetab.o
+
+# Singletons
+OBJS += palettegroupinstance.o
+OBJS += viewrenderinstance.o
+OBJS += systempaletteinstance.o
+
+# Test application
+OBJS += testdesktopapp.o
+
+CXXFLAGS += -Wall -Wextra -Winline -Wcast-align -g3 -O1
 
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all: $(addprefix $(OBJDIR)/, $(OBJS)) *.h
-	$(CXX) $(LFLAGS) -g -o testsys_debug.exe $^ -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
-	$(CXX) $(LFLAGS) -s -o testsys.exe $^ -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+all: builddir build
+
+build: $(addprefix $(OBJDIR)/, $(OBJS)) *.h
+	$(CXX) $(LFLAGS) -g3 -o guidbg $(OBJDIR)/* -lSDL2main -lSDL2 -lSDL2_ttf
+	$(CXX) $(LFLAGS) -s -o gui $(OBJDIR)/* -lSDL2main -lSDL2 -lSDL2_ttf
 
 clean:
-	del /Q $(OBJDIR)\*.*
-	del testsys*.exe
+	rm -rf $(OBJDIR)/
+	rm -f gui
+	rm -f guidbg
+
+builddir:
+	mkdir -p build
