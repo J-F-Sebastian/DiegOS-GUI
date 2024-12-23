@@ -19,7 +19,7 @@
 
 #include "viewinstances.h"
 #include "desktopapp.h"
-#include "SDL.h"
+#include <SDL2/SDL.h>
 #include "button.h"
 #include "progressbar.h"
 #include "window.h"
