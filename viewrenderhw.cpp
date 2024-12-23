@@ -20,8 +20,8 @@
 #include <iostream>
 #include "viewrenderhw.h"
 #include "color_utils.h"
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 static inline void to_SDL_Point(const Point &point, SDL_Point &spoint)
 {
@@ -133,7 +133,8 @@ ViewRenderHW::ViewRenderHW(int xres, int yres, int bitdepth) : ViewRender(xres, 
 		std::cout << "Font could not be inited! SDL_Error: " << TTF_GetError() << std::endl;
 	}
 
-	font = TTF_OpenFont("C:\\windows\\fonts\\segoeui.ttf", 14);
+//	font = TTF_OpenFont("C:\\windows\\fonts\\segoeui.ttf", 14);
+	font = TTF_OpenFont("/usr/share/fonts/TTF/NotoSansSymbols2-Regular.ttf", 14);
 	if (!font)
 	{
 		std::cout << "Font could not be loaded! SDL_Error: " << TTF_GetError() << std::endl;
@@ -324,7 +325,7 @@ void ViewRenderHW::text(const Rectangle &rect, uint32_t fcolor, uint32_t bcolor,
 	to_SDL_Color(fcolor, &f);
 	to_SDL_Color(bcolor, &b);
 
-	SDL_Surface *surface = TTF_RenderText_LCD(font, text, f, b);
+	SDL_Surface *surface = TTF_RenderText_Shaded(font, text, f, b);
 	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_RenderCopy(renderer, message, NULL, &srect);
 	SDL_FreeSurface(surface);
@@ -342,7 +343,7 @@ void ViewRenderHW::textUNICODE(const Rectangle &rect, uint32_t fcolor, uint32_t 
 	to_SDL_Color(fcolor, &f);
 	to_SDL_Color(bcolor, &b);
 
-	SDL_Surface *surface = TTF_RenderUNICODE_LCD(font, text, f, b);
+	SDL_Surface *surface = TTF_RenderUNICODE_Shaded(font, text, f, b);
 	SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_RenderCopy(renderer, message, NULL, &srect);
 	SDL_FreeSurface(surface);
@@ -389,7 +390,7 @@ void ViewRenderHW::drawBMP(void *bmp, const Rectangle &rect)
 void ViewRenderHW::start()
 {
 	if (SDL_SetRenderTarget(renderer, NULL))
-		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCTION__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 	SDL_RenderClear(renderer);
 }
 
@@ -397,7 +398,7 @@ void ViewRenderHW::show()
 {
 	// Update the surface
 	if (SDL_SetRenderTarget(renderer, NULL))
-		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCTION__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 
 	SDL_RenderPresent(renderer);
 }
@@ -424,13 +425,13 @@ void *ViewRenderHW::createBuffer(const Rectangle &rect)
 
 	if (texture == NULL)
 	{
-		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCTION__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 		return NULL;
 	}
 
 	if (SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE))
 	{
-		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCTION__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 		SDL_DestroyTexture(texture);
 		return NULL;
 	}
@@ -447,10 +448,10 @@ void ViewRenderHW::releaseBuffer(const void *buffer)
 void ViewRenderHW::setBuffer(const void *buffer)
 {
 	if (buffer == nullptr)
-		std::cout << __FUNCSIG__ << std::endl;
+		std::cout << __FUNCTION__ << std::endl;
 
 	if (SDL_SetRenderTarget(renderer, (SDL_Texture *)buffer))
-		std::cout << __FUNCSIG__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
+		std::cout << __FUNCTION__ << " Renderer error!  SDL_Error: " << SDL_GetError() << std::endl;
 }
 
 void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect, const Rectangle &vidmem)
@@ -463,9 +464,9 @@ void ViewRenderHW::writeBuffer(const void *buffer, const Rectangle &rect, const 
 	if (buffer)
 	{
 		if (SDL_SetRenderTarget(renderer, NULL))
-			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
+			std::cout << __FUNCTION__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 
 		if (SDL_RenderCopy(renderer, (SDL_Texture *)buffer, &srect, &vrect))
-			std::cout << __FUNCSIG__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
+			std::cout << __FUNCTION__ << " Renderer error " << std::hex << buffer << std::dec << "!  SDL_Error: " << SDL_GetError() << std::endl;
 	}
 }
