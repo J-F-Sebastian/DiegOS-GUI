@@ -19,7 +19,7 @@
 #include <iostream>
 
 #include "vieweventsdl.h"
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 /*
  * Static caches for events, this is not truly required for keyboard events,
