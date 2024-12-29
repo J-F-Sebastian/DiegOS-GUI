@@ -98,7 +98,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 		/* FALLTHRU */
 		case SDL_MOUSEBUTTONUP:
 		{
-			uint8_t temp;
+			uint8_t temp = 0;
 			/*std::cout << std::hex << "x " << sdlevt.button.timestamp << " / " << (int)sdlevt.button.button << " / " << (int)sdlevt.button.state << " / " << (int)sdlevt.button.clicks << std::endl;*/
 			if (sdlevt.button.button == SDL_BUTTON_LEFT)
 				temp = 1 << 2;
@@ -107,7 +107,7 @@ bool ViewEventSDL::wait(Event *evt, int timeoutms)
 			if (sdlevt.button.button == SDL_BUTTON_RIGHT)
 				temp = 1 << 0;
 
-			mouse.status = (sdlevt.button.state == SDL_PRESSED) ? POS_EVT_PRESSED : POS_EVT_RELEASED;
+			mouse.status = (sdlevt.button.state == SDL_PRESSED) ? (uint8_t)POS_EVT_PRESSED : (uint8_t)POS_EVT_RELEASED;
 			/*
 			 * Pressing different buttons clears ckick state
 			 */
