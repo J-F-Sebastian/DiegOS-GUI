@@ -39,8 +39,6 @@ void ViewApplication::initMenu()
 
 void ViewApplication::handleEvent(Event *evt)
 {
-	// evt->print();
-
 	if (evt->isEventKey())
 	{
 		KeybEvent *key = evt->getKeyDownEvent();
@@ -56,7 +54,7 @@ void ViewApplication::handleEvent(Event *evt)
 				 */
 				while (evtM->wait(&event, 100))
 					handleEvent(&event);
-				// draw();
+
 				clearState(VIEW_STATE_EVLOOP);
 			}
 			break;
