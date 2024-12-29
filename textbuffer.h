@@ -1,7 +1,7 @@
 /*
  * DiegOS Operating System source code
  *
- * Copyright (C) 2012 - 2019 Diego Gallizioli
+ * Copyright (C) 2012 - 2024 Diego Gallizioli
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public:
 
 	uint16_t getBufferXY(int x, int y);
 
-	virtual void blitBuffer(int srcx, int srcy, int dstx, int dsty, char *dest){};
+	virtual void blitBuffer(int srcx, int srcy, int dstx, int dsty, char *dest) {};
 
 private:
 	uint16_t *buffer;
