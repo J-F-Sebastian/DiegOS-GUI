@@ -21,8 +21,6 @@
 #include "desktop.h"
 #include "event_keyboard.h"
 
-#include <iostream>
-
 ViewApplication::ViewApplication(Rectangle &limits, ViewEventManager *evt, View *parent) : ViewExec(limits, evt, parent)
 {
 }

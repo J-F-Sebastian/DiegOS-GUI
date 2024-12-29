@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-
 #include "viewinstances.h"
 #include "frame.h"
 #include "frame_palette.h"

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <iostream>
 
 #include "viewgroup.h"
 #include "viewzbuffer.h"
@@ -320,7 +319,6 @@ void ViewGroup::handleEvent(Event *evt)
 			 */
 			else if (thisViewIsMine(receiver))
 			{
-				evt->print();
 				receiver->handleEvent(evt);
 			}
 			/*
@@ -643,7 +641,6 @@ void ViewGroup::selectNext(bool forward)
 
 bool ViewGroup::focusView(View *target)
 {
-	std::cout << std::hex << "PTR " << target << std::endl;
 	if (!target)
 		return false;
 
