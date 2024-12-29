@@ -42,7 +42,7 @@ void ViewExec::run()
 		{
 			handleEvent(&event);
 			if (!event.isEventUnknown())
-				std::cout << " ERROR !!!" << std::endl;
+				event.print();
 		}
 	}
 }
