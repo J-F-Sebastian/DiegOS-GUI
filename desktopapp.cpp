@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <SDL2/SDL.h>
 #include "viewinstances.h"
 #include "desktopapp.h"
-#include "SDL.h"
 #include "button.h"
 #include "progressbar.h"
 #include "window.h"
