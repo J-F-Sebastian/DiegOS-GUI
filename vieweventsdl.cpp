@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include <iostream>
+#include <SDL2/SDL.h>
 
 #include "vieweventsdl.h"
-#include "SDL.h"
 
 /*
  * Static caches for events, this is not truly required for keyboard events,
