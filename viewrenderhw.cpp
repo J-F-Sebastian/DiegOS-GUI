@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <SDL2/SDL.h>
 #include <iostream>
+
 #include "viewrenderhw.h"
 #include "color_utils.h"
-#include "SDL.h"
 #include "SDL_ttf.h"
 
 static inline void to_SDL_Point(const Point &point, SDL_Point &spoint)
