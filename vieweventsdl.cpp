@@ -38,10 +38,8 @@ ViewEventSDL::ViewEventSDL() : ViewEventManager()
 	else
 	{
 		SDL_EventState(SDL_WINDOWEVENT, SDL_IGNORE);
-		// SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
-
 		myEventType = SDL_RegisterEvents(1);
-		if (myEventType == -1U)
+		if (myEventType == UINT32_MAX)
 		{
 			SDL_QuitSubSystem(SDL_INIT_EVENTS);
 			std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
