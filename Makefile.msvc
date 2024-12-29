@@ -19,17 +19,59 @@ MYOBJDIR = windowsdbg
 MYOBJDIR = windows
 !endif
 
-MYOBJS = $(MYOBJDIR)\event.obj $(MYOBJDIR)\eventqueue.obj $(MYOBJDIR)\view.obj $(MYOBJDIR)\viewexec.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\frame.obj $(MYOBJDIR)\geometry.obj $(MYOBJDIR)\palette.obj $(MYOBJDIR)\palettegroup.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettegroupfactory.obj $(MYOBJDIR)\viewrenderfactory.obj $(MYOBJDIR)\viewrenderhw.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\vieweventfactory.obj $(MYOBJDIR)\vieweventsdl.obj $(MYOBJDIR)\titlebar.obj $(MYOBJDIR)\window.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\background.obj $(MYOBJDIR)\progressbar.obj $(MYOBJDIR)\button.obj $(MYOBJDIR)\window_icon.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj $(MYOBJDIR)\scrollbar.obj $(MYOBJDIR)\testdesktopapp.obj $(MYOBJDIR)\viewgroup.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewapplication.obj $(MYOBJDIR)\palettegroupinstance.obj $(MYOBJDIR)\viewrenderinstance.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewzbuffer.obj $(MYOBJDIR)\desktop.obj $(MYOBJDIR)\abstract_button.obj $(MYOBJDIR)\resizetab.obj
-MYOBJS = $(MYOBJS) $(MYOBJDIR)\systempaletteinstance.obj $(MYOBJDIR)\palettetab.obj
+# Geometry classes, Points and Rectangles
+MYOBJS = $(MYOBJDIR)\geometry.obj
 
-CPPFLAGS = /Oi /favor:INTEL64 /W4 /GA /std:c++20 /EHcs /MP4 /c
+# The Z-Buffer
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewzbuffer.obj
+
+# Events related objects
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\event.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\eventqueue.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\vieweventfactory.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\vieweventsdl.obj
+
+# Color Palettes
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\palette.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettegroup.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettegroupfactory.obj
+
+# Rendering
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewrenderfactory.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewrenderhw.obj
+
+# View and ViewGroup
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\view.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewgroup.obj
+
+# Specialized ViewGroups
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewexec.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewapplication.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\window.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktopapp.obj
+
+# Specialized Views
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\frame.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\titlebar.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\background.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\progressbar.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\scrollbar.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\abstract_button.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\button.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\window_icon.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\desktop.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\resizetab.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettetab.obj
+
+# Singletons
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\palettegroupinstance.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\viewrenderinstance.obj
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\systempaletteinstance.obj
+
+# Test application
+MYOBJS = $(MYOBJS) $(MYOBJDIR)\testdesktopapp.obj
+
+CPPFLAGS = /favor:INTEL64 /W4 /GA /std:c++20 /EHcs /MP4 /c
 
 !ifdef DEBUG
 CPPFLAGS = $(CPPFLAGS) /Zi /O1
@@ -37,6 +79,8 @@ CPPFLAGS = $(CPPFLAGS) /Zi /O1
 CPPFLAGS = $(CPPFLAGS) /O2 /arch:AVX
 !endif
 
+CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2\include
+# The following is required only to use SDL2_ttf
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2\include\SDL2
 CPPFLAGS = $(CPPFLAGS) /I$(MYLIBSDIR)\SDL2_ttf\include
 
@@ -56,7 +100,8 @@ LNFLAGS = $(LNFLAGS) /Fegui.exe
 
 compileonly : $(MYOBJDIR) $(MYOBJS) *.h
 
-all : $(MYOBJDIR) $(MYOBJS) *.h
+#all : $(MYOBJDIR) $(MYOBJS) *.h
+all : compileonly
  $(CPP) $(LNFLAGS) $(MYOBJS) $(MYLIBSDIR)\SDL2\lib\SDL2.lib $(MYLIBSDIR)\SDL2_ttf\lib\x64\SDL2_ttf.lib
 
 {}.cpp{$(MYOBJDIR)}.obj::
