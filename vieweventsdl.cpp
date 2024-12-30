@@ -27,7 +27,7 @@
  * it is definitively required for mouse events when using SDL.
  */
 static struct KeybEvent kbd = {0, 0};
-static struct PositionalEvent mouse = {0, 0, 0, POS_EVT_RELEASED};
+static struct PositionalEvent mouse = {0, 0, 0, 0, 0, POS_EVT_RELEASED};
 
 ViewEventSDL::ViewEventSDL() : ViewEventManager()
 {
