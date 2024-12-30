@@ -292,6 +292,17 @@ class PaletteGroup *PaletteGroupFactory::create(enum SystemColorPalette sel, int
 		pal[PaletteGroup::PAL_WINICON]->loadPalette(winiconPaletteDBG);
 		pal[PaletteGroup::PAL_SCROLLBAR]->loadPalette(scrollbarPaletteDBG);
 		break;
+
+	default:
+		delete pal[PaletteGroup::PAL_BACKGROUND];
+		delete pal[PaletteGroup::PAL_FRAME];
+		delete pal[PaletteGroup::PAL_TITLEBAR];
+		delete pal[PaletteGroup::PAL_PROGRESSBAR];
+		delete pal[PaletteGroup::PAL_DESKTOP];
+		delete pal[PaletteGroup::PAL_BUTTON];
+		delete pal[PaletteGroup::PAL_WINICON];
+		delete pal[PaletteGroup::PAL_SCROLLBAR];
+		return nullptr;
 	}
 
 	return new PaletteGroup(pal, PaletteGroup::PAL_NUM);
@@ -330,6 +341,10 @@ class Palette *SystemPaletteFactory::create(enum SystemColorPalette sel, int bit
 	case SYS_PALETTE_DEBUG:
 		pal->loadPalette(PALETTEDIEGOS);
 		break;
+
+	default:
+		delete pal;
+		return nullptr;
 	}
 
 	return pal;
